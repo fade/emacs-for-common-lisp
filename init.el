@@ -7,6 +7,19 @@
 ;;; Silence compiler warnings from native-comp; they're too disruptive.
 (setq native-comp-async-report-warnings-errors nil)
 
+;; I put 'org-spiffs in a subdir of emacs.d, which needs finding:
+(add-to-list 'load-path (expand-file-name "fade/" user-emacs-directory))
+(require 'org-spiffs nil t) ;; rename org-roam buffers to something sane.
+
+;;; Themes need finding.
+(add-to-list 'custom-theme-load-path
+             (expand-file-name "themes/" user-emacs-directory))
+
+;; where I'm developing my theme.
+(add-to-list 'custom-theme-load-path
+             (expand-file-name "themes/" "~/SourceCode/lisp/emacs_stuff/"))
+
+
 ;;; Set up package
 (require 'package)
 
@@ -65,6 +78,12 @@
   :straight t
   :custom
   (org-ellipsis " ▾")
+  (org-hide-emphasis-markers t)
+  (org-fontify-quote-and-verse-blocks t)
+  (org-src-tab-acts-natively t)
+  (org-edit-src-content-indentation 2)
+  (org-startup-folded 'content)
+  (org-cycle-separator-lines 2)
   (org-agenda-start-with-log-mode t)
   (org-log-done 'time)
   (org-log-into-drawer t)
@@ -78,17 +97,6 @@
          ;; rename org-roam buffers to their enclosed #+TITLE
          (add-hook 'org-mode-hook 'fade/org-mode-rename-buffer)))
 
-;; I put 'org-spiffs in a subdir of emacs.d, which needs finding:
-(add-to-list 'load-path (expand-file-name "fade/" user-emacs-directory))
-(require 'org-spiffs nil t) ;; rename org-roam buffers to something sane.
-
-;;; Themes need finding.
-(add-to-list 'custom-theme-load-path
-             (expand-file-name "themes/" user-emacs-directory))
-
-;; where I'm developing my theme.
-(add-to-list 'custom-theme-load-path
-             (expand-file-name "themes/" "~/SourceCode/lisp/emacs_stuff/"))
 
 ;;; Begin initialization
 ;; Turn off mouse interface early in startup to avoid momentary display

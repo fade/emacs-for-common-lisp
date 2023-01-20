@@ -170,7 +170,6 @@ The =efs/org-font-setup= function configures various text faces to tweak the siz
     (font-lock-add-keywords 'org-mode
                             '(("^ *\\([-]\\) "
                                (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-
     ;; Set faces for heading levels
     (dolist (face '((org-level-1 . 1.2)
                     (org-level-2 . 1.1)
@@ -275,11 +274,18 @@ Learned about [[https://github.com/sachac/.emacs.d/blob/83d21e473368adb1f63e582a
 
 ** Org Roam
 #+BEGIN_SRC emacs-lisp
+  (use-package emacsql
+    :straight t)
+
+  (use-package emacsql-sqlite
+    :straight t)
 
   (use-package org-roam
     :straight t
+
     :init
     (setq org-roam-v2-ack t)
+
     :config
     (setf org-roam-directory (expand-file-name "Roam/" site-org-files))
     (setf org-roam-dailies-directory (expand-file-name "Dailies/" org-roam-directory))
@@ -288,6 +294,7 @@ Learned about [[https://github.com/sachac/.emacs.d/blob/83d21e473368adb1f63e582a
     (setq org-roam-dailies-capture-templates
           '(("d" "daily" entry #'org-roam-capture--get-point
              "* %?\n")))
+
     (org-roam-setup)
 
     :bind
@@ -296,11 +303,11 @@ Learned about [[https://github.com/sachac/.emacs.d/blob/83d21e473368adb1f63e582a
      ("C-c n g" . org-roam-graph)
      ("C-c n r" . org-roam-node-random)
      (:map org-mode-map
-      ("C-c n i" . org-roam-node-insert)
-      ("C-c n o" . org-roam-get-create)
-      ("C-c n t" . org-roam-tag-add)
-      ("C-c n a" . org-roam-alias-add)
-      ("C-c n l" . org-roam-buffer-toggle))))
+           ("C-c n i" . org-roam-node-insert)
+           ("C-c n o" . org-roam-get-create)
+           ("C-c n t" . org-roam-tag-add)
+           ("C-c n a" . org-roam-alias-add)
+           ("C-c n l" . org-roam-buffer-toggle))))
 
   (use-package  org-roam-bibtex
     :straight t
@@ -576,6 +583,7 @@ This makes sure that everything can be a project.
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "<f5>") 'projectile-compile-project)
 #+END_SRC
+
 * Perspectives
 My emacs session tends to build up an enormous buffer list over time,
 which is (barely) manageable with the use of Helm. I have stopped
@@ -587,11 +595,11 @@ functionality. Including here on a provisional basis. In practice I
 have not made this a part of my workflow, yet, so I'm not going to
 generate the package clause when this file is tangled.
 
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp :tangle no
   (use-package perspective
     :straight t
-    ;; :bind
-    ;; ("C-x C-b" . persp-list-buffers)   ; or use a nicer switcher, see below
+    :bind
+    ("C-x C-b" . persp-list-buffers)   ; or use a nicer switcher, see below
     :config
     (persp-mode))
 #+end_src
@@ -666,8 +674,63 @@ Return to the subject of previous sessions fast quick.
                             (projects . 5)))
     (setq dashboard-banner-logo-title "DeepSky Emacs"))
 #+end_src
-* VTerm
+* Tree-sitter
 #+begin_src emacs-lisp
+  ;; (use-package tree-sitter
+  ;;   :straight t)
+
+  (use-package treesit-parser-manager
+    :straight (treesit-parser-manager :host codeberg :repo "ckruse/treesit-parser-manager" :files ("*.el"))
+    :commands (treesit-parser-manager-install-grammars
+               treesit-parser-manager-update-grammars
+               treesit-parser-manager-install-or-update-grammars
+               treesit-parser-manager-remove-grammar)
+    :custom
+    (treesit-parser-manager-grammars
+     '(("https://github.com/tree-sitter/tree-sitter-rust"
+        ("tree-sitter-rust"))
+
+       ("https://github.com/ikatyang/tree-sitter-toml"
+        ("tree-sitter-toml"))
+
+       ("https://github.com/elixir-lang/tree-sitter-elixir"
+        ("tree-sitter-elixir"))
+
+       ("https://github.com/tree-sitter/tree-sitter-typescript"
+        ("tree-sitter-typescript/tsx" "tree-sitter-typescript/typescript"))
+
+       ("https://github.com/tree-sitter/tree-sitter-javascript"
+        ("tree-sitter-javascript"))
+
+       ("https://github.com/tree-sitter/tree-sitter-css"
+        ("tree-sitter-css"))
+
+       ("https://github.com/serenadeai/tree-sitter-scss"
+        ("tree-sitter-scss"))
+
+       ("https://github.com/tree-sitter/tree-sitter-json"
+        ("tree-sitter-json"))
+
+       ("https://github.com/tree-sitter/tree-sitter-go"
+        ("tree-sitter-go"))
+
+       ("https://github.com/tree-sitter/tree-sitter-cpp"
+        ("tree-sitter-cpp"))
+
+       ;; ("https://github.com/tree-sitter/tree-sitter-c"
+       ;;  (tree-sitter-c))
+       ))
+
+    :config
+    (setq treesit-extra-load-path (list (expand-file-name "tree-sit" user-emacs-directory)))
+    :hook (emacs-startup . treesit-parser-manager-install-grammars))
+
+  (use-package tree-sitter-langs
+    :straight t
+    :after tree-sitter)
+#+end_src
+* VTerm
+#+begin_src emacs-lisp :tangle no
   (use-package vterm
      :config
     (setq veterm-max-scrollback 10000))
@@ -894,7 +957,9 @@ your cursor will be briefly highlighted now.
 #+end_src
 
 * OpenAI ChatGPT
+
 So... this is actually right up in the land of magic technology. I kind of can't believe how interesting it is.
+
 #+begin_src emacs-lisp
   (use-package chatgpt
     :straight (:host github :repo "joshcho/ChatGPT.el" :files ("dist" "*.el"))

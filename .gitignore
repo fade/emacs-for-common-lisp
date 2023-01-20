@@ -9,3 +9,17 @@
 
 # Undo-tree save-files
 *.~undo-tree
+/.org-id-locations
+/auto-save-list/
+/bookmarks
+/config.el
+/eln-cache/
+/elpa/
+/eshell/
+/history
+/org-roam.db
+/projectile-bookmarks.eld
+/straight/
+/transient/
+/tree-sit-parsers/
+/tree-sit-repos/

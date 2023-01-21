@@ -662,18 +662,6 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
 
 #+END_SRC
 
-* Dashboard
-Return to the subject of previous sessions fast quick.
-#+begin_src emacs-lisp
-  (use-package dashboard
-    :straight t
-    :config
-    (dashboard-setup-startup-hook)
-    (setq dashboard-startup-banner "~/.emacs.d/img/dashLogo.png")
-    (setq dashboard-items '((recents . 5)
-                            (projects . 5)))
-    (setq dashboard-banner-logo-title "DeepSky Emacs"))
-#+end_src
 * Tree-sitter
 #+begin_src emacs-lisp
   ;; (use-package tree-sitter
@@ -728,6 +716,18 @@ Return to the subject of previous sessions fast quick.
   (use-package tree-sitter-langs
     :straight t
     :after tree-sitter)
+#+end_src
+* Dashboard
+Return to the subject of previous sessions fast quick.
+#+begin_src emacs-lisp
+  (use-package dashboard
+    :straight t
+    :config
+    (dashboard-setup-startup-hook)
+    (setq dashboard-startup-banner "~/.emacs.d/img/3d-logo_no_background.png")
+    (setq dashboard-items '((recents . 5)
+                            (projects . 5)))
+    (setq dashboard-banner-logo-title "DeepSky Emacs"))
 #+end_src
 * VTerm
 #+begin_src emacs-lisp :tangle no

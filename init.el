@@ -169,8 +169,10 @@
         (warn "Package %s failed to reinstall" package-name)))))
 
 ;; late setup
-(require 'sraight-spiffs nil t) ;; when I manually update straight
+;; when I manually update straight
 ;; packages, do all the steps at once.
+(require 'straight-spiffs nil t)
+
 
 (defun show-file-name ()
   "Show the full path filename of the current buffer in the minibuffer."

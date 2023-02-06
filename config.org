@@ -866,7 +866,7 @@ Dired configuration is split between =init.el= and this clause in =config.org=, 
   (use-package mu4e
     :ensure nil
     :defer 120
-    :load-path "/usr/share/emacs/site-lisp/mu4e/"
+    :load-path "/usr/local/share/emacs/site-lisp/mu4e/"
 
     :config
     ;; this setting avoids mbsync problems
@@ -875,8 +875,9 @@ Dired configuration is split between =init.el= and this clause in =config.org=, 
     ;; update every 10 minutes
     (setq mu4e-update-interval (* 10 60))
     (setq mu4e-get-mail-command "mbsync -a")
-    (setq mu4e-maildir "~/Mail/GMail/")
-  
+    (setq mu4e-mu-binary "/usr/local/bin/mu")
+    (setq mu4e-root-maildir "~/Mail/GMail/")
+
     (setq mu4e-drafts-folder "/[Gmail].Drafts")
     (setq mu4e-sent-folder "/[Gmail].Sent Mail")
     (setq mu4e-refile-folder "/[Gmail].All Mail")
@@ -894,7 +895,9 @@ Dired configuration is split between =init.el= and this clause in =config.org=, 
             ("/[Gmail].Sent Mail"      . ?s)
             ("/[Gmail].Trash"          . ?t)
             ("/[Gmail].Drafts"         . ?d)
-            ("/[Gmail].All Mail"       . ?a))))
+            ("/[Gmail].All Mail"       . ?a)))
+
+    )
 #+end_src
 
 * Minor conveniences
@@ -996,7 +999,9 @@ So... this is actually right up in the land of magic technology. I kind of can't
   (use-package flycheck
     :ensure t
     :diminish flycheck-mode
-    :init (global-flycheck-mode))
+    :init (global-flycheck-mode)
+    :config
+    (add-hook 'sh-mode-hook 'flycheck-mode))
 
   (use-package flycheck-cython
     :ensure t
@@ -1329,8 +1334,8 @@ buffer navigation, but applies it to windows. The default keys are
     (progn
       (setq sly-lisp-implementations
             '((sbcl ("/usr/local/bin/sbcl" "--dynamic-space-size" "2500"))
-              (ccl ("/usr/bin/ros" "-L" "ccl-bin" "run"))
-              (ccl ("/usr/bin/ccl"))
+              ;; (ccl ("/usr/bin/ros" "-L" "ccl-bin" "run"))
+              (ccl ("/usr/local/bin/ccl"))
               (abcl ("/usr/local/src/abcl/abcl"))
               (clisp ("/usr/bin/clisp"))
               (ecl ("/usr/local/bin/ecl"))
@@ -1365,6 +1370,8 @@ buffer navigation, but applies it to windows. The default keys are
   (use-package sly-quicklisp
     :straight t
     :after sly)
+
+
 #+END_SRC
 
 #+RESULTS:

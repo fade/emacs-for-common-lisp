@@ -210,6 +210,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(avy-lead-face ((t (:background "medium blue" :foreground "yellow"))))
+ '(avy-lead-face-2 ((t (:background "dark turquoise" :foreground "midnight blue"))))
  '(company-scrollbar-bg ((t (:background "#199919991999"))) t)
  '(company-scrollbar-fg ((t (:background "#0ccc0ccc0ccc"))) t)
  '(company-tooltip ((t (:inherit default :background "#051e051e051e"))))

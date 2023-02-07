@@ -181,16 +181,17 @@ The =efs/org-font-setup= function configures various text faces to tweak the siz
                     (org-level-8 . 1.1)))
       (if (string-equal system-type "darwin")
           (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face))
-        (set-face-attribute (car face) nil :font "Droid Sans" :weight 'regular :height (cdr face))))
+        (set-face-attribute (car face) nil :font "Droid Sans" :weight 'regular :height (cdr face)))
+    
 
-    ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-    (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-    (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-    (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
-    (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-    (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-    (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+      ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+      (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+      (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+      (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+      (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+      (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+      (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+      (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)))
 
   (efs/org-font-setup)
 #+END_SRC
@@ -764,6 +765,12 @@ buffers in emacs. source: [[http://whattheemacsd.com/sane-defaults.el-01.html][M
   (setq recentf-max-saved-items 200))
 #+END_SRC
 
+* 0x0
+post regions/files/iota of emacs buffers to 0x0 for linking in remote places like IRC.
+#+begin_src emacs-lisp
+  (use-package 0x0
+    :straight t)
+#+end_src
 * SparQL mode
 
 most relevantly, sparql is used to define queries to the WikiData knowledge database. 
@@ -1704,9 +1711,51 @@ And here's how we tell Emacs which font we want.
   (if window-system
       (progn
         (add-to-list 'default-frame-alist '(font . "Envy Code R"))
-        ;; (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 120 :weight 'regular)
+        ;; (add-to-list 'default-frame-alist '(font . "Iosevka"))
+        (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 120 :weight 'regular)
         (set-face-attribute 'default nil :font "Envy Code R" :height 120)
         (set-face-attribute 'fixed-pitch nil :font "Envy Code R-11")))
+
+  ;; (use-package fontaine
+  ;;   :straight t
+  ;;   :config
+  ;;   (setq fontaine-presets
+  ;;         '((tiny
+  ;;            :default-family "Iosevka Wide Fixed"
+  ;;            :default-height 70)
+  ;;           (small
+  ;;            :default-family "Iosevka Fixed"
+  ;;            :default-height 90)
+  ;;           (regular
+  ;;            :default-height 100)
+  ;;           (medium
+  ;;            :default-height 110)
+  ;;           (large
+  ;;            :default-weight semilight
+  ;;            :default-height 140
+  ;;            :bold-weight extrabold)
+  ;;           (presentation
+  ;;            :default-weight semilight
+  ;;            :default-height 170
+  ;;            :bold-weight extrabold)
+  ;;           (t
+  ;;            ;; I keep all properties for didactic purposes, but most can be
+  ;;            ;; omitted.  See the fontaine manual for the technicalities:
+  ;;            ;; <https://protesilaos.com/emacs/fontaine>.
+  ;;            :default-family "Iosevka Comfy"
+  ;;            :default-weight regular
+  ;;            :default-height 100
+  ;;            :fixed-pitch-family nil ; falls back to :default-family
+  ;;            :fixed-pitch-weight nil ; falls back to :default-weight
+  ;;            :fixed-pitch-height 1.0
+  ;;            :variable-pitch-family "Iosevka Duo"
+  ;;            :variable-pitch-weight nil
+  ;;            :variable-pitch-height 1.0
+  ;;            :bold-family nil ; use whatever the underlying face has
+  ;;            :bold-weight bold
+  ;;            :italic-family nil
+  ;;            :italic-slant italic
+  ;;            :line-spacing nil))))
 
   ;; (set-face-attribute 'fixed-pitch nil :font "Fira Code Retina" :height 120)
 

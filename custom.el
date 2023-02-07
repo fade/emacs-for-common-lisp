@@ -169,8 +169,8 @@
      (Base . 10)
      (Syntax . ANSI-Common-Lisp)
      (eval sh-set-shell "zsh")))
+ '(save-place-mode t)
  '(send-mail-function 'mailclient-send-it)
- '(show-paren-mode t)
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))
  '(spaceline-all-the-icons-separator-type 'wave)
  '(term-default-bg-color "#002b36")
@@ -210,6 +210,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(default ((t (:family "Envy Code R" :foundry "ENVY" :slant normal :weight regular :height 118 :width normal))))
  '(avy-lead-face ((t (:background "medium blue" :foreground "yellow"))))
  '(avy-lead-face-2 ((t (:background "dark turquoise" :foreground "midnight blue"))))
  '(company-scrollbar-bg ((t (:background "#199919991999"))) t)

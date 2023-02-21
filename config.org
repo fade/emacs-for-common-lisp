@@ -470,8 +470,8 @@ good column number to do that.
           ("we" "Checking Email" entry (file+olp+datetree "~/Dropbox/OrgFiles/Journal.org")
            "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
 
-          ("b" "Books")
-          ("bm" "Book" entry (file org-books-file)
+          ("b" "Books, manual")
+          ("bm" "Books, Internet" entry (file org-books-file)
            "* %^{TITLE}\n:PROPERTIES:\n:ADDED: %<[%Y-%02m-%02d]>\n:END:%^{AUTHOR}p\n%?" :empty-lines 1)
           ("bi" "Book" entry (file org-books-file)
            "%(let* ((url (substring-no-properties (current-kill 0)))

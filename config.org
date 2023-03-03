@@ -885,7 +885,7 @@ Dired configuration is split between =init.el= and this clause in =config.org=, 
 
 * Mail with mu4e
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (use-package mu4e
     :straight t
     ;; :defer 120

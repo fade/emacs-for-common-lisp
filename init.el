@@ -7,6 +7,11 @@
 ;;; Silence compiler warnings from native-comp; they're too disruptive.
 ;; (setq native-comp-async-report-warnings-errors nil)
 
+;;; straight is failing due to a reference to a void symbol, the
+;;; symbol being deprecated and missing in emacs29
+
+(defvar native-comp-deferred-compilation-deny-list nil)
+
 ;; I put 'org-spiffs in a subdir of emacs.d, which needs finding:
 (add-to-list 'load-path (expand-file-name "fade/" user-emacs-directory))
 (require 'org-spiffs nil t) ;; rename org-roam buffers to something sane.

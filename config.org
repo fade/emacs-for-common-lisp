@@ -746,6 +746,7 @@ Return to the subject of previous sessions fast quick.
                             (projects . 5)))
     (setq dashboard-banner-logo-title "DeepSky Emacs"))
 #+end_src
+
 * VTerm
 #+begin_src emacs-lisp :tangle no
   (use-package vterm
@@ -753,6 +754,7 @@ Return to the subject of previous sessions fast quick.
     (setq veterm-max-scrollback 10000))
 
 #+end_src
+
 * List buffers
 
 source: http://ergoemacs.org/emacs/emacs_buffer_management.html
@@ -787,6 +789,7 @@ post regions/files/iota of emacs buffers to 0x0 for linking in remote places lik
   (use-package 0x0
     :straight t)
 #+end_src
+
 * SparQL mode
 
 most relevantly, sparql is used to define queries to the WikiData knowledge database. 
@@ -809,6 +812,7 @@ This really is the best PDF management system I've ever used.
     (setq-default pdf-view-display-size 'fit-width)
     (setq pdf-annot-activate-created-annotations t))
 #+END_SRC
+
 * Tramp
 
 #+BEGIN_SRC emacs-lisp
@@ -859,6 +863,7 @@ Because sometimes you have to look at python code that came from a person with u
 (use-package whitespace
   :bind ("s-<f10>" . whitespace-mode))
 #+END_SRC
+
 * Aggressive Indent Mode
 
 #+begin_src emacs-lisp
@@ -885,11 +890,11 @@ Dired configuration is split between =init.el= and this clause in =config.org=, 
 
 * Mail with mu4e
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
   (use-package mu4e
     :straight t
     ;; :defer 120
-    ;; :load-path "/usr/local/share/emacs/site-lisp/mu4e/"
+    :load-path "/usr/share/emacs/site-lisp/mu4e/"
 
     :config
     ;; this setting avoids mbsync problems
@@ -898,16 +903,17 @@ Dired configuration is split between =init.el= and this clause in =config.org=, 
     ;; update every 10 minutes
     (setq mu4e-update-interval (* 10 60))
     (setq mu4e-get-mail-command "mbsync -a")
-    (setq mu4e-mu-binary "/usr/local/bin/mu")
+    (setq mu4e-mu-binary "/usr/bin/mu")
     (setq mu4e-root-maildir "~/Mail/GMail/")
 
+    ;; Gmail folder structure
     (setq mu4e-drafts-folder "/[Gmail].Drafts")
     (setq mu4e-sent-folder "/[Gmail].Sent Mail")
     (setq mu4e-refile-folder "/[Gmail].All Mail")
     (setq mu4e-trash-folder "/[Gmail].Trash")
 
     (setq mu4e-headers-fields
-          '((:human-date .25)
+          '((:human-date . 25)
             (:flags . 6)
             (:from . 22)
             (:to . 22)
@@ -918,9 +924,7 @@ Dired configuration is split between =init.el= and this clause in =config.org=, 
             ("/[Gmail].Sent Mail"      . ?s)
             ("/[Gmail].Trash"          . ?t)
             ("/[Gmail].Drafts"         . ?d)
-            ("/[Gmail].All Mail"       . ?a)))
-
-    )
+            ("/[Gmail].All Mail"       . ?a))))
 #+end_src
 
 * Minor conveniences
@@ -987,6 +991,42 @@ your cursor will be briefly highlighted now.
 So... this is actually right up in the land of magic technology. I kind of can't believe how interesting it is.
 
 #+begin_src emacs-lisp
+
+  (use-package chatgpt-arcana
+    :straight (:host github :repo "CarlQLange/ChatGPT-Arcana.el" :files ("*.el"))
+    :init (setq chatgpt-arcana-api-key "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")
+    :config 
+    (use-package all-the-icons
+      :config
+      (add-to-list 'all-the-icons-mode-icon-alist
+                   '(chatgpt-arcana-chat-mode all-the-icons-octicon "comment-discussion" :height 1.0 :v-adjust -0.1 :face all-the-icons-purple)))
+
+    (use-package pretty-hydra
+      :straight t
+      :config
+      (eval `(pretty-hydra-define chatgpt-arcana-hydra (:color blue :quit-key "q" :title "ChatGPT Arcana")
+               ("Query"
+                (("a" chatgpt-arcana-query "Query")
+                 ("r" chatgpt-arcana-replace-region "Replace region"))
+                "Insert"
+                (("i" chatgpt-arcana-insert-at-point-with-context "At point with context")
+                 ("I" chatgpt-arcana-insert-at-point "At point")
+                 ("j" chatgpt-arcana-insert-after-region "Before region")
+                 ("J" chatgpt-arcana-insert-before-region "After region"))
+                "Chat"
+                (("c" chatgpt-arcana-start-chat "Start chat"))
+                "Shortcuts"
+                (,@(chatgpt-arcana-generate-prompt-shortcuts))))))
+
+    ;; (map! :leader
+    ;;       :prefix ("[" . "ChatGPT")
+    ;;       :desc "Start chat" :g "c" #'chatgpt-arcana-start-chat
+    ;;       :desc "Start chat" :g "[" #'chatgpt-arcana-start-chat
+    ;;       :desc "Open Hydra" :g "h" #'chatgpt-arcana-hydra/body)
+    )
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
   (use-package chatgpt
     :straight (:host github :repo "joshcho/ChatGPT.el" :files ("dist" "*.el"))
     :init

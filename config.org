@@ -750,7 +750,8 @@ Return to the subject of previous sessions fast quick.
 * VTerm
 #+begin_src emacs-lisp :tangle no
   (use-package vterm
-     :config
+    :straight t
+    :config
     (setq veterm-max-scrollback 10000))
 
 #+end_src

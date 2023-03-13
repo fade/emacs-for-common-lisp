@@ -995,7 +995,7 @@ So... this is actually right up in the land of magic technology. I kind of can't
 
   (use-package chatgpt-arcana
     :straight (:host github :repo "CarlQLange/ChatGPT-Arcana.el" :files ("*.el"))
-    :init (setq chatgpt-arcana-api-key "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")
+    :init (setq chatgpt-arcana-api-key "") ;; this key should be set in an environment variable.
     :config 
     (use-package all-the-icons
       :config

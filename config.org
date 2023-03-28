@@ -757,7 +757,7 @@ Return to the subject of previous sessions fast quick.
 #+end_src
 
 * VTerm
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
   (use-package vterm
     :straight t
     :config

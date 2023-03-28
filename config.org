@@ -1001,7 +1001,12 @@ your cursor will be briefly highlighted now.
 
 So... this is actually right up in the land of magic technology. I kind of can't believe how interesting it is.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
+  (use-package gptai
+    :straight t)
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
 
   (use-package chatgpt-arcana
     :straight (:host github :repo "CarlQLange/ChatGPT-Arcana.el" :files ("*.el"))

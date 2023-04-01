@@ -823,6 +823,13 @@ This really is the best PDF management system I've ever used.
     (setq pdf-annot-activate-created-annotations t))
 #+END_SRC
 
+* Epub support
+#+begin_src emacs-lisp
+  (use-package nov
+    :straight t
+    :config
+    (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
+#+end_src
 * Tramp
 
 #+BEGIN_SRC emacs-lisp
@@ -1001,9 +1008,12 @@ your cursor will be briefly highlighted now.
 
 So... this is actually right up in the land of magic technology. I kind of can't believe how interesting it is.
 
-#+begin_src emacs-lisp :tangle no
-  (use-package gptai
-    :straight t)
+#+begin_src emacs-lisp
+  (use-package gptel
+    :straight t
+    :config
+    (setf gptel-api-key (getenv "OPENAI_SECRET_KEY")
+          gptel-default-mode 'org-mode))
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
@@ -1406,7 +1416,6 @@ buffer navigation, but applies it to windows. The default keys are
   (use-package sly
     :load-path "~/SourceCode/lisp/sly"
     :straight t
-    :defer t
     :commands sly
     :bind ("C-c M-o" . sly-mrepl-clear-repl)
     :init
@@ -1424,7 +1433,6 @@ buffer navigation, but applies it to windows. The default keys are
             sly-net-coding-system 'utf-8-unix
             sly-complete-symbol*-fancy t
             common-lisp-hyperspec "~/SourceCode/lisp/HyperSpec"))
-
     :config
     (progn
       (require 'sly-autoloads)))
@@ -1828,8 +1836,6 @@ And here's how we tell Emacs which font we want.
                  :italic-family nil
                  :italic-slant italic
                  :line-spacing nil)))))
-
-
 #+END_SRC
 
 * Misc

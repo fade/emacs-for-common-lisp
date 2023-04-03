@@ -564,7 +564,6 @@ Pandoc converts between a huge number of different file formats.
 #+END_SRC
 
 *** LaTeX exporting
-
 I've had issues with getting BiBTeX to work correctly with the LaTeX
 exporter for PDF exporting. By changing the command to `latexmk`
 references appear in the PDF output like they should. Source:
@@ -580,6 +579,16 @@ exporting to html sometimes (always?) requires htmlize
 (use-package htmlize
   :straight t)
 #+END_SRC
+
+** [[https://github.com/weirdNox/org-noter][Org Noter]]
+create notes that are kept in sync when you scroll through the document, but that are external to it - the notes themselves live in an Org-mode file. 
+#+begin_src emacs-lisp
+  (use-package org-noter
+    :straight t)
+
+  (use-package org-noter-pdftools
+    :straight t)
+#+end_src
 * Hydra
 Hail Hydra!
 #+begin_src emacs-lisp
@@ -817,11 +826,14 @@ This really is the best PDF management system I've ever used.
 
 #+BEGIN_SRC emacs-lisp
   (use-package pdf-tools
-    :ensure t
+    :straight t
     :config
     ;; (pdf-tools-install)
     (setq-default pdf-view-display-size 'fit-width)
     (setq pdf-annot-activate-created-annotations t))
+
+  (use-package org-pdftools
+    :straight t)
 #+END_SRC
 
 * Epub support
@@ -1490,12 +1502,24 @@ I spend almost all of my time in emacs writing common lisp code, and in that end
 
       ;;; globally in every buffer and mode check if paredit-RET was called in
       ;;; the repl buffer and call sly-mrepl-return
-      (advice-add 'paredit-RET
-                  :after
-                  (lambda ()
-                    (when (string-prefix-p "*sly-mrepl for"
-                                           (buffer-name (current-buffer)))
-                      (sly-mrepl-return))))))
+      ;; (advice-add 'paredit-RET
+      ;;             :after
+      ;;             (lambda ()
+      ;;               (when (string-prefix-p "*sly-mrepl for"
+      ;;                                      (buffer-name (current-buffer)))
+      ;;                 (sly-mrepl-return))))
+    
+      ;; the above advice 'leaks' into common-lisp buffers. This
+      ;; configuration throws #'paredit-newline onto C-j and unmaps
+      ;; return in the paredit-mode-map.
+
+      (keymap-set paredit-mode-map "C-j"
+                  (defun +paredit-newline ()
+                    (interactive)
+                    (call-interactively
+                     (if (derived-mode-p 'lisp-interaction-mode)
+                         #'eval-print-last-sexp #'paredit-newline))))
+      (keymap-unset paredit-mode-map "RET" t)))
 #+END_SRC
 
 ** Hashicorp Configuration Language

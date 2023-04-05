@@ -827,13 +827,18 @@ This really is the best PDF management system I've ever used.
 #+BEGIN_SRC emacs-lisp
   (use-package pdf-tools
     :straight t
+    :commands (pdf-vew-modepdf-tools-install)
+    :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
+    :magic ("%PDF" . pdf-view-mode)
     :config
-    ;; (pdf-tools-install)
+    (pdf-tools-install)
+    (define-pdf-cache-function pagelabels)
     (setq-default pdf-view-display-size 'fit-width)
     (setq pdf-annot-activate-created-annotations t))
 
   (use-package org-pdftools
-    :straight t)
+    :straight t
+    :hook (org-load-hook . org-pdftools-setup-link))
 #+END_SRC
 
 * Epub support
@@ -1626,7 +1631,6 @@ I spend almost all of my time in emacs writing common lisp code, and in that end
   #+END_SRC
   
 *** Skewer
-
     I also configure Skewer for my [[file:emacs-web.org][HTML and CSS]] files, we need to do the
     same for JavaScript:
 
@@ -1641,6 +1645,7 @@ I spend almost all of my time in emacs writing common lisp code, and in that end
    * C-x C-e :: `skewer-eval-last-expression'
    * C-M-x   :: `skewer-eval-defun'
    * C-c C-k :: `skewer-load-buffer'
+
 ** Python
 Integrates with IPython., using elpy jedi, and virtualenvwrapper.
 
@@ -1719,21 +1724,18 @@ Integrates with IPython., using elpy jedi, and virtualenvwrapper.
 #+END_SRC
 
 * Highlight line containing the point
-
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
   (when window-system (add-hook 'prog-mode-hook 'hl-line-mode))
 
   (defadvice hl-line-mode (after
                            dino-advise-hl-line-mode
                            activate compile)
+
     (set-face-attribute 'hl-line nil
                         :inherit nil
                         :background (face-background 'highlight))
-    (set-face-background hl-line-face "#0f0f0f"))
+    (set-face-background hl-line-face "#191970"))
 #+END_SRC
-
-#+RESULTS:
-: hl-line-mode
 
 * Rainbow
    

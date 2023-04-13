@@ -1734,7 +1734,7 @@ Integrates with IPython., using elpy jedi, and virtualenvwrapper.
     (set-face-attribute 'hl-line nil
                         :inherit nil
                         :background (face-background 'highlight))
-    (set-face-background hl-line-face "#191970"))
+    (set-face-background hl-line-face "#1a1a1a"))
 #+END_SRC
 
 * Rainbow
@@ -1754,10 +1754,10 @@ lot cooler than you may think.
 #+END_SRC
 * Theme
 ** Emacs' startup screen is naf
-
 #+BEGIN_SRC emacs-lisp
 (setq inhibit-startup-message t)
 #+END_SRC
+
 ** Colours On Terminal
    custom colour themes generally enhance my experience of writing
    inside emacs, but when that theme is applied to an instance running
@@ -1776,6 +1776,7 @@ lot cooler than you may think.
 
 #+RESULTS:
 : t
+*
 ** DeepSky Theme
 
    Load the appropriate theme, and a utility for arbitrarily loading
@@ -1819,10 +1820,8 @@ lot cooler than you may think.
 
 
 * Font
-And here's how we tell Emacs which font we want.
-
+And here's how we tell Emacs which font we want. See [[https://protesilaos.com/emacs/fontaine][the Fontaine manual.]]
 #+BEGIN_SRC emacs-lisp
-
   (if window-system
       ;; (progn
       ;;   (add-to-list 'default-frame-alist '(font . "Envy Code R"))

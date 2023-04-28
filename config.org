@@ -907,7 +907,7 @@ Because sometimes you have to look at python code that came from a person with u
     :config
     (global-aggressive-indent-mode 1)
     ;; (add-to-list 'aggressive-indent-excluded-modes 'html-mode)
-    (add-to-list 'aggressive-indent-excluded-modes 'lisp-mode)
+    ;; (add-to-list 'aggressive-indent-excluded-modes 'lisp-mode)
     (add-to-list 'aggressive-indent-excluded-modes 'python-mode))
 #+end_src
 
@@ -1424,7 +1424,6 @@ buffer navigation, but applies it to windows. The default keys are
 
 #+END_SRC
 
-
 * Languages
 ** Common Lisp
 *** SLY
@@ -1439,21 +1438,23 @@ buffer navigation, but applies it to windows. The default keys are
     :init
     (progn
       (setq sly-lisp-implementations
-	    '((sbcl ("/usr/local/bin/sbcl" "--dynamic-space-size" "2500"))
-	      ;; (ccl ("/usr/bin/ros" "-L" "ccl-bin" "run"))
-	      (ccl ("/usr/local/bin/ccl"))
-	      (abcl ("/usr/local/src/abcl/abcl"))
-	      (clisp ("/usr/bin/clisp"))
-	      (ecl ("/usr/local/bin/ecl"))
-	      (decl ("/usr/bin/ecl"))))
+            '((sbcl ("/usr/local/bin/sbcl" "--dynamic-space-size" "2500"))
+              ;; (ccl ("/usr/bin/ros" "-L" "ccl-bin" "run"))
+              (ccl ("/usr/local/bin/ccl"))
+              (abcl ("/usr/local/src/abcl/abcl"))
+              (clisp ("/usr/bin/clisp"))
+              (ecl ("/usr/local/bin/ecl"))
+              (decl ("/usr/bin/ecl"))))
 
       (setq sly-kill-without-query-p t
-	    sly-net-coding-system 'utf-8-unix
-	    sly-complete-symbol*-fancy t
-	    common-lisp-hyperspec "~/SourceCode/lisp/HyperSpec"))
+            sly-net-coding-system 'utf-8-unix
+            sly-complete-symbol*-fancy t
+            common-lisp-hyperspec "~/SourceCode/lisp/HyperSpec"))
     :config
     (progn
-      (require 'sly-autoloads)))
+      (require 'sly-autoloads)
+      (load "~/quicklisp/log4sly-setup.el")
+      (global-log4sly-mode 1)))
 
   (use-package sly-asdf
     ;; :load-path "~/SourceCode/lisp/sly-asdf"
@@ -1502,8 +1503,8 @@ I spend almost all of my time in emacs writing common lisp code, and in that end
       ;; (add-hook 'slime-repl-mode-hook       #'enable-paredit-mode)
       (add-hook 'sly-mrepl-mode-hook        #'enable-paredit-mode)
       ;; (add-hook 'slime-mode-hook            #'enable-paredit-mode)
-      ;; (add-hook 'clojure-mode-hook          #'enable-paredit-mode)
-      ;; (add-hook 'cider-repl-mode-hook       #'enable-paredit-mode)
+      (add-hook 'clojure-mode-hook          #'enable-paredit-mode)
+      (add-hook 'cider-repl-mode-hook       #'enable-paredit-mode)
 
       ;;; globally in every buffer and mode check if paredit-RET was called in
       ;;; the repl buffer and call sly-mrepl-return
@@ -1513,7 +1514,7 @@ I spend almost all of my time in emacs writing common lisp code, and in that end
       ;;               (when (string-prefix-p "*sly-mrepl for"
       ;;                                      (buffer-name (current-buffer)))
       ;;                 (sly-mrepl-return))))
-    
+
       ;; the above advice 'leaks' into common-lisp buffers. This
       ;; configuration throws #'paredit-newline onto C-j and unmaps
       ;; return in the paredit-mode-map.
@@ -1525,6 +1526,7 @@ I spend almost all of my time in emacs writing common lisp code, and in that end
                      (if (derived-mode-p 'lisp-interaction-mode)
                          #'eval-print-last-sexp #'paredit-newline))))
       (keymap-unset paredit-mode-map "RET" t)))
+
 #+END_SRC
 
 ** Hashicorp Configuration Language
@@ -1734,7 +1736,7 @@ Integrates with IPython., using elpy jedi, and virtualenvwrapper.
     (set-face-attribute 'hl-line nil
                         :inherit nil
                         :background (face-background 'highlight))
-    (set-face-background hl-line-face "#1a1a1a"))
+    (set-face-background hl-line-face "#141414"))
 #+END_SRC
 
 * Rainbow
@@ -1818,60 +1820,6 @@ lot cooler than you may think.
   (bind-key "s-<f11>" 'disable-active-themes)
 #+END_SRC
 
-
-* Font
-And here's how we tell Emacs which font we want. See [[https://protesilaos.com/emacs/fontaine][the Fontaine manual.]]
-#+BEGIN_SRC emacs-lisp
-  (if window-system
-      ;; (progn
-      ;;   (add-to-list 'default-frame-alist '(font . "Envy Code R"))
-      ;;   ;; (add-to-list 'default-frame-alist '(font . "Iosevka"))
-      ;;   (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 120 :weight 'regular)
-      ;;   (set-face-attribute 'default nil :font "Envy Code R" :height 120)
-      ;;   (set-face-attribute 'fixed-pitch nil :font "Envy Code R-11"))
-
-      (use-package fontaine
-        :straight t
-        :config
-        (setq fontaine-presets
-              '((tiny
-                 :default-family "Envy Code R"
-                 :default-height 70)
-                (small
-                 :default-family "Envy Code R"
-                 :default-height 90)
-                (regular
-                 :default-height 100)
-                (medium
-                 :default-height 110)
-                (large
-                 :default-weight semilight
-                 :default-height 140
-                 :bold-weight extrabold)
-                (presentation
-                 :default-weight semilight
-                 :default-height 170
-                 :bold-weight extrabold)
-                (t
-                 ;; I keep all properties for didactic purposes, but most can be
-                 ;; omitted.  See the fontaine manual for the technicalities:
-                 ;; <https://protesilaos.com/emacs/fontaine>.
-                 :default-family "Envy Code R"
-                 :default-weight regular
-                 :default-height 100
-                 :fixed-pitch-family nil ; falls back to :default-family
-                 :fixed-pitch-weight nil ; falls back to :default-weight
-                 :fixed-pitch-height 1.0
-                 :variable-pitch-family "Iosevka Duo"
-                 :variable-pitch-weight nil
-                 :variable-pitch-height 1.0
-                 :bold-family nil ; use whatever the underlying face has
-                 :bold-weight bold
-                 :italic-family nil
-                 :italic-slant italic
-                 :line-spacing nil)))))
-#+END_SRC
-
 * Misc
 ** Display Time
 
@@ -1928,4 +1876,56 @@ Convenience bindings to use doc-view with the arrow keys.
     (server-mode t))
 #+END_SRC
 
+* Font
+And here's how we tell Emacs which font we want. See [[https://protesilaos.com/emacs/fontaine][the Fontaine manual.]]
+#+BEGIN_SRC emacs-lisp
+  (if window-system
+      ;; (progn
+      ;;   (add-to-list 'default-frame-alist '(font . "Envy Code R"))
+      ;;   ;; (add-to-list 'default-frame-alist '(font . "Iosevka"))
+      ;;   (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 120 :weight 'regular)
+      ;;   (set-face-attribute 'default nil :font "Envy Code R" :height 120)
+      ;;   (set-face-attribute 'fixed-pitch nil :font "Envy Code R-11"))
+
+      (use-package fontaine
+        :straight t
+        :config
+        (setq fontaine-presets
+              '((tiny
+                 :default-family "Envy Code R"
+                 :default-height 70)
+                (small
+                 :default-family "Envy Code R"
+                 :default-height 90)
+                (regular
+                 :default-height 100)
+                (medium
+                 :default-height 110)
+                (large
+                 :default-weight semilight
+                 :default-height 140
+                 :bold-weight extrabold)
+                (presentation
+                 :default-weight semilight
+                 :default-height 170
+                 :bold-weight extrabold)
+                (t
+                 ;; I keep all properties for didactic purposes, but most can be
+                 ;; omitted.  See the fontaine manual for the technicalities:
+                 ;; <https://protesilaos.com/emacs/fontaine>.
+                 :default-family "Envy Code R"
+                 :default-weight regular
+                 :default-height 100
+                 :fixed-pitch-family nil ; falls back to :default-family
+                 :fixed-pitch-weight nil ; falls back to :default-weight
+                 :fixed-pitch-height 1.0
+                 :variable-pitch-family "Iosevka Duo"
+                 :variable-pitch-weight nil
+                 :variable-pitch-height 1.0
+                 :bold-family nil ; use whatever the underlying face has
+                 :bold-weight bold
+                 :italic-family nil
+                 :italic-slant italic
+                 :line-spacing nil)))))
+#+END_SRC
 

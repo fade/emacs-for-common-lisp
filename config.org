@@ -1006,11 +1006,15 @@ for your cursor. Unless you know its position, you can not move it
 efficiently. Every time you change buffers, the current position of
 your cursor will be briefly highlighted now.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
   (use-package beacon
     :straight t
     :config
-    (beacon-mode 1))
+    (beacon-mode 1)
+    :custom
+    (beacon-color "#00bfff")
+    (beacon-blink-when-buffer-changes nil))
+
 #+END_SRC
 
 * Vagrant
@@ -1142,7 +1146,7 @@ the =tldr= is:
 6. You can press =RET= on any word in the definitionto look ~that~ one
    up. This is an inescapable rabbit hole for people of a certain disposition.
 
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp :tangle no
   (use-package sdcv
     :straight t)
 #+end_src

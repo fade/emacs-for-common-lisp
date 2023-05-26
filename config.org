@@ -1084,6 +1084,7 @@ So... this is actually right up in the land of magic technology. I kind of can't
 #+end_src
 
 * Elisp packages
+
 ** Docker
 #+begin_src emacs-lisp
   (use-package docker
@@ -1330,6 +1331,16 @@ buffer navigation, but applies it to windows. The default keys are
         ag-reuse-buffers t))
 #+END_SRC
 
+** Ement
+This really is the best available client for matrix, and it's increasingly obvious that the young'uns won't be brought to IRC.
+#+begin_src emacs-lisp
+  (use-package ement
+    :straight t
+    :custom
+    (ement-room-prism 'both)
+    (ement-save-sessions t);; stores token to disk in plain text
+    (ement-room-send-message-filter 'ement-room-send-org-filter))
+#+end_src
 ** Completion
 
 #+begin_src emacs-lisp 

@@ -1339,7 +1339,8 @@ This really is the best available client for matrix, and it's increasingly obvio
     :custom
     (ement-room-prism 'both)
     (ement-save-sessions t);; stores token to disk in plain text
-    (ement-room-send-message-filter 'ement-room-send-org-filter))
+    (ement-room-send-message-filter 'ement-room-send-org-filter)
+    (ement-set-display-name "Fade"))
 #+end_src
 ** Completion
 

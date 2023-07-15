@@ -23,3 +23,13 @@
 /transient/
 /tree-sit-parsers/
 /tree-sit-repos/
+/.mc-lists.el
+/ac-comphist.dat
+/elpy/
+/forge-database.sqlite
+/nov-places
+/persist/
+/places
+/request/
+/tramp
+/url/

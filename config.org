@@ -171,28 +171,29 @@ The =efs/org-font-setup= function configures various text faces to tweak the siz
                             '(("^ *\\([-]\\) "
                                (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
     ;; Set faces for heading levels
-    (dolist (face '((org-level-1 . 1.2)
-                    (org-level-2 . 1.1)
-                    (org-level-3 . 1.05)
-                    (org-level-4 . 1.0)
-                    (org-level-5 . 1.1)
-                    (org-level-6 . 1.1)
-                    (org-level-7 . 1.1)
-                    (org-level-8 . 1.1)))
-      (when  (string-equal system-type "darwin")
-        (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face))
-        ;;(set-face-attribute (car face) nil :font "Droid Sans" :weight 'regular :height (cdr face))
-        )
+    ;; (dolist (face '((org-level-1 . 1.2)
+    ;;                 (org-level-2 . 1.1)
+    ;;                 (org-level-3 . 1.05)
+    ;;                 (org-level-4 . 1.0)
+    ;;                 (org-level-5 . 1.1)
+    ;;                 (org-level-6 . 1.1)
+    ;;                 (org-level-7 . 1.1)
+    ;;                 (org-level-8 . 1.1)))
+    ;;   (when  (string-equal system-type "darwin")
+    ;;     (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face))
+    ;;     ;;(set-face-attribute (car face) nil :font "Droid Sans" :weight 'regular :height (cdr face))
+    ;;     )
 
 
-      ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-      (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-      (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-      (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
-      (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-      (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-      (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-      (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)))
+    ;;   ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+    ;;   (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+    ;;   (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+    ;;   (set-face-attribute 'org-table nil   :inherit '(shadow fixed-pitch))
+    ;;   (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+    ;;   (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+    ;;   (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+    ;;   (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+    )
 
   (efs/org-font-setup)
 #+END_SRC
@@ -1843,12 +1844,15 @@ lot cooler than you may think.
    text console.
    
 #+BEGIN_SRC emacs-lisp
-(use-package color-theme-approximate
-  :ensure t
-  :config
-  (unless (display-graphic-p)
-    (autoload 'color-theme-approximate-on "color-theme-approximate")
-    (color-theme-approximate-on)))
+  (use-package color-theme-approximate
+    :ensure t
+    :config
+    (unless (display-graphic-p)
+      (autoload 'color-theme-approximate-on "color-theme-approximate")
+      (color-theme-approximate-on)))
+
+  (use-package ef-themes
+    :straight t)
 #+END_SRC
 
 #+RESULTS:
@@ -1955,54 +1959,54 @@ Convenience bindings to use doc-view with the arrow keys.
 And here's how we tell Emacs which font we want. See [[https://protesilaos.com/emacs/fontaine][the Fontaine manual.]]
 #+BEGIN_SRC emacs-lisp
   (if window-system
-      ;; (progn
-      ;;   (add-to-list 'default-frame-alist '(font . "Envy Code R"))
-      ;;   ;; (add-to-list 'default-frame-alist '(font . "Iosevka"))
-      ;;   (set-face-attribute 'variable-pitch nil :font "Cantarell" :height 120 :weight 'regular)
-      ;;   (set-face-attribute 'default nil :font "Envy Code R" :height 120)
-      ;;   (set-face-attribute 'fixed-pitch nil :font "Envy Code R-11"))
+      (progn
+        (add-to-list 'default-frame-alist '(font . "Envy Code R"))
+        ;; (add-to-list 'default-frame-alist '(font . "Iosevka"))
+        (set-face-attribute 'variable-pitch nil :font "Iosevka" :height 120 :weight 'regular)
+        (set-face-attribute 'default nil :font "Envy Code R" :height 120)
+        (set-face-attribute 'fixed-pitch nil :font "Envy Code R-11")
 
-      (use-package fontaine
-        :straight t
-        :config
-        (setq fontaine-presets
-              '((tiny
-                 :default-family "Envy Code R"
-                 :default-height 70)
-                (small
-                 :default-family "Envy Code R"
-                 :default-height 90)
-                (regular
-                 :default-family "Envy Code R"
-                 :default-height 100)
-                (medium
-                 :default-family "Envy Code R"
-                 :default-height 110)
-                (large
-                 :default-weight semilight
-                 :default-height 140
-                 :bold-weight extrabold)
-                (presentation
-                 :default-weight semilight
-                 :default-height 170
-                 :bold-weight extrabold)
-                (t
-                 ;; I keep all properties for didactic purposes, but most can be
-                 ;; omitted.  See the fontaine manual for the technicalities:
-                 ;; <https://protesilaos.com/emacs/fontaine>.
-                 :default-family "Envy Code R"
-                 :default-weight regular
-                 :default-height 100
-                 :fixed-pitch-family nil ; falls back to :default-family
-                 :fixed-pitch-weight nil ; falls back to :default-weight
-                 :fixed-pitch-height 1.0
-                 :variable-pitch-family "Iosevka Duo"
-                 :variable-pitch-weight nil
-                 :variable-pitch-height 1.0
-                 :bold-family nil ; use whatever the underlying face has
-                 :bold-weight bold
-                 :italic-family nil
-                 :italic-slant italic
-                 :line-spacing nil)))))
+        (use-package fontaine
+          :straight t
+          :config
+          (setq fontaine-presets
+                '((tiny
+                   :default-family "Envy Code R"
+                   :default-height 70)
+                  (small
+                   :default-family "Envy Code R"
+                   :default-height 90)
+                  (regular
+                   :default-family "Envy Code R"
+                   :default-height 100)
+                  (medium
+                   :default-family "Envy Code R"
+                   :default-height 110)
+                  (large
+                   :default-weight semilight
+                   :default-height 140
+                   :bold-weight extrabold)
+                  (presentation
+                   :default-weight semilight
+                   :default-height 170
+                   :bold-weight extrabold)
+                  (t
+                   ;; I keep all properties for didactic purposes, but most can be
+                   ;; omitted.  See the fontaine manual for the technicalities:
+                   ;; <https://protesilaos.com/emacs/fontaine>.
+                   :default-family "Envy Code R"
+                   :default-weight regular
+                   :default-height 100
+                   :fixed-pitch-family nil ; falls back to :default-family
+                   :fixed-pitch-weight nil ; falls back to :default-weight
+                   :fixed-pitch-height 1.0
+                   :variable-pitch-family "Iosevka Duo"
+                   :variable-pitch-weight nil
+                   :variable-pitch-height 1.0
+                   :bold-family nil ; use whatever the underlying face has
+                   :bold-weight bold
+                   :italic-family nil
+                   :italic-slant italic
+                   :line-spacing nil))))))
 #+END_SRC
 

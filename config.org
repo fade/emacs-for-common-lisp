@@ -34,6 +34,17 @@ The diminish package appears to have been subsumed into the Crux package by Bodi
   :ensure t)
 #+END_SRC
 
+#+begin_src emacs-lisp
+  (use-package no-littering
+    :straight t
+    :custom
+    (no-littering-etc-directory
+     (expand-file-name "config/" user-emacs-directory))
+    (no-littering-var-directory
+     (expand-file-name "data/" user-emacs-directory))
+    (require 'no-littering))
+#+end_src
+
 #+BEGIN_SRC emacs-lisp
   ;; These functions are useful. Activate them. This use of #'put is
   ;; strange, but this feature uses symbol properties.
@@ -88,6 +99,9 @@ The diminish package appears to have been subsumed into the Crux package by Bodi
   (add-hook 'after-save-hook
             'executable-make-buffer-file-executable-if-script-p)
 #+END_SRC
+
+#+RESULTS:
+| executable-make-buffer-file-executable-if-script-p |
 
 The following function for ~occur-dwim~ is taken from [[https://github.com/abo-abo][Oleh Krehel]] from
 [[http://oremacs.com/2015/01/26/occur-dwim/][his blog post at (or emacs irrelevant)]]. It takes the current region or
@@ -285,7 +299,8 @@ Learned about [[https://github.com/sachac/.emacs.d/blob/83d21e473368adb1f63e582a
 ** Org Web Tools
 #+begin_src emacs-lisp
   (use-package org-web-tools
-    :straight t)
+    :straight t
+    :load-path "~/SourceCode/lisp/emacs_stuff/packages-projects/org-web-tools")
 
 #+end_src
 ** Org Roam
@@ -943,8 +958,8 @@ Dired configuration is split between =init.el= and this clause in =config.org=, 
       (use-package mu4e
         :straight t
         ;; :defer 120
-        :load-path "/usr/share/emacs/site-lisp/mu4e/"
-
+        :load-path "/usr/local/share/emacs/site-lisp/mu4e"
+        
         :config
         ;; this setting avoids mbsync problems
         (setq mu4e-change-filenames-when-moving t)
@@ -952,7 +967,7 @@ Dired configuration is split between =init.el= and this clause in =config.org=, 
         ;; update every 10 minutes
         (setq mu4e-update-interval (* 10 60))
         (setq mu4e-get-mail-command "mbsync -a")
-        (setq mu4e-mu-binary "/usr/bin/mu")
+        (setq mu4e-mu-binary "/usr/local/bin/mu")
         (setq mu4e-root-maildir "~/Mail/GMail/")
 
         ;; Gmail folder structure
@@ -973,7 +988,12 @@ Dired configuration is split between =init.el= and this clause in =config.org=, 
                 ("/[Gmail].Sent Mail"      . ?s)
                 ("/[Gmail].Trash"          . ?t)
                 ("/[Gmail].Drafts"         . ?d)
-                ("/[Gmail].All Mail"       . ?a)))))
+                ("/[Gmail].All Mail"       . ?a)))
+        ))
+
+  ;; (setq (smtpmail-smtp-server . "smtp.gmail.com")
+  ;;       (smtpmail-smtp-service . 465)
+  ;;       (smtpmail-stream-type . ssl))
 #+end_src
 
 * Minor conveniences
@@ -1383,10 +1403,18 @@ This really is the best available client for matrix, and it's increasingly obvio
     (vertico-mode))
 
   ;; this will put most recent items at the top of any given vertico selection.
+  ;; (use-package savehist
+  ;;   :straight t
+  ;;   :init
+  ;;   (savehist-mode))
+
   (use-package savehist
     :straight t
-    :init
-    (savehist-mode))
+    :hook (after-init . savehist-mode)
+    :custom
+    (savehist-autosave-interval 60)
+    (savehist-file (no-littering-expand-var-file-name "savehist"))
+    (savehist-ignored-variables '(ement-room-message-history)))
 
   ;; completion selection (narrowing) enhancements.
   (use-package consult
@@ -1962,7 +1990,7 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
       (progn
         (add-to-list 'default-frame-alist '(font . "Envy Code R"))
         ;; (add-to-list 'default-frame-alist '(font . "Iosevka"))
-        (set-face-attribute 'variable-pitch nil :font "Iosevka" :height 120 :weight 'regular)
+        (set-face-attribute 'variable-pitch nil :font "Iosevka Comfy Duo" :height 120 :weight 'regular)
         (set-face-attribute 'default nil :font "Envy Code R" :height 120)
         (set-face-attribute 'fixed-pitch nil :font "Envy Code R-11")
 
@@ -2000,7 +2028,7 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
                    :fixed-pitch-family nil ; falls back to :default-family
                    :fixed-pitch-weight nil ; falls back to :default-weight
                    :fixed-pitch-height 1.0
-                   :variable-pitch-family "Iosevka Duo"
+                   :variable-pitch-family "Iosevka Comfy Duo"
                    :variable-pitch-weight nil
                    :variable-pitch-height 1.0
                    :bold-family nil ; use whatever the underlying face has

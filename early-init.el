@@ -1,3 +1,3 @@
 
-(defvar run-email nil)
+(defvar run-email t)
 

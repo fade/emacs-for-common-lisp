@@ -30,7 +30,7 @@
 
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("ELPA"  . "http://tromey.com/elpa/")
-			 ("gnu"   . "http://elpa.gnu.org/packages/"))) ;;("org"   . "https://orgmode.org/elpa/")
+			 ("gnu"   . "http://elpa.gnu.org/packages/"))) 
 
 (package-initialize)
 

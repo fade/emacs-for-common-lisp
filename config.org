@@ -885,7 +885,7 @@ This really is the best PDF management system I've ever used.
     :ensure t
     :config
     ;; tramp hangs when remote has 'weird' prompt. Check in for this terminal type.
-    (setf tramp-terminal-type "tramp")
+    (setf tramp-terminal-type "dumb")
     (add-to-list 'tramp-connection-properties
                  (list (regexp-quote "/ssh:fade@deepsky.com:")
                        "remote-shell" "/bin/sh"))) 

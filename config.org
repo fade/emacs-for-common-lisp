@@ -1413,11 +1413,6 @@ This really is the best available client for matrix, and it's increasingly obvio
     (vertico-mode))
 
   ;; this will put most recent items at the top of any given vertico selection.
-  ;; (use-package savehist
-  ;;   :straight t
-  ;;   :init
-  ;;   (savehist-mode))
-
   (use-package savehist
     :straight t
     :hook (after-init . savehist-mode)

@@ -1426,6 +1426,10 @@ This really is the best available client for matrix, and it's increasingly obvio
     ("C-s" . consult-line)
     ("s-s s" . consult-ripgrep))
 
+  ;; consult conveniences around notes and note-taking.
+  (use-package consult-notes
+    :straight t)
+
   ;; this is a completion style, which defines how we match against input.
   (use-package orderless
     :straight t

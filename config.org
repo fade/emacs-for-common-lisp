@@ -380,7 +380,8 @@ Set up some global key bindings that integrate with Org Mode features.
 
 ** Center Org Buffers
 
-[[https://github.com/joostkremers/visual-fill-column][visual-fill-column]] will center =org-mode= buffers. This gives a more pleasing effect when writing long documents in natural languages.
+[[https://github.com/joostkremers/visual-fill-column][visual-fill-column]] will center =org-mode= buffers. This gives a more
+pleasing effect when writing long documents in natural languages.
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (defun efs/org-mode-visual-fill ()
@@ -395,7 +396,8 @@ Set up some global key bindings that integrate with Org Mode features.
 #+END_SRC
 
 ** Org Bullets
-Makes it all look a bit nicer, I hate looking at asterisks.  Also, see =org-mode-setup= configuration function at the top of this file.
+Makes it all look a bit nicer, I hate looking at asterisks. Also, see
+=org-mode-setup= configuration function at the top of this file.
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-bullets

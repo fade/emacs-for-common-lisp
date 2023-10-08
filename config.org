@@ -8,7 +8,6 @@
 * Personal Information
 
 Obviously, you'll want to change this to match your personal credentials.
-
 #+BEGIN_SRC emacs-lisp 
   (setq user-full-name "Brian O'Reilly"
 	user-mail-address "fade@deepsky.com")
@@ -313,10 +312,8 @@ Learned about [[https://github.com/sachac/.emacs.d/blob/83d21e473368adb1f63e582a
 
   (use-package org-roam
     :straight t
-
     :init
     (setq org-roam-v2-ack t)
-
     :config
     (setf org-roam-directory (expand-file-name "Roam/" site-org-files))
     (setf org-roam-dailies-directory (expand-file-name "Dailies/" org-roam-directory))
@@ -352,10 +349,6 @@ Learned about [[https://github.com/sachac/.emacs.d/blob/83d21e473368adb1f63e582a
           org-roam-ui-follow t
           org-roam-ui-update-on-save t
           org-roam-ui-open-on-start t))
-
-  ;; (use-package org-roam-server
-  ;;   :ensure t
-  ;;   :after org-roam)
 
 #+END_SRC
 

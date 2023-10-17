@@ -24,6 +24,11 @@
 (add-to-list 'custom-theme-load-path
              (expand-file-name "themes/" "~/SourceCode/lisp/emacs_stuff/"))
 
+;; where we hold transient saves and other such data
+
+(files--ensure-directory (expand-file-name "config/" user-emacs-directory))
+(files--ensure-directory (expand-file-name "data/" user-emacs-directory))
+
 
 ;;; Set up package
 (require 'package)

@@ -612,6 +612,7 @@ create notes that are kept in sync when you scroll through the document, but tha
   (use-package org-noter-pdftools
     :straight t)
 #+end_src
+
 * Buffer by Projects
 I would like to have buffers grouped by project, so navigating the
 buffers isn't so cluttered even in the presence of vertico.
@@ -620,6 +621,7 @@ alphapapa's bufler mode looks to solve this problem.
   (use-package bufler
     :straight t)
 #+end_src
+
 * Hydra
 Hail Hydra!
 #+begin_src emacs-lisp

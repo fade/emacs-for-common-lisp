@@ -673,7 +673,6 @@ alphapapa's bufler mode looks to solve this problem.
     :straight t)
 #+end_src
 
-
 * Default web browser
 Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.org][dakrone/eos at github]].
 #+BEGIN_SRC emacs-lisp
@@ -1681,6 +1680,31 @@ I spend almost all of my time in emacs writing common lisp code, and in that end
     :straight t
     :after terraform-mode)
 #+END_SRC
+** YAML mode
+#+BEGIN_SRC emacs-lisp
+(use-package yaml-mode
+  :ensure t
+  :defer t
+  :config
+  (add-hook 'yaml-mode-hook '(lambda () (ansible 1))))
+#+END_SRC
+** Ansible
+#+BEGIN_SRC emacs-lisp
+  (use-package ansible
+    :ensure t
+    ;; :load-path "~/SourceCode/lisp/emacs_stuff/emacs-ansible"
+    :defer t
+    :config
+    (use-package ansible-doc
+    :ensure t
+    :defer t)
+    (use-package ansible-vault
+      :ensure t
+      :defer t)
+    (use-package company-ansible
+      :ensure t
+      :defer t))
+#+END_SRC
 
 ** JavaScript
   #+BEGIN_SRC elisp 
@@ -1823,31 +1847,6 @@ Integrates with IPython., using elpy jedi, and virtualenvwrapper.
     :defer t
     :config
     (setq venv-location "~/.virtualenvs"))
-#+END_SRC
-** YAML mode
-#+BEGIN_SRC emacs-lisp
-(use-package yaml-mode
-  :ensure t
-  :defer t
-  :config
-  (add-hook 'yaml-mode-hook '(lambda () (ansible 1))))
-#+END_SRC
-** Ansible
-#+BEGIN_SRC emacs-lisp
-  (use-package ansible
-    :ensure t
-    ;; :load-path "~/SourceCode/lisp/emacs_stuff/emacs-ansible"
-    :defer t
-    :config
-    (use-package ansible-doc
-    :ensure t
-    :defer t)
-    (use-package ansible-vault
-      :ensure t
-      :defer t)
-    (use-package company-ansible
-      :ensure t
-      :defer t))
 #+END_SRC
 ** Typescript mode
 

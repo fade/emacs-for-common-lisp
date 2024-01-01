@@ -1013,8 +1013,10 @@ Quickly edit =~/.emacs.d/config.org=. The Emacs way being the Emacs way, this sp
 
 #+BEGIN_SRC emacs-lisp
   (defun config-visit ()
+    "Visits the org containing Emacs' literate config."
     (interactive)
     (find-file "~/.emacs.d/config.org"))
+
   (global-set-key (kbd "C-c e") 'config-visit)
 #+END_SRC
 
@@ -1567,7 +1569,7 @@ This really is the best available client for matrix, and it's increasingly obvio
     :straight t
     :commands sly
     :bind ("C-c M-o" . sly-mrepl-clear-repl)
-        
+    
     :config
     (progn
       (setf sly-lisp-implementations

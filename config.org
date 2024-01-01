@@ -1585,11 +1585,14 @@ This really is the best available client for matrix, and it's increasingly obvio
             sly-net-coding-system 'utf-8-unix
             sly-complete-symbol*-fancy t
             sly-default-lisp 'sbcl
-            common-lisp-hyperspec "~/SourceCode/lisp/HyperSpec")
+            common-lisp-hyperspec-root "file:///home/fade/SourceCode/lisp/HyperSpec/")
 
       (require 'sly-autoloads)
       (load "~/quicklisp/log4sly-setup.el")
       (global-log4sly-mode 1)))
+
+  (eval-after-load 'sly
+    `(define-key sly-prefix-map (kbd "M-h") 'sly-documentation-lookup))
 
   (use-package sly-asdf
     ;; :load-path "~/SourceCode/lisp/sly-asdf"

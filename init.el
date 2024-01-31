@@ -24,10 +24,16 @@
 (add-to-list 'custom-theme-load-path
              (expand-file-name "themes/" "~/SourceCode/lisp/emacs_stuff/"))
 
-;; where we hold transient saves and other such data
+;; where we hold transient saves and other such data. The arity of
+;; files--ensure-directory changed from emacs29 to emacs30.
 
-(files--ensure-directory (expand-file-name "config/" user-emacs-directory))
-(files--ensure-directory (expand-file-name "data/" user-emacs-directory))
+(if (version<= emacs-version "29.2")
+    (progn
+      (files--ensure-directory 'make-directory-internal (expand-file-name "config/" user-emacs-directory))
+      (files--ensure-directory 'make-directory-internal (expand-file-name "data/" user-emacs-directory)))
+  (progn
+    (files--ensure-directory (expand-file-name "config/" user-emacs-directory))
+    (files--ensure-directory (expand-file-name "data/" user-emacs-directory))))
 
 
 ;;; Set up package

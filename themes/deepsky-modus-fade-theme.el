@@ -113,8 +113,8 @@ between foreground and background is >= 7:1)."
 (custom-theme-set-faces
  'deepsky-modus-fade
  '(default
-    ((t (:family "Envy Code R" :foundry "ENVY" :slant normal :weight normal :height 120 :width normal
-                 :foreground "white" :background "black"))))
+   ((t (:family "Envy Code R" :foundry "ENVY" :slant normal :weight normal :height 120 :width normal
+                :foreground "white" :background "black"))))
  '(cursor ((((class color) (min-colors 89)) :background "#ffffff")))
  '(fixed-pitch ((t (:family "Monospace"))))
  '(variable-pitch ((((type w32)) (:foundry "outline" :family "Arial")) (t (:family "Sans Serif"))))
@@ -126,6 +126,7 @@ between foreground and background is >= 7:1)."
  '(shadow ((((class color) (min-colors 89)) :foreground "#a8a8a8")))
  '(secondary-selection ((((class color) (min-colors 89)) :inherit deepsky-theme-special-cold)))
  '(trailing-whitespace ((((class color) (min-colors 89)) :background "#a4202a")))
+
  ;;; fontlock faces
  
  '(font-lock-builtin-face ((t (:foreground "#Ffa500"))))
@@ -143,7 +144,9 @@ between foreground and background is >= 7:1)."
  '(font-lock-type-face ((t (nil))))
  '(font-lock-variable-name-face ((t (:foreground "cyan"))))
  '(font-lock-warning-face ((t (:bold t :foreground "Red" :weight bold))))
+
 ;;; /fontlock faces
+
  '(button ((((class color) (min-colors 89)) :foreground "#00bcff" :underline t)))
  '(link ((((class color) (min-colors 89)) :inherit button)))
  '(link-visited ((((class color) (min-colors 89)) :inherit button :foreground "#b6a0ff")))

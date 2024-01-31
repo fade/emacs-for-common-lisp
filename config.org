@@ -7,14 +7,21 @@
 
 * Personal Information
 
-Obviously, you'll want to change this to match your personal credentials.
+Obviously, you'll want to change this to match your personal
+credentials.
 #+BEGIN_SRC emacs-lisp 
   (setq user-full-name "Brian O'Reilly"
 	user-mail-address "fade@deepsky.com")
 #+END_SRC
 
 * Which Key
-[[https://github.com/justbur/emacs-which-key][which-key]] is a useful UI panel that appears when you start pressing any key binding in Emacs to offer you all possible completions for the prefix.  For example, if you press =C-c= (hold control and press the letter =c=), a panel will appear at the bottom of the frame displaying all of the bindings under that prefix and which command they run.  This is very useful for learning the possible key bindings in the mode of your current buffer.
+[[https://github.com/justbur/emacs-which-key][which-key]] is a useful UI panel that appears when you start pressing
+any key binding in Emacs to offer you all possible completions for the
+prefix. For example, if you press =C-c= (hold control and press the
+letter =c=), a panel will appear at the bottom of the frame displaying
+all of the bindings under that prefix and which command they run. This
+is very useful for learning the possible key bindings in the mode of
+your current buffer.
 
   #+BEGIN_SRC emacs-lisp 
     (use-package which-key
@@ -27,7 +34,8 @@ Obviously, you'll want to change this to match your personal credentials.
 * Sane defaults
 Sources for this section include [[https://github.com/magnars/.emacs.d/blob/master/settings/sane-defaults.el][Magnar Sveen]] and [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha Chua]].
 
-The diminish package appears to have been subsumed into the Crux package by Bodizar Bhatzov. 
+The diminish package appears to have been subsumed into the Crux
+package by Bodizar Bhatzov.
 #+BEGIN_SRC emacs-lisp
 (use-package diminish
   :ensure t)
@@ -153,15 +161,26 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
 
 * Org mode
 
-Org mode is one of the killer applications that run inside Emacs. It turns plain text into data that can be used for computation. Often, that computation takes the form of making lists and organising your life, but it can be anything you can conceive that is ultimately computable. 
+Org mode is one of the killer applications that run inside Emacs. It
+turns plain text into data that can be used for computation. Often,
+that computation takes the form of making lists and organising your
+life, but it can be anything you can conceive that is ultimately
+computable.
 
 It goes without saying that I also use it to manage my Emacs config.
 
 ** Installation
 
-Although Org mode ships with Emacs, the latest version can be installed externally. The configuration here follows the [[http://orgmode.org/elpa.html][Org mode ELPA installation instructions]].
+Although Org mode ships with Emacs, the latest version can be
+installed externally. The configuration here follows the [[http://orgmode.org/elpa.html][Org mode ELPA
+installation instructions]].
 
-Org mode is currently being installed right after use-package is initialised in =init.el=. It must be configured immediately, particularly if the package is being provided via the =straight= package manager, or you can get peculiar errors tangling this configuration file, and also when you enter an org file of any kind, where the configuration around faces and org functions just doesn't work.
+Org mode is currently being installed right after use-package is
+initialised in =init.el=. It must be configured immediately,
+particularly if the package is being provided via the =straight= package
+manager, or you can get peculiar errors tangling this configuration
+file, and also when you enter an org file of any kind, where the
+configuration around faces and org functions just doesn't work.
 
 On Org mode version 9 I wasn't able to execute source blocks out of
 the box. [[https://emacs.stackexchange.com/a/28604][Others have run into the same issue too]]. The solution is to
@@ -175,7 +194,11 @@ remove the .elc files from the package directory:
 
 ** Better Font Faces
 
-The =efs/org-font-setup= function configures various text faces to tweak the sizes of headings and use variable width fonts in most cases so that it looks more like we're editing a document in =org-mode=.  We switch back to fixed width (monospace) fonts for code blocks and tables so that they display correctly.
+The =efs/org-font-setup= function configures various text faces to tweak
+the sizes of headings and use variable width fonts in most cases so
+that it looks more like we're editing a document in =org-mode=. We
+switch back to fixed width (monospace) fonts for code blocks and
+tables so that they display correctly.
 
 #+BEGIN_SRC emacs-lisp
   (defun efs/org-font-setup ()
@@ -243,7 +266,10 @@ speed keys in Org mode]].
 
 ** Org Tables .. Extended functionality
 
-This package is useful when you have a lot of data in various org tables in a given document, and you want to drop it into a table that synthesizes various pieces of data from the other tables, with or without additional processing.
+This package is useful when you have a lot of data in various org
+tables in a given document, and you want to drop it into a table that
+synthesizes various pieces of data from the other tables, with or
+without additional processing.
 #+begin_src emacs-lisp
   (use-package orgtbl-aggregate
     :straight t
@@ -265,7 +291,10 @@ This package is useful when you have a lot of data in various org tables in a gi
 
 ** Org agenda
 
-Learned about [[https://github.com/sachac/.emacs.d/blob/83d21e473368adb1f63e582a6595450fcd0e787c/Sacha.org#org-agenda][this =delq= and =mapcar= trick from Sacha Chua's config]]. This form will add the agenda file to the org-agenda-files list if the file actually exists at the place indicated. Remember to touch the file if you change this list.
+Learned about [[https://github.com/sachac/.emacs.d/blob/83d21e473368adb1f63e582a6595450fcd0e787c/Sacha.org#org-agenda][this =delq= and =mapcar= trick from Sacha Chua's config]].
+This form will add the agenda file to the org-agenda-files list if the
+file actually exists at the place indicated. Remember to touch the
+file if you change this list.
 
 #+BEGIN_SRC emacs-lisp
   (setq org-agenda-files
@@ -604,7 +633,9 @@ exporting to html sometimes (always?) requires htmlize
 #+END_SRC
 
 ** [[https://github.com/weirdNox/org-noter][Org Noter]]
-create notes that are kept in sync when you scroll through the document, but that are external to it - the notes themselves live in an Org-mode file. 
+create notes that are kept in sync when you scroll through the
+document, but that are external to it - the notes themselves live in
+an Org-mode file.
 #+begin_src emacs-lisp
   (use-package org-noter
     :straight t)
@@ -790,14 +821,37 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
 * Dashboard
 Return to the subject of previous sessions fast quick.
 #+begin_src emacs-lisp
+
+  ;; Function to get a random file with specified extensions from a directory
+  (defun get-random-file (directory)
+    (interactive)
+    (let* ((allowed-extensions '(".png" ".svg" ".jpg" ".gif"))
+           (filtered-files (directory-files directory t (regexp-opt allowed-extensions))))
+      (if filtered-files
+          (nth (random (length filtered-files)) filtered-files)
+        (progn
+          (message "Error: No supported files found in %s" directory)
+          nil))))
+
+  ;; Function to set a random picture as the startup banner
+  (defun set-random-startup-banner ()
+    (setq dashboard-startup-banner (get-random-file dashboard-banner-dir)))
+
   (use-package dashboard
     :straight t
     :config
     (dashboard-setup-startup-hook)
-    (setq dashboard-startup-banner "~/.emacs.d/img/3d-logo_no_background-small.png")
-    (setq dashboard-items '((recents . 5)
+    ;; directory containing dashboard logo images
+    (setq dashboard-banner-dir "~/.emacs.d/logos/")
+    ;; set a random picture as the startup banner initially
+    (set-random-startup-banner)
+    ;; (setq dashboard-startup-banner "~/.emacs.d/img/3d-logo_no_background-small.png")
+    (setq dashboard-items '((agenda . 5)
+                            (recents . 5)
                             (projects . 5)))
-    (setq dashboard-banner-logo-title "DeepSky Emacs"))
+    
+    (setq dashboard-banner-logo-title "DeepSky Emacs")
+    (advice-add 'dashboard-refresh-buffer :after 'set-random-startup-banner))
 #+end_src
 
 * VTerm
@@ -927,7 +981,8 @@ do just that to reduce the repetition.
 #+END_SRC
 
 * Whitespace mode
-Because sometimes you have to look at python code that came from a person with unusual editor defaults.
+Because sometimes you have to look at python code that came from a
+person with unusual editor defaults.
 #+BEGIN_SRC emacs-lisp
 (use-package whitespace
   :bind ("s-<f10>" . whitespace-mode))
@@ -947,7 +1002,11 @@ Because sometimes you have to look at python code that came from a person with u
 
 * File Management
 ** Dired
-Dired configuration is split between =init.el= and this clause in =config.org=, for reasons related to the way that emacs is initialised in this regime. If dired is not configured early, emacs throws to the debugger with an error when dired is called in regular use. (I don't know if this is still true.)
+Dired configuration is split between =init.el= and this clause in
+=config.org=, for reasons related to the way that emacs is initialised
+in this regime. If dired is not configured early, emacs throws to the
+debugger with an error when dired is called in regular use. (I don't
+know if this is still true.)
 #+BEGIN_SRC emacs-lisp
 
   (use-package all-the-icons-dired
@@ -1009,8 +1068,10 @@ While on their own they might not be particularly impressive. Together
 they create a nice environment for you to work in.
 
 ** visiting the configuration
-Quickly edit =~/.emacs.d/config.org=. The Emacs way being the Emacs way, this specific keybinding turns out to be one of the most useful quality of life changes in this config, which is odd, considering the triviality of the feature.
-
+Quickly edit =~/.emacs.d/config.org=. The Emacs way being the Emacs way,
+this specific keybinding turns out to be one of the most useful
+quality of life changes in this config, which is odd, considering the
+triviality of the feature.
 #+BEGIN_SRC emacs-lisp
   (defun config-visit ()
     "Visits the org containing Emacs' literate config."
@@ -1023,7 +1084,6 @@ Quickly edit =~/.emacs.d/config.org=. The Emacs way being the Emacs way, this sp
 ** Reloading the configuration
 Simply pressing =Control-c r= will reload this file, very handy.
 You can also manually invoke =config-reload=.
-
 #+BEGIN_SRC emacs-lisp
   (defun config-reload ()
     "Reloads ~/.emacs.d/config.org at runtime"
@@ -1035,18 +1095,15 @@ You can also manually invoke =config-reload=.
 ** Subwords
 Emacs treats camelCase strings as a single word by default, this
 changes said behaviour.
-
 #+BEGIN_SRC emacs-lisp
   (global-subword-mode 1)
 #+END_SRC
 
 ** Beacon
-
 While changing buffers or workspaces, the first thing you do is look
 for your cursor. Unless you know its position, you can not move it
 efficiently. Every time you change buffers, the current position of
 your cursor will be briefly highlighted now.
-
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package beacon
     :straight t
@@ -1068,6 +1125,7 @@ your cursor will be briefly highlighted now.
 #+end_src
 
 * Llama2
+
 I'm using ollama for local LLM stuff, so lets see how that looks in emacs..
 
 #+begin_src emacs-lisp
@@ -1083,7 +1141,8 @@ I'm using ollama for local LLM stuff, so lets see how that looks in emacs..
 
 * OpenAI ChatGPT
 
-So... this is actually right up in the land of magic technology. I kind of can't believe how interesting it is.
+So... this is actually right up in the land of magic technology. I
+kind of can't believe how interesting it is.
 
 #+begin_src emacs-lisp
   (use-package gptel
@@ -1191,16 +1250,20 @@ with the ever productive Marcin Borkowski: [[http://mbork.pl/2017-01-14_I'm_now_
 the right dictionary.]]
 
 the =tldr= is:
-1. Download the Webster’s dictionary in StarDict format, as Somers tells you to do. (Apparently it’s not “some strange format”, but a standard format for a digital dictionary.)
+1. Download the Webster’s dictionary in StarDict format, as Somers
+   tells you to do. (Apparently it’s not “some strange format”, but a
+   standard format for a digital dictionary.)
 2. Unzip the files and put them in ~/.stardict/dic
 3. Install sdcv, a command-line utility for accessing StarDict
-   dictionaries. (On Arch GNU/Linux with from the AUR with yay, it is =yay -S sdcv=.)
+   dictionaries. (On Arch GNU/Linux with from the AUR with yay, it is
+   =yay -S sdcv=.)
 4. My config is using straight, so I'm accessing the sdcv package with
    the package manager, as below
 5. With point on a word to look up, say =M-x sdcv-search=, or =M-x
    sdcv-search= anywhere and type in the word.
-6. You can press =RET= on any word in the definitionto look ~that~ one
-   up. This is an inescapable rabbit hole for people of a certain disposition.
+6. You can press =RET= on any word in the definitionto look ~that~ one up.
+   This is an inescapable rabbit hole for people of a certain
+   disposition.
 
 #+begin_src emacs-lisp :tangle no
   (use-package sdcv
@@ -1208,7 +1271,8 @@ the =tldr= is:
 #+end_src
 
 ** Helpful
-This package gives richer help information, and makes interrogating emacs more fruitful.
+This package gives richer help information, and makes interrogating
+emacs more fruitful.
 #+BEGIN_SRC emacs-lisp
   (use-package helpful
     :ensure t
@@ -1236,7 +1300,10 @@ This package gives richer help information, and makes interrogating emacs more f
 
 ** Democratize
 
-Democratize can extract thousands of usage examples (aka "demos") from some of your favorite Emacs Lisp libraries and, among other things, insert them into Helpful (or regular "Help") buffers when you look up a function
+Democratize can extract thousands of usage examples (aka "demos") from
+some of your favorite Emacs Lisp libraries and, among other things,
+insert them into Helpful (or regular "Help") buffers when you look up
+a function
 
 #+begin_src emacs-lisp :tangle no
   ;; (use-package democratize
@@ -1346,8 +1413,8 @@ Project navigation and management library for Emacs.
 See [[http://emacsrocks.com/e15.html][Emacs Rocks! Episode 15]] to learn how restclient can help out with
 testing APIs from within Emacs. The HTTP calls you make in the buffer
 aren't constrainted within Emacs; there's the
-=restclient-copy-curl-command= to get the equivalent =curl= call
-string to keep things portable.
+=restclient-copy-curl-command= to get the equivalent =curl= call string to
+keep things portable.
 
 #+BEGIN_SRC emacs-lisp
   (use-package restclient
@@ -1407,7 +1474,8 @@ buffer navigation, but applies it to windows. The default keys are
 #+END_SRC
 
 ** Ement
-This really is the best available client for matrix, and it's increasingly obvious that the young'uns won't be brought to IRC.
+This really is the best available client for matrix, and it's
+increasingly obvious that the young'uns won't be brought to IRC.
 #+begin_src emacs-lisp
   (use-package ement
     :straight t
@@ -1417,8 +1485,8 @@ This really is the best available client for matrix, and it's increasingly obvio
     (ement-room-send-message-filter 'ement-room-send-org-filter)
     (ement-set-display-name "Fade"))
 #+end_src
-** Completion
 
+** Completion
 #+begin_src emacs-lisp 
   ;; vertico is the base for our Helm exodus.
   (use-package vertico
@@ -1573,10 +1641,10 @@ This really is the best available client for matrix, and it's increasingly obvio
     :config
     (progn
       (setf sly-lisp-implementations
-            '((sbcl ("sbcl" "--dynamic-space-size" "8GB" "--core" "/home/fade/sbcl.core"))
+            '((sbcl ("sbcl" "--core" "/home/fade/sbcl.core")) ;;"--dynamic-space-size" "8GB"
               (sbcl-vanilla ("/usr/local/bin/sbcl" "--dynamic-space-size" "2500"))
-              ;; (ccl ("/usr/bin/ros" "-L" "ccl-bin" "run"))
-              (ccl ("/usr/local/bin/ccl"))
+              (ccl ("/usr/bin/ros" "-L" "ccl-bin" "run"))
+              ;; (ccl ("/usr/local/bin/ccl"))
               (abcl ("/usr/local/src/abcl/abcl"))
               (clisp ("/usr/bin/clisp"))
               (ecl ("/usr/local/bin/ecl"))
@@ -1620,7 +1688,14 @@ This really is the best available client for matrix, and it's increasingly obvio
 
 *** Paredit
 
-I spend almost all of my time in emacs writing common lisp code, and in that endeavour, Paredit is the single most useful package in my configuration. It allows me to treat code as structure, moving forms in their entirety. It also ensures that the famous parenthesis are always balanced, and that I usually only have to type the opening 50% of them. This mode is useful in all programming languages for the paren matching features, but it is indespensible if you write any lisp dialect regularly.
+I spend almost all of my time in emacs writing common lisp code, and
+in that endeavour, Paredit is the single most useful package in my
+configuration. It allows me to treat code as structure, moving forms
+in their entirety. It also ensures that the famous parenthesis are
+always balanced, and that I usually only have to type the opening 50%
+of them. This mode is useful in all programming languages for the
+paren matching features, but it is indespensible if you write any lisp
+dialect regularly.
 
 #+BEGIN_SRC emacs-lisp
   (use-package paredit
@@ -1814,33 +1889,39 @@ Integrates with IPython., using elpy jedi, and virtualenvwrapper.
 
 #+BEGIN_SRC emacs-lisp
 
-  (use-package elpy
-    :ensure t
-    :config
-    (setq elpy-rpc-backend "jedi")
-    (setq python-shell-interpreter "ipython"
-          python-shell-interpreter-args "-i --simple-prompt")
-    (elpy-enable))
+  ;; (use-package elpy
+  ;;   :ensure t
+  ;;   :config
+  ;;   (setq elpy-rpc-backend "jedi")
+  ;;   (setq python-shell-interpreter "ipython"
+  ;;         python-shell-interpreter-args "-i --simple-prompt")
+  ;;   (elpy-enable))
 
-  (use-package jedi
-    :ensure t
-    :init
-    (add-hook 'python-mode-hook 'jedi:setup)
-    :config
-    (local-set-key (kbd "M-.") 'jedi:goto-definition)
-    (local-set-key (kbd "M-,") 'jedi:goto-definition-pop-marker)
-    (local-set-key (kbd "M-?") 'jedi:show-doc)
-    (local-set-key (kbd "M-/") 'jedi:get-in-function-call)
-    (setq jedi:complete-on-dot t))
+  ;; (use-package jedi
+  ;;   :ensure t
+  ;;   :init
+  ;;   (add-hook 'python-mode-hook 'jedi:setup)
+  ;;   :config
+  ;;   (local-set-key (kbd "M-.") 'jedi:goto-definition)
+  ;;   (local-set-key (kbd "M-,") 'jedi:goto-definition-pop-marker)
+  ;;   (local-set-key (kbd "M-?") 'jedi:show-doc)
+  ;;   (local-set-key (kbd "M-/") 'jedi:get-in-function-call)
+  ;;   (setq jedi:complete-on-dot t))
 
-  (use-package company-jedi
-    :ensure jedi
-    :ensure t
-    :config
-    (add-to-list 'company-backends 'company-jedi))
+  ;; (use-package company-jedi
+  ;;   :ensure jedi
+  ;;   :ensure t
+  ;;   :config
+  ;;   (add-to-list 'company-backends 'company-jedi))
 
-  (use-package jinja2-mode
-    :ensure t)
+  ;; (use-package jinja2-mode
+  ;;   :ensure t)
+
+  (use-package lsp-pyright
+    :straight t
+    :hook (python-mode . (lambda ()
+                           (require 'lsp-pyright)
+                           (lsp))))
 
 #+END_SRC
 

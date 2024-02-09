@@ -663,7 +663,7 @@ them accordingly.
 
 ** Enable projectile globally
 This makes sure that everything can be a project.
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
   (use-package projectile
     :straight t
     :init
@@ -671,7 +671,7 @@ This makes sure that everything can be a project.
 #+END_SRC
 
 ** Let projectile call make
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
   (global-set-key (kbd "<f5>") 'projectile-compile-project)
 #+END_SRC
 

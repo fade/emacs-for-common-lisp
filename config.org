@@ -899,7 +899,6 @@ post regions/files/iota of emacs buffers to 0x0 for linking in remote places lik
 #+end_src
 
 * SparQL mode
-
 most relevantly, sparql is used to define queries to the WikiData knowledge database. 
 
 #+begin_src emacs-lisp
@@ -1130,7 +1129,7 @@ I'm using ollama for local LLM stuff, so lets see how that looks in
 emacs.. This package binds C-c e to a command prefix, which clobbers
 the bind we had set for visiting this config.org file.
 
-#+begin_src emacs-lisp 
+#+begin_src emacs-lisp :tangle no
   (use-package ellama
     :straight t
     :init
@@ -1146,7 +1145,7 @@ the bind we had set for visiting this config.org file.
 So... this is actually right up in the land of magic technology. I
 kind of can't believe how interesting it is.
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
   (use-package gptel
     :straight t
     :config
@@ -1165,7 +1164,7 @@ kind of can't believe how interesting it is.
       (add-to-list 'all-the-icons-mode-icon-alist
                    '(chatgpt-arcana-chat-mode all-the-icons-octicon "comment-discussion" :height 1.0 :v-adjust -0.1 :face all-the-icons-purple))))
 
-  (use-package major-mode-hydra
+  (use-package major-mode-hydra 
     :straight t
     :bind
     ("s-SPC" . major-mode-hydra)

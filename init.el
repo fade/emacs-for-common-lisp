@@ -4,6 +4,9 @@
 
 ;;; Code:
 
+;;; When source files are newer than byte-compiled artifacts, we want the new file.
+(setq load-prefer-newer t)
+
 ;;; Silence compiler warnings from native-comp; they're too disruptive.
 ;; (setq native-comp-async-report-warnings-errors nil)
 

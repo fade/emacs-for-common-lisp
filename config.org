@@ -1388,7 +1388,7 @@ No more juggling windows after commiting. It's magit bliss.
     :straight t
     :after magit
     :config
-    (magit-todoes-mode))
+    (magit-todos-mode))
 #+end_src
 * Multiple cursors
 

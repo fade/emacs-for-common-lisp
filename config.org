@@ -107,9 +107,6 @@ package by Bodizar Bhatzov.
             'executable-make-buffer-file-executable-if-script-p)
 #+END_SRC
 
-#+RESULTS:
-| executable-make-buffer-file-executable-if-script-p |
-
 The following function for ~occur-dwim~ is taken from [[https://github.com/abo-abo][Oleh Krehel]] from
 [[http://oremacs.com/2015/01/26/occur-dwim/][his blog post at (or emacs irrelevant)]]. It takes the current region or
 the symbol at point as the default value for occur.
@@ -380,8 +377,6 @@ file if you change this list.
           org-roam-ui-open-on-start t))
 
 #+END_SRC
-
-#+RESULTS:
 
 ** Org Books
 #+begin_src emacs-lisp
@@ -1707,8 +1702,6 @@ increasingly obvious that the young'uns won't be brought to IRC.
     :after sly)
 #+END_SRC
 
-#+RESULTS:
-
 *** Paredit
 
 I spend almost all of my time in emacs writing common lisp code, and
@@ -1837,9 +1830,7 @@ dialect regularly.
       (js2-indent-on-enter-key t))
   #+END_SRC
 
-  #+RESULTS:
-
-    Color /defined/ variables with [[https://github.com/ankurdave/color-identifiers-mode][color-identifiers-mode]]:
+   Color /defined/ variables with [[https://github.com/ankurdave/color-identifiers-mode][color-identifiers-mode]]:
 
   #+BEGIN_SRC elisp 
    (use-package color-identifiers-mode
@@ -2019,9 +2010,6 @@ lot cooler than you may think.
     :straight t)
 #+END_SRC
 
-#+RESULTS:
-: t
-*
 ** DeepSky Theme
 
    Load the appropriate theme, and a utility for arbitrarily loading

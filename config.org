@@ -1022,7 +1022,7 @@ know if this is still true.)
       (use-package mu4e
         :straight t
         ;; :defer 120
-        :load-path "/usr/local/share/emacs/site-lisp/mu4e"
+        :load-path "/usr/share/emacs/site-lisp/mu4e"
         
         :config
         ;; this setting avoids mbsync problems
@@ -1031,7 +1031,7 @@ know if this is still true.)
         ;; update every 10 minutes
         (setq mu4e-update-interval (* 10 60))
         (setq mu4e-get-mail-command "mbsync -a")
-        (setq mu4e-mu-binary "/usr/local/bin/mu")
+        (setq mu4e-mu-binary "/usr/bin/mu")
         (setq mu4e-root-maildir "~/Mail/GMail/")
 
         ;; Gmail folder structure

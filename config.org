@@ -870,7 +870,8 @@ buffers in emacs. source: [[http://whattheemacsd.com/sane-defaults.el-01.html][M
 #+BEGIN_SRC emacs-lisp
   (add-hook 'dired-mode-hook 'auto-revert-mode)
   (global-auto-revert-mode t)
-
+  ;; the mode-line is updated from the emacs VC package, not magit, refresh it.
+  (setq auto-revert-check-vc-info t)
   ;; Also auto refresh dired, but be quiet about it
   (setq global-auto-revert-non-file-buffers t)
   (setq auto-revert-verbose nil)

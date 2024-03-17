@@ -992,6 +992,7 @@ person with unusual editor defaults.
     (global-aggressive-indent-mode 1)
     ;; (add-to-list 'aggressive-indent-excluded-modes 'html-mode)
     ;; (add-to-list 'aggressive-indent-excluded-modes 'lisp-mode)
+    (add-to-list 'aggressive-indent-excluded-modes 'sly-mrepl-mode)
     (add-to-list 'aggressive-indent-excluded-modes 'python-mode))
 #+end_src
 

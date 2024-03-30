@@ -14,6 +14,13 @@ credentials.
 	user-mail-address "fade@deepsky.com")
 #+END_SRC
 
+* Pass the built-in unix password manager, emacs support
+
+#+begin_src emacs-lisp
+  (use-package pass
+    :straight t)
+#+end_src
+
 * Which Key
 [[https://github.com/justbur/emacs-which-key][which-key]] is a useful UI panel that appears when you start pressing
 any key binding in Emacs to offer you all possible completions for the
@@ -328,6 +335,10 @@ file if you change this list.
     :load-path "~/SourceCode/lisp/emacs_stuff/packages-projects/org-web-tools")
 
 #+end_src
+
+** Database Support
+
+
 ** Org Roam
 #+BEGIN_SRC emacs-lisp
   (use-package emacsql
@@ -1656,8 +1667,10 @@ increasingly obvious that the young'uns won't be brought to IRC.
     :load-path "~/SourceCode/lisp/sly"
     :straight t
     :commands sly
-    :bind ("C-c M-o" . sly-mrepl-clear-repl)
-    
+    :bind 
+    (("C-c w h". sly-hyperspec-lookup)
+     ("C-c M-o" . sly-mrepl-clear-repl))
+
     :config
     (progn
       (setf sly-lisp-implementations
@@ -1674,7 +1687,6 @@ increasingly obvious that the young'uns won't be brought to IRC.
             sly-complete-symbol*-fancy t
             sly-default-lisp 'sbcl
             common-lisp-hyperspec-root "file:///home/fade/SourceCode/lisp/HyperSpec/")
-
       (require 'sly-autoloads)
       (load "~/quicklisp/log4sly-setup.el")
       (global-log4sly-mode 1)))

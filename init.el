@@ -169,7 +169,8 @@
 
 
 ;; start the emacs daemon process.
-(server-start)
+(if (display-graphic-p)
+    (server-start))
 
 ;;; Load the config contained in our Org-mode file, which contains the
 ;;; meat of this config..

@@ -38,11 +38,13 @@ your current buffer.
       (which-key-mode)
       (setq which-key-idle-delay 1))
   #+END_SRC
+
 * Sane defaults
 Sources for this section include [[https://github.com/magnars/.emacs.d/blob/master/settings/sane-defaults.el][Magnar Sveen]] and [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha Chua]].
 
 The diminish package appears to have been subsumed into the Crux
 package by Bodizar Bhatzov.
+
 #+BEGIN_SRC emacs-lisp
 (use-package diminish
   :ensure t)
@@ -57,6 +59,14 @@ package by Bodizar Bhatzov.
     (no-littering-var-directory
      (expand-file-name "data/" user-emacs-directory))
     (require 'no-littering))
+#+end_src
+
+#+begin_src emacs-lisp
+  (use-package emacs
+    :init
+    ;; enable indentation+completion using the TAB key.
+    ;; 'completion-at-point is often bound to M-TAB
+    (setq tab-always-indent 'complete))
 #+end_src
 
 #+BEGIN_SRC emacs-lisp
@@ -196,6 +206,8 @@ remove the .elc files from the package directory:
 
 #+END_SRC
 
+#+RESULTS:
+
 ** Better Font Faces
 
 The =efs/org-font-setup= function configures various text faces to tweak
@@ -327,6 +339,36 @@ file if you change this list.
 
   (define-key org-mode-map (kbd "C-c C-d") 'org-toggle-todo-and-fold)
 #+END_SRC
+
+** Org Modern. Prettify.
+#+begin_src emacs-lisp
+  (use-package org-modern
+    :straight t
+    :after org
+    :config
+    (progn 
+      (with-eval-after-load 'org (global-org-modern-mode))
+
+      (setq
+       ;; Edit settings
+       org-auto-align-tags nil
+       org-tags-column 0
+       org-catch-invisible-edits 'show-and-error
+       org-special-ctrl-a/e t
+       org-insert-heading-respect-content t
+
+       ;; Org styling, hide markup etc.
+       org-hide-emphasis-markers t
+       org-pretty-entities t
+       org-ellipsis "…"
+
+       ;; Agenda styling
+       org-agenda-tags-column 0
+       org-agenda-block-separator ?─
+       org-agenda-time-grid
+       '((daily today require-timed)
+         (800 1000 1200 1400 1600 1800 2000)))))
+#+end_src
 
 ** Org Web Tools
 #+BEGIN_SRC emacs-lisp
@@ -990,8 +1032,8 @@ do just that to reduce the repetition.
 Because sometimes you have to look at python code that came from a
 person with unusual editor defaults.
 #+BEGIN_SRC emacs-lisp
-(use-package whitespace
-  :bind ("s-<f10>" . whitespace-mode))
+  (use-package whitespace
+    :bind ("s-<f10>" . whitespace-mode))
 #+END_SRC
 
 * Aggressive Indent Mode
@@ -1412,7 +1454,8 @@ We'll also need to =(require 'multiple-cusors)= because of [[https://github.com/
            ("C-!"         . mc/mark-next-symbol-like-this)
            ("s-d"         . mc/mark-all-dwim)))
 #+END_SRC
-** Perspective
+
+* Perspective
 
 Workspaces in Emacs.
 
@@ -1422,7 +1465,7 @@ Workspaces in Emacs.
   :defer t
   :config (persp-mode))
 #+END_SRC
-** Projectile
+* Projectile
 [[http://batsov.com/projectile/][Projectile Home]]
 
 Project navigation and management library for Emacs.
@@ -1439,7 +1482,7 @@ Project navigation and management library for Emacs.
   (setq projectile-switch-project-action 'projectile-dired))
 #+END_SRC
 
-** Restclient
+* Restclient
 
 See [[http://emacsrocks.com/e15.html][Emacs Rocks! Episode 15]] to learn how restclient can help out with
 testing APIs from within Emacs. The HTTP calls you make in the buffer
@@ -1454,7 +1497,7 @@ keep things portable.
     :mode ("\\.restclient\\'" . restclient-mode))
 #+END_SRC
 
-** Undo Tree
+* Undo Tree
 #+BEGIN_SRC emacs-lisp
   (use-package undo-tree
     :straight t
@@ -1465,7 +1508,7 @@ keep things portable.
     (undo-tree-auto-save-history nil))
 #+END_SRC
 
-** Avy - a better Ace
+* Avy - a better Ace
 
 [[https://github.com/abo-abo/avy][Avy]] integrates with Ace window, and works like Ace Jump mode.
 
@@ -1479,7 +1522,7 @@ keep things portable.
     (set-face-attribute 'avy-lead-face-1 nil :background "SlateBlue4" :foreground "light goldenrod")
     :bind ("s-s c" . avy-goto-char))
 #+end_src
-** Ace Window
+* Ace Window
 
 [[https://github.com/abo-abo/ace-window][ace-window]] is a package that uses the same idea from ace-jump-mode for
 buffer navigation, but applies it to windows. The default keys are
@@ -1492,7 +1535,7 @@ buffer navigation, but applies it to windows. The default keys are
     (ace-window-display-mode)
     :bind ("s-o" . ace-window))
 #+END_SRC
-** Ag -- The Silver Searcher.
+* Ag -- The Silver Searcher.
 
 #+BEGIN_SRC emacs-lisp
 (use-package ag
@@ -1504,7 +1547,7 @@ buffer navigation, but applies it to windows. The default keys are
         ag-reuse-buffers t))
 #+END_SRC
 
-** Ement
+* Ement
 This really is the best available client for matrix, and it's
 increasingly obvious that the young'uns won't be brought to IRC.
 #+BEGIN_SRC emacs-lisp
@@ -1517,7 +1560,7 @@ increasingly obvious that the young'uns won't be brought to IRC.
     (ement-set-display-name "Fade"))
 #+end_src
 
-** Completion
+* Completion
 #+BEGIN_SRC emacs-lisp 
   ;; vertico is the base for our Helm exodus.
   (use-package vertico
@@ -1611,51 +1654,24 @@ increasingly obvious that the young'uns won't be brought to IRC.
 
 #+end_src
 
-*** Company
-#+BEGIN_SRC emacs-lisp
-  (use-package company
-    :ensure nil
-    :diminish company-mode
-    ;; :bind (:map company-mode-map
-    ;;             (("C-n" . company-select-next)
-    ;;              ("C-p" . company-select-previous)
-    ;;              ("C-d" . company-show-doc-buffer)
-    ;;              ("M-." . company-show-location)))
-    :config
-    (progn
-      ;; less than this and it disrupts typing when you aren't interested in completion.
-      (setq company-idle-delay 0.9)
-      (setq company-minimize-prefix-length 3)
-      ;; company completion everywhere.
-      (add-hook 'after-init-hook 'global-company-mode)
-      (require 'color)
-
-      (let ((bg (face-attribute 'default :background)))
-        (custom-set-faces
-         `(company-tooltip ((t (:inherit default :background ,(color-lighten-name bg 2)))))
-         `(company-scrollbar-bg ((t (:background ,(color-lighten-name bg 10)))))
-         `(company-scrollbar-fg ((t (:background ,(color-lighten-name bg 5)))))
-         `(company-tooltip-selection ((t (:inherit font-lock-function-name-face))))
-         `(company-tooltip-common ((t (:inherit font-lock-constant-face))))))
-
-      (with-eval-after-load 'company
-        (define-key company-active-map (kbd "M-n") nil)
-        (define-key company-active-map (kbd "M-p") nil)
-        (define-key company-active-map (kbd "C-n") #'company-select-next)
-        (define-key company-active-map (kbd "C-p") #'company-select-previous)
-        (define-key company-active-map (kbd "SPC") #'company-abort))))
-
-  ;; (use-package company-box
-  ;;   :after company)
-
-  (use-package company-quickhelp
-    :after (company)
-    :hook (company-mode . company-quickhelp-mode)
-    :config
-    (setq company-quickhelp-delay 1.0)
-    :ensure t)
-
-#+END_SRC
+* Corfu
+Looking at this as a replacement for Company.
+#+begin_src emacs-lisp
+  (use-package corfu
+    :straight t
+    :custom
+    (corfu-cycle t)
+    (corfu-auto t)
+    (corfu-scroll-margin 5)
+    (corfu-separator ?\s)
+    :bind (:map corfu-map
+                (("C-n" . corfu-next)
+                 ("C-p" . corfu-previous)
+                 ("<tab>" . corfu-next)
+                 ("<backtab>" . corfu-previous)))
+    :init
+    (global-corfu-mode))
+#+end_src
 
 * Languages
 ** Common Lisp
@@ -1689,6 +1705,8 @@ increasingly obvious that the young'uns won't be brought to IRC.
             common-lisp-hyperspec-root "file:///home/fade/SourceCode/lisp/HyperSpec/")
       (require 'sly-autoloads)
       (load "~/quicklisp/log4sly-setup.el")
+      (add-to-list 'load-path "~/SourceCode/lisp/emacs_stuff/sly-stepper")
+      (require 'sly-stepper-autoloads)
       (global-log4sly-mode 1)))
 
   (eval-after-load 'sly
@@ -2134,27 +2152,27 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
 #+BEGIN_SRC emacs-lisp
   (if window-system
       (progn
-        (add-to-list 'default-frame-alist '(font . "Envy Code R"))
+        (add-to-list 'default-frame-alist '(font . "EnvyCodeR Nerd Font"))
         ;; (add-to-list 'default-frame-alist '(font . "Iosevka"))
         (set-face-attribute 'variable-pitch nil :font "Iosevka Comfy Duo" :height 120 :weight 'regular)
-        (set-face-attribute 'default nil :font "Envy Code R" :height 120)
-        (set-face-attribute 'fixed-pitch nil :font "Envy Code R-11")
+        (set-face-attribute 'default nil :font "EnvyCodeR Nerd Font" :height 120)
+        (set-face-attribute 'fixed-pitch nil :font "EnvyCodeR Nerd Font-11")
 
         (use-package fontaine
           :straight t
           :config
           (setq fontaine-presets
                 '((tiny
-                   :default-family "Envy Code R"
+                   :default-family "EnvyCodeR Nerd Font"
                    :default-height 70)
                   (small
-                   :default-family "Envy Code R"
+                   :default-family "EnvyCodeR Nerd Font"
                    :default-height 90)
                   (regular
-                   :default-family "Envy Code R"
+                   :default-family "EnvyCodeR Nerd Font"
                    :default-height 100)
                   (medium
-                   :default-family "Envy Code R"
+                   :default-family "EnvyCodeR Nerd Font"
                    :default-height 110)
                   (large
                    :default-weight semilight
@@ -2168,7 +2186,7 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
                    ;; I keep all properties for didactic purposes, but most can be
                    ;; omitted.  See the fontaine manual for the technicalities:
                    ;; <https://protesilaos.com/emacs/fontaine>.
-                   :default-family "Envy Code R"
+                   :default-family "EnvyCodeR Nerd Font"
                    :default-weight regular
                    :default-height 100
                    :fixed-pitch-family nil ; falls back to :default-family

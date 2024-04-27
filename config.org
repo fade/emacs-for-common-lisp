@@ -173,6 +173,16 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
            (mapc 'find-file fn-list)))))
 #+END_SRC
 
+* Personal keymaps
+#+begin_src emacs-lisp
+  ;; Global Prefix for personal binds
+  ;; this system is largely derivative of SummerEmacs' setup
+
+  (defvar-keymap prefix-buffer-map=0
+    :doc "Prefix map for C-Q for 0x0"
+    "f" #'0x0-upload-file
+    "t" #'0x0-upload-text)
+#+end_src
 * Org mode
 
 Org mode is one of the killer applications that run inside Emacs. It

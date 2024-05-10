@@ -1224,16 +1224,21 @@ the bind we had set for visiting this config.org file.
 So... this is actually right up in the land of magic technology. I
 kind of can't believe how interesting it is.
 
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp 
   (use-package gptel
     :straight t
     :config
-    (setf  gptel-default-mode 'org-mode))
+    (setq  gptel-default-mode 'org-mode
+           gptel-model "codellama:latest"
+           gptel-backend (gptel-make-ollama "Ollama"
+                           :host "localhost:11434"
+                           :stream t
+                           :models '("codellama:latest" "zephyr:latest" "dolphin-mixtral:latest"))))
 
   (gptel-make-ollama "Ollama"
     :host "localhost:11434"
     :stream t
-    :models '("codellama:latest"))
+    :models '("codellama:latest" "zephyr:latest" "dolphin-mixtral:latest"))
 #+end_src
 
 #+BEGIN_SRC emacs-lisp :tangle no

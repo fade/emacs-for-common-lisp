@@ -1208,14 +1208,10 @@ Overall, this configuration sets up =gptel= to use a language model called "code
            :map gptel-mode-map
            ("C-c h" . 'gptel-menu)))
 
-
-
-
   (setq gptel-backend (gptel-make-ollama "Ollama"
                         :host "localhost:11434"
                         :stream t
                         :models '("codellama:latest" "zephyr:latest" "dolphin-mixtral:latest")))
-
 
 #+end_src
 

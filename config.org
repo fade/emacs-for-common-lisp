@@ -368,7 +368,7 @@ file if you change this list.
        org-insert-heading-respect-content t
 
        ;; Org styling, hide markup etc.
-       org-hide-emphasis-markers t
+       org-hide-emphasis-markers nil
        org-pretty-entities t
        org-ellipsis "…"
 
@@ -385,11 +385,7 @@ file if you change this list.
   (use-package org-web-tools
     :straight t
     :load-path "~/SourceCode/lisp/emacs_stuff/packages-projects/org-web-tools")
-
 #+end_src
-
-** Database Support
-
 
 ** Org Roam
 #+BEGIN_SRC emacs-lisp
@@ -864,8 +860,8 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
        ("https://github.com/tree-sitter/tree-sitter-cpp"
         ("tree-sitter-cpp"))
 
-       ;; ("https://github.com/tree-sitter/tree-sitter-c"
-       ;;  (tree-sitter-c))
+       ("https://github.com/tree-sitter/tree-sitter-c"
+        (tree-sitter-c))
        ))
 
     :config
@@ -1164,7 +1160,7 @@ While changing buffers or workspaces, the first thing you do is look
 for your cursor. Unless you know its position, you can not move it
 efficiently. Every time you change buffers, the current position of
 your cursor will be briefly highlighted now.
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp 
   (use-package beacon
     :straight t
     :config
@@ -1190,7 +1186,7 @@ I'm using ollama for local LLM stuff, so lets see how that looks in
 emacs.. This package binds C-c e to a command prefix, which clobbers
 the bind we had set for visiting this config.org file.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
   (use-package ellama
     :straight t
     :init
@@ -1542,6 +1538,7 @@ buffer navigation, but applies it to windows. The default keys are
     (ace-window-display-mode)
     :bind ("s-o" . ace-window))
 #+END_SRC
+
 * Ag -- The Silver Searcher.
 
 #+BEGIN_SRC emacs-lisp
@@ -2108,15 +2105,15 @@ the load average.
 (setq display-time-default-load-average nil)
 #+END_SRC
 ** Swap Buffer Windows
-   #+BEGIN_SRC emacs-lisp
-     (use-package buffer-move
-       :ensure t
-       :config
-       (progn
-	 (global-set-key (kbd "<C-M-s-up>")     'buf-move-up)
-	 (global-set-key (kbd "<C-M-s-down>")   'buf-move-down)
-	 (global-set-key (kbd "<C-M-s-left>")   'buf-move-left)
-	 (global-set-key (kbd "<C-M-s-right>")  'buf-move-right)))
+#+BEGIN_SRC emacs-lisp
+  (use-package buffer-move
+    :ensure t
+    :config
+    (progn
+      (global-set-key (kbd "<C-M-s-up>")     'buf-move-up)
+      (global-set-key (kbd "<C-M-s-down>")   'buf-move-down)
+      (global-set-key (kbd "<C-M-s-left>")   'buf-move-left)
+      (global-set-key (kbd "<C-M-s-right>")  'buf-move-right)))
    #+END_SRC
 
 ** Display Battery Mode

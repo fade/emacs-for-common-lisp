@@ -449,9 +449,9 @@ file if you change this list.
 Set up some global key bindings that integrate with Org Mode features.
 
 #+BEGIN_SRC emacs-lisp
-(bind-key "C-c l" 'org-store-link)
-(bind-key "C-c c" 'org-capture)
-(bind-key "C-c a" 'org-agenda)
+  (bind-key "C-c l" 'org-store-link)
+  (bind-key "C-c c" 'org-capture)
+  (bind-key "C-c a" 'org-agenda)
 #+END_SRC
 
 ** Center Org Buffers
@@ -1220,21 +1220,38 @@ the bind we had set for visiting this config.org file.
 So... this is actually right up in the land of magic technology. I
 kind of can't believe how interesting it is.
 
+This is the Emacs configuration for the =gptel= package, which allows you to use a language model as a helpful assistant in Emacs. The following settings are used:
+
+- =gptel-default-mode=: This sets the default mode for =gptel= to be =org-mode=.
+- =gptel-model=: This sets the name of the language model that will be used by =gptel=, which in this case is "codellama:latest".
+- =gptel-directives=: This sets a list of directives for =gptel= to use when generating responses. In this case, the first directive sets the default response for any input, while the second directive sets the response for inputs that are labeled as "programming".
+- =C-c t=: This sets the key binding for sending input to =gptel=.
+- =gptel-mode-map=: This sets the map of key bindings for =gptel= mode. The first binding sets the key binding for displaying the menu, while the second binding sets the key binding for sending input to =gptel=.
+
+Overall, this configuration sets up =gptel= to use a language model called "codellama:latest" and provides some default directives for generating responses.
+
 #+BEGIN_SRC emacs-lisp 
   (use-package gptel
     :straight t
     :config
-    (setq  gptel-default-mode 'org-mode
+    (setf  gptel-default-mode 'org-mode
            gptel-model "codellama:latest"
-           gptel-backend (gptel-make-ollama "Ollama"
-                           :host "localhost:11434"
-                           :stream t
-                           :models '("codellama:latest" "zephyr:latest" "dolphin-mixtral:latest"))))
+           
+           gptel-directives '((default . "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
+                              (programming . "You are a large language model and a careful programmer and insightful system architect. Provide code and explanation as appropriate.")))
+    :bind (("C-c t" . 'gptel-send)
+           :map gptel-mode-map
+           ("C-c h" . 'gptel-menu)))
 
-  (gptel-make-ollama "Ollama"
-    :host "localhost:11434"
-    :stream t
-    :models '("codellama:latest" "zephyr:latest" "dolphin-mixtral:latest"))
+
+
+
+  (setq gptel-backend (gptel-make-ollama "Ollama"
+                        :host "localhost:11434"
+                        :stream t
+                        :models '("codellama:latest" "zephyr:latest" "dolphin-mixtral:latest")))
+
+
 #+end_src
 
 #+BEGIN_SRC emacs-lisp :tangle no

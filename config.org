@@ -1180,41 +1180,6 @@ your cursor will be briefly highlighted now.
     :straight t)
 #+end_src
 
-* Llama2
-
-I'm using ollama for local LLM stuff, so lets see how that looks in
-emacs.. This package binds C-c e to a command prefix, which clobbers
-the bind we had set for visiting this config.org file.
-
-#+BEGIN_SRC emacs-lisp :tangle no
-  (use-package ellama
-    :straight t
-    :init
-    (setopt ellama-keymap-prefix "C-c t")
-    (setopt ellama-language "English")
-    (require 'llm-ollama)
-    ;; (setopt ellama-provider
-    ;;         (make-llm-ollama
-    ;;          :chat-model "codellama:latest" :embedding-model "codellama:latest"))
-    (setopt ellama-providers
-            '(("codellama" . (make-llm-llama
-                              :chat-model "codellama:latest" :embedding-model "codellama:latest"))
-              ("zephyr" . (make-llm-ollama
-                           :chat-model "zephyr:latest" :embedding-model "zephyr:latest"))
-
-              ("mistral" . (make-llm-ollama
-                            :chat-model "mistral:latest" :embedding-model "mistral:latest"))
-
-              ("dolphin-mixtral" . (make-llm-ollama
-                                    :chat-model "dolphin-mixtral:latest"
-                                    :embedding-model "dolphin-mixtral:latest"))))
-    (setopt ellama-naming-provider
-            (make-llm-ollama
-             :chat-model "zephyr:latest"
-             :embedding-model "zephyr:latest"))
-    (setopt ellama-naming-scheme 'ellama-generate-name-by-llm))
-#+end_src
-
 * LLM Integrations via Ollama
 
 So... this is actually right up in the land of magic technology. I

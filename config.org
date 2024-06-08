@@ -1215,7 +1215,7 @@ the bind we had set for visiting this config.org file.
     (setopt ellama-naming-scheme 'ellama-generate-name-by-llm))
 #+end_src
 
-* OpenAI ChatGPT
+* LLM Integrations via Ollama
 
 So... this is actually right up in the land of magic technology. I
 kind of can't believe how interesting it is.

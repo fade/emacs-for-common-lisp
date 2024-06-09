@@ -379,7 +379,6 @@ file if you change this list.
        '((daily today require-timed)
          (800 1000 1200 1400 1600 1800 2000)))))
 #+end_src
-
 ** Org Web Tools
 #+BEGIN_SRC emacs-lisp
   (use-package org-web-tools
@@ -2135,7 +2134,6 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
   (if window-system
       (progn
         (add-to-list 'default-frame-alist '(font . "EnvyCodeR Nerd Font"))
-        ;; (add-to-list 'default-frame-alist '(font . "Iosevka"))
         (set-face-attribute 'variable-pitch nil :font "Iosevka Comfy Duo" :height 120 :weight 'regular)
         (set-face-attribute 'default nil :font "EnvyCodeR Nerd Font" :height 120)
         (set-face-attribute 'fixed-pitch nil :font "EnvyCodeR Nerd Font-11")

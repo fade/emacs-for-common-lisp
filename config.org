@@ -1201,7 +1201,6 @@ This is a configuration file for the GPTel package in Emacs. It sets up the mode
                         :host "localhost:11434"
                         :stream t
                         :models '("codellama:latest" "zephyr:latest" "dolphin-mixtral:latest")))
-
 #+end_src
 
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -1626,7 +1625,7 @@ increasingly obvious that the young'uns won't be brought to IRC.
 #+end_src
 
 * Corfu
-Looking at this as a replacement for Company.
+This is the way we do completion. Problem solved.
 #+begin_src emacs-lisp
   (use-package corfu
     :straight t

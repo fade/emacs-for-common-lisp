@@ -1182,6 +1182,8 @@ This is the Emacs configuration for the =gptel= package, which allows you to use
 
 Overall, this configuration sets up =gptel= to use a language model called "codellama:latest" and provides some default directives for generating responses.
 
+This is a configuration file for the GPTel package in Emacs. It sets up the model, mode, and directives for the language model assistant, as well as binds keys to send text to the language model and display its responses. The backend is set up using the =gptel-make-ollama= function, which connects to an Ollama server at localhost:11434 and uses the "codellama:latest" model. The =:stream= option is set to =t=, which enables real-time responses from the language model.
+
 #+BEGIN_SRC emacs-lisp 
   (use-package gptel
     :straight t

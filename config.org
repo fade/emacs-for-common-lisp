@@ -312,9 +312,7 @@ without additional processing.
 #+BEGIN_SRC emacs-lisp
   (bind-key "C-c c" 'org-capture)
   (setq org-default-notes-file "~/Dropbox/Notes/notes.org")
-
 #+END_SRC
-
 ** Org agenda
 
 Learned about [[https://github.com/sachac/.emacs.d/blob/83d21e473368adb1f63e582a6595450fcd0e787c/Sacha.org#org-agenda][this =delq= and =mapcar= trick from Sacha Chua's config]].
@@ -1063,7 +1061,6 @@ in this regime. If dired is not configured early, emacs throws to the
 debugger with an error when dired is called in regular use. (I don't
 know if this is still true.)
 #+BEGIN_SRC emacs-lisp
-
   (use-package all-the-icons-dired
     :straight t
     :after dired
@@ -1169,15 +1166,6 @@ your cursor will be briefly highlighted now.
     (beacon-blink-when-buffer-changes nil))
 
 #+END_SRC
-
-* Vagrant
-#+BEGIN_SRC emacs-lisp
-  (use-package vagrant
-    :straight t)
-
-  (use-package vagrant-tramp
-    :straight t)
-#+end_src
 
 * LLM Integrations via Ollama
 

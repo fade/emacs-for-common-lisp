@@ -172,16 +172,186 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
          (let* ((fn-list (dired-get-marked-files nil arg)))
            (mapc 'find-file fn-list)))))
 #+END_SRC
+* Jinx for spelling, per SummerEmacs.
+#+begin_src emacs-lisp
+  (use-package jinx
+    :straight t
+    :hook 'emacs-startup-hook #'global-jinx-mode)
 
+#+end_src
 * Personal keymaps
 #+begin_src emacs-lisp
   ;; Global Prefix for personal binds
   ;; this system is largely derivative of SummerEmacs' setup
 
-  (defvar-keymap prefix-buffer-map=0
-    :doc "Prefix map for C-Q for 0x0"
+  (defvar-keymap prefix-buffer-map-0
+    :doc "Prefix map for C-q for 0x0"
     "f" #'0x0-upload-file
     "t" #'0x0-upload-text)
+
+  (defvar-keymap prefix-buffer-map-b
+    :doc "Prefix map for C-q for buffers"
+    "s" #'switch-to-buffer
+    "c" #'clean-buffer-list
+    "i" #'ibuffer
+    "m" #'buffer-menu)
+
+  (defvar-keymap prefix-buffer-map-c
+    :doc "Prefix map for C-q for consult"
+    "b" #'consult-bookmark
+    "m" #'bookmark-set
+    "d" #'consult-dir
+    "o" #'consult-outline
+    "g" #'consult-grep
+    "i" #'consult-imenu
+    "s" #'consult-notes-search-in-all-notes
+    "@" #'consult-mu
+    ;; "f" #'consult-denote-find
+    ;; "r" #'consult-denote-grep
+    )
+
+  ;; (defvar-keymap prefix-buffer-map-denote
+  ;;   :doc "Prefix map for C-q d d for Denote"
+  ;;   "l" #'denote-menu-list-notes
+  ;;   "f" #'denote-menu-filter
+  ;;   "k" #'denote-menu-filter-by-keyword
+  ;;   "c" #'denote-menu-clear-filters
+  ;;   "-" #'denote-menu-filter-out-keyword
+  ;;   "s" #'denote-org-extras-link-to-heading
+  ;;   )
+
+  (defvar-keymap prefix-buffer-map-d
+    :doc "Prefix map for C-q for dired/Denote"
+    "j" #'dired
+    "d" prefix-buffer-map-denote)
+
+  (defvar-keymap prefix-buffer-map-e
+    :doc "Prefix map for C-q for ement/erc"
+    "m" #'ement-connect
+    "t" #'ement-disconnect
+    "z" #'connect-to-znc
+    "o" #'erc-occur
+    "d" #'disconnect-from-znc)
+
+  (defvar-keymap prefix-buffer-map-f
+    :doc "Prefix map for C-q for fzf"
+    "f" #'fzf
+    "d" #'fzf-directory)
+
+  (defvar-keymap prefix-buffer-map-j
+    :doc "Prefix map for C-q for jump"
+    "j" #'avy-goto-char-timer
+    "i" #'imenu
+    "o" #'occur
+    "d" #'dired-jump)
+
+  (defvar-keymap prefix-buffer-map-l
+    :doc "Prefix map for C-q line"
+    "f" #'fixup-whitespace
+    )
+
+  (defvar-keymap prefix-buffer-map-casual
+    :doc "Prefix map for C-q for casual"
+    "a" #'casual-avy-tmenu
+    "i" #'casual-ibuffer-tmenu
+    "c" #'casual-calc-tmenu
+    "n" #'casual-info-tmenu
+    "d" #'casual-dired-tmenu)
+
+  (defvar-keymap prefix-buffer-map-m
+    :doc "Prefix map for C-q for misc"
+    "a" #'accent-menu
+    "f" #'follow-mode
+    "p" #'pass
+    "c" prefix-buffer-map-casual
+    "s" #'scroll-lock-mode)
+
+  (defvar-keymap prefix-buffer-map-o
+    :doc "Prefix map for C-q for Org"
+    "t" #'org-tags-view
+    "a" #'org-archive-subtree
+    "i" #'org-time-stamp-inactive
+    "d" #'org-time-stamp
+    "r" #'org-refile)
+
+  (defvar-keymap prefix-buffer-map-p
+    :doc "Prefix map for C-q for packages"
+    "l" #'list-packages
+    "r" #'package-refresh-contents)
+
+  (defvar-keymap prefix-buffer-map-q
+    :doc "Prefix map for C-q for org-ql"
+    "s" #'org-ql-search
+    "r" #'org-ql-refile
+    "l" #'org-ql-open-link
+    "b" #'org-ql-view-sidebar
+    "f" #'org-ql-find
+    "v" #'org-ql-view
+    "a" #'org-ql-find-in-agenda
+    "d" #'org-ql-find-in-org-directory
+    "i" #'org-ql-view-recent-items)
+
+  (defvar-keymap prefix-buffer-map-s
+    :doc "Prefix map for C-q for spelling"
+    ;; "o" #'osx-dictionary-search-word-at-point
+    "l" #'jinx-languages
+    "c" #'jinx-correct
+    "s" #'dictionary-search)
+
+  (defvar-keymap prefix-buffer-map-t
+    :doc "Prefix map for C-q for terminals"
+    "e" #'eat
+    "v" #'vterm)
+
+  (defvar-keymap prefix-buffer-map-u
+    :doc "Prefix map for C-q for undo"
+    "v" #'undo-tree-visualize
+    "u" #'undo-tree-undo
+    "r" #'undo-tree-redo)
+
+  (defvar-keymap prefix-command-q
+    :doc "Prefix Map for C-q:"
+    "0" prefix-buffer-map-0
+    "b" prefix-buffer-map-b
+    "c" prefix-buffer-map-c
+    "d" prefix-buffer-map-d
+    "e" prefix-buffer-map-e
+    "f" prefix-buffer-map-f
+    "g" 'magit-status
+    "j" prefix-buffer-map-j
+    "h" help-map
+    "l" prefix-buffer-map-l
+    "m" prefix-buffer-map-m
+    "o" prefix-buffer-map-o
+    "p" prefix-buffer-map-p
+    "q" 'prefix-buffer-map-q
+    "s" prefix-buffer-map-s
+    "t" prefix-buffer-map-t
+    "u" prefix-buffer-map-u
+    "w" 'world-clock)
+
+  (which-key-add-keymap-based-replacements prefix-command-q
+    "0" `("0x0" . ,prefix-buffer-map-0)
+    "b" `("Buffer" . ,prefix-buffer-map-b)
+    "c" `("Consult" . ,prefix-buffer-map-c)
+    "d" `("Dired/Denote" . ,prefix-buffer-map-d)
+    "e" `("Ement/ERC" . ,prefix-buffer-map-e)
+    "f" `("Fzf" . ,prefix-buffer-map-f)
+    "j" `("Jump" . ,prefix-buffer-map-j)
+    "h" `("Help Map" . ,help-map)
+    "l" `("Line" . ,prefix-buffer-map-l)
+    "m" `("Misc" . ,prefix-buffer-map-m)
+    "o" `("Org" . ,prefix-buffer-map-o)
+    "p" `("Packages" . ,prefix-buffer-map-p)
+    "q" `("Org-ql" . ,prefix-buffer-map-q)
+    "s" `("Spelling/Dictionary/Jinx" . ,prefix-buffer-map-s)
+    "t" `("Terminals" . ,prefix-buffer-map-t)
+    "u" `("Undo Tree" . ,prefix-buffer-map-u)
+    "d d" `("Denote" . ,prefix-buffer-map-denote)
+    "m c" `("Casual Menus" . ,prefix-buffer-map-casual))
+
+  (keymap-set global-map "C-q" prefix-command-q)
+
 #+end_src
 * Org mode
 
@@ -1032,6 +1202,21 @@ do just that to reduce the repetition.
   (bind-key "C-x 3" 'hsplit-other-window)
 #+END_SRC
 
+* File Management
+** Dired
+Dired configuration is split between =init.el= and this clause in
+=config.org=, for reasons related to the way that emacs is initialised
+in this regime. If dired is not configured early, emacs throws to the
+debugger with an error when dired is called in regular use. (I don't
+know if this is still true.)
+#+BEGIN_SRC emacs-lisp
+  (use-package all-the-icons-dired
+    :straight t
+    :after dired
+    :diminish all-the-icons-dired-mode
+    :hook (dired-mode . all-the-icons-dired-mode))
+#+END_SRC
+
 * Whitespace mode
 Because sometimes you have to look at python code that came from a
 person with unusual editor defaults.
@@ -1052,21 +1237,6 @@ person with unusual editor defaults.
     (add-to-list 'aggressive-indent-excluded-modes 'sly-mrepl-mode)
     (add-to-list 'aggressive-indent-excluded-modes 'python-mode))
 #+end_src
-
-* File Management
-** Dired
-Dired configuration is split between =init.el= and this clause in
-=config.org=, for reasons related to the way that emacs is initialised
-in this regime. If dired is not configured early, emacs throws to the
-debugger with an error when dired is called in regular use. (I don't
-know if this is still true.)
-#+BEGIN_SRC emacs-lisp
-  (use-package all-the-icons-dired
-    :straight t
-    :after dired
-    :diminish all-the-icons-dired-mode
-    :hook (dired-mode . all-the-icons-dired-mode))
-#+END_SRC
 
 * Mail with mu4e
 
@@ -1477,7 +1647,7 @@ keep things portable.
     (undo-tree-auto-save-history nil))
 #+END_SRC
 
-* Avy - a better Ace
+* Avy - Jump Around
 
 [[https://github.com/abo-abo/avy][Avy]] integrates with Ace window, and works like Ace Jump mode.
 
@@ -1503,18 +1673,6 @@ buffer navigation, but applies it to windows. The default keys are
     :config
     (ace-window-display-mode)
     :bind ("s-o" . ace-window))
-#+END_SRC
-
-* Ag -- The Silver Searcher.
-
-#+BEGIN_SRC emacs-lisp
-(use-package ag
-  :commands ag
-  :ensure t
-  :config
-  (setq ag-highlight-search t
-        ag-reuse-window nil
-        ag-reuse-buffers t))
 #+END_SRC
 
 * Ement
@@ -1625,7 +1783,7 @@ increasingly obvious that the young'uns won't be brought to IRC.
 #+end_src
 
 * Corfu
-This is the way we do completion. Problem solved.
+This is the way we do in buffer completion. Problem solved.
 #+begin_src emacs-lisp
   (use-package corfu
     :straight t
@@ -1805,6 +1963,11 @@ dialect regularly.
 #+END_SRC
 
 ** Web Development Utilities
+** Zig
+#+begin_src emacs-lisp
+  (use-package zig-mode
+    :straight t)
+#+end_src
 
 *** Lorem Ipsum is useful in more places than just the web, but this is where it traditionally goes.
 #+BEGIN_SRC emacs-lisp
@@ -2000,7 +2163,6 @@ lot cooler than you may think.
 #+BEGIN_SRC emacs-lisp
 (setq inhibit-startup-message t)
 #+END_SRC
-
 ** Colours On Terminal
    custom colour themes generally enhance my experience of writing
    inside emacs, but when that theme is applied to an instance running

@@ -205,20 +205,7 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
     "g" #'consult-grep
     "i" #'consult-imenu
     "s" #'consult-notes-search-in-all-notes
-    "@" #'consult-mu
-    ;; "f" #'consult-denote-find
-    ;; "r" #'consult-denote-grep
-    )
-
-  ;; (defvar-keymap prefix-buffer-map-denote
-  ;;   :doc "Prefix map for C-q d d for Denote"
-  ;;   "l" #'denote-menu-list-notes
-  ;;   "f" #'denote-menu-filter
-  ;;   "k" #'denote-menu-filter-by-keyword
-  ;;   "c" #'denote-menu-clear-filters
-  ;;   "-" #'denote-menu-filter-out-keyword
-  ;;   "s" #'denote-org-extras-link-to-heading
-  ;;   )
+    "@" #'consult-mu)
 
   (defvar-keymap prefix-buffer-map-d
     :doc "Prefix map for C-q for dired/Denote"

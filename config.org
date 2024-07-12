@@ -496,13 +496,13 @@ file if you change this list.
 #+END_SRC
 
 ** Org Modern. Prettify.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (use-package org-modern
     :straight t
     :after org
     :config
     (progn 
-      (with-eval-after-load 'org (global-org-modern-mode))
+      ;; (with-eval-after-load 'org (global-org-modern-mode))
 
       (setq
        ;; Edit settings
@@ -1337,7 +1337,6 @@ This is a configuration file for the GPTel package in Emacs. It sets up the mode
     :config
     (setf  gptel-default-mode 'org-mode
            gptel-model "codellama:latest"
-           
            gptel-directives '((default . "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
                               (programming . "You are a large language model and a careful programmer and insightful system architect. Provide code and explanation as appropriate.")))
     :bind (("C-c t" . 'gptel-send)
@@ -1946,7 +1945,7 @@ dialect regularly.
     :straight t)
 #+end_src
 
-*** Lorem Ipsum is useful in more places than just the web, but this is where it traditionally goes.
+** Lorem Ipsum is useful in more places than just the web, but this is where it traditionally goes.
 #+BEGIN_SRC emacs-lisp
   (use-package lorem-ipsum
     :ensure t)
@@ -2099,8 +2098,7 @@ Integrates with IPython., using elpy jedi, and virtualenvwrapper.
     (setq venv-location "~/.virtualenvs"))
 #+END_SRC
 ** Typescript mode
-
-#+BEGIN_SRC emacs-lisp
+ #+BEGIN_SRC emacs-lisp
   ;; (use-package typescript-mode
   ;;   :ensure t
   ;;   :defer t)

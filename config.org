@@ -207,10 +207,10 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
     "s" #'consult-notes-search-in-all-notes
     "@" #'consult-mu)
 
-  (defvar-keymap prefix-buffer-map-d
-    :doc "Prefix map for C-q for dired/Denote"
-    "j" #'dired
-    "d" prefix-buffer-map-denote)
+  ;; (defvar-keymap prefix-buffer-map-d
+  ;;   :doc "Prefix map for C-q for dired/Denote"
+  ;;   "j" #'dired
+  ;;   "d" prefix-buffer-map-denote)
 
   (defvar-keymap prefix-buffer-map-e
     :doc "Prefix map for C-q for ement/erc"
@@ -219,11 +219,6 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
     "z" #'connect-to-znc
     "o" #'erc-occur
     "d" #'disconnect-from-znc)
-
-  (defvar-keymap prefix-buffer-map-f
-    :doc "Prefix map for C-q for fzf"
-    "f" #'fzf
-    "d" #'fzf-directory)
 
   (defvar-keymap prefix-buffer-map-j
     :doc "Prefix map for C-q for jump"
@@ -301,9 +296,7 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
     "0" prefix-buffer-map-0
     "b" prefix-buffer-map-b
     "c" prefix-buffer-map-c
-    "d" prefix-buffer-map-d
     "e" prefix-buffer-map-e
-    "f" prefix-buffer-map-f
     "g" 'magit-status
     "j" prefix-buffer-map-j
     "h" help-map
@@ -321,9 +314,7 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
     "0" `("0x0" . ,prefix-buffer-map-0)
     "b" `("Buffer" . ,prefix-buffer-map-b)
     "c" `("Consult" . ,prefix-buffer-map-c)
-    "d" `("Dired/Denote" . ,prefix-buffer-map-d)
     "e" `("Ement/ERC" . ,prefix-buffer-map-e)
-    "f" `("Fzf" . ,prefix-buffer-map-f)
     "j" `("Jump" . ,prefix-buffer-map-j)
     "h" `("Help Map" . ,help-map)
     "l" `("Line" . ,prefix-buffer-map-l)
@@ -334,7 +325,6 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
     "s" `("Spelling/Dictionary/Jinx" . ,prefix-buffer-map-s)
     "t" `("Terminals" . ,prefix-buffer-map-t)
     "u" `("Undo Tree" . ,prefix-buffer-map-u)
-    "d d" `("Denote" . ,prefix-buffer-map-denote)
     "m c" `("Casual Menus" . ,prefix-buffer-map-casual))
 
   (keymap-set global-map "C-q" prefix-command-q)
@@ -1029,7 +1019,6 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
 * Dashboard
 Return to the subject of previous sessions fast quick.
 #+BEGIN_SRC emacs-lisp
-
   ;; Function to get a random file with specified extensions from a directory
   (defun get-random-file (directory)
     (interactive)
@@ -1154,7 +1143,8 @@ This really is the best PDF management system I've ever used.
     (setf tramp-terminal-type "dumb")
     (add-to-list 'tramp-connection-properties
                  (list (regexp-quote "/ssh:fade@deepsky.com:")
-                       "remote-shell" "/bin/sh"))) 
+                       "remote-shell" "/bin/sh"
+                       ))) 
 #+END_SRC
 
 * Window

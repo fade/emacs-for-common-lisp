@@ -229,8 +229,7 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
 
   (defvar-keymap prefix-buffer-map-l
     :doc "Prefix map for C-q line"
-    "f" #'fixup-whitespace
-    )
+    "f" #'fixup-whitespace)
 
   (defvar-keymap prefix-buffer-map-casual
     :doc "Prefix map for C-q for casual"
@@ -240,12 +239,20 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
     "n" #'casual-info-tmenu
     "d" #'casual-dired-tmenu)
 
+  (defvar-keymap prefix-buffer-map-mark
+    :doc "Prefix map for C-q for mark"
+    "w" #'mark-word
+    "s" #'mark-end-of-sentence
+    "p" #'mark-paragraph
+    "b" #'mark-whole-buffer)
+
   (defvar-keymap prefix-buffer-map-m
     :doc "Prefix map for C-q for misc"
     "a" #'accent-menu
-    "f" #'follow-mode
-    "p" #'pass
     "c" prefix-buffer-map-casual
+    "f" #'follow-mode
+    "m" prefix-buffer-map-mark
+    "p" #'pass
     "s" #'scroll-lock-mode)
 
   (defvar-keymap prefix-buffer-map-o
@@ -325,7 +332,8 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
     "s" `("Spelling/Dictionary/Jinx" . ,prefix-buffer-map-s)
     "t" `("Terminals" . ,prefix-buffer-map-t)
     "u" `("Undo Tree" . ,prefix-buffer-map-u)
-    "m c" `("Casual Menus" . ,prefix-buffer-map-casual))
+    "m c" `("Casual Menus" . ,prefix-buffer-map-casual)
+    "m m" `("Mark" . ,prefix-buffer-map-mark))
 
   (keymap-set global-map "C-q" prefix-command-q)
 
@@ -1005,8 +1013,7 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
         ("tree-sitter-cpp"))
 
        ("https://github.com/tree-sitter/tree-sitter-c"
-        (tree-sitter-c))
-       ))
+        (tree-sitter-c))))
 
     :config
     (setq treesit-extra-load-path (list (expand-file-name "tree-sit" user-emacs-directory)))
@@ -1028,7 +1035,7 @@ Return to the subject of previous sessions fast quick.
           (nth (random (length filtered-files)) filtered-files)
         (progn
           (message "Error: No supported files found in %s" directory)
-          nil))))
+          (return nil)))))
 
   ;; Function to set a random picture as the startup banner
   (defun set-random-startup-banner ()
@@ -1218,46 +1225,47 @@ person with unusual editor defaults.
 * Mail with mu4e
 
 #+BEGIN_SRC emacs-lisp
-  (if run-email
-      (use-package mu4e
-        :straight t
-        ;; :defer 120
-        :load-path "/usr/share/emacs/site-lisp/mu4e"
-        
-        :config
-        ;; this setting avoids mbsync problems
-        (setq mu4e-change-filenames-when-moving t)
 
-        ;; update every 10 minutes
-        (setq mu4e-update-interval (* 10 60))
-        (setq mu4e-get-mail-command "mbsync -a")
-        (setq mu4e-mu-binary "/usr/bin/mu")
-        (setq mu4e-root-maildir "~/Mail/GMail/")
+  (use-package mu4e
+    :straight t
+    :if run-email
+    ;; :defer 120
+    :load-path "/usr/share/emacs/site-lisp/mu4e"
+    
+    :config
+    ;; this setting avoids mbsync problems
+    (setq mu4e-change-filenames-when-moving t)
 
-        ;; Gmail folder structure
-        (setq mu4e-drafts-folder "/[Gmail].Drafts")
-        (setq mu4e-sent-folder "/[Gmail].Sent Mail")
-        (setq mu4e-refile-folder "/[Gmail].All Mail")
-        (setq mu4e-trash-folder "/[Gmail].Trash")
+    ;; update every 10 minutes
+    (setq mu4e-update-interval (* 10 60))
+    (setq mu4e-get-mail-command "mbsync -a")
+    (setq mu4e-mu-binary "/usr/bin/mu")
+    (setq mu4e-root-maildir "~/Mail/GMail/")
 
-        (setq mu4e-headers-fields
-              '((:human-date . 25)
-                (:flags . 6)
-                (:from . 22)
-                (:to . 22)
-                (:thread-subject . nil)))
+    ;; Gmail folder structure
+    (setq mu4e-drafts-folder "/[Gmail].Drafts")
+    (setq mu4e-sent-folder "/[Gmail].Sent Mail")
+    (setq mu4e-refile-folder "/[Gmail].All Mail")
+    (setq mu4e-trash-folder "/[Gmail].Trash")
 
-        (setq mu4e-maildir-shortcuts
-              '(("/Inbox"                  . ?i)
-                ("/[Gmail].Sent Mail"      . ?s)
-                ("/[Gmail].Trash"          . ?t)
-                ("/[Gmail].Drafts"         . ?d)
-                ("/[Gmail].All Mail"       . ?a)))
-        ))
+    (setq mu4e-headers-fields
+          '((:human-date . 25)
+            (:flags . 6)
+            (:from . 22)
+            (:to . 22)
+            (:thread-subject . nil)))
 
-  ;; (setq (smtpmail-smtp-server . "smtp.gmail.com")
-  ;;       (smtpmail-smtp-service . 465)
-  ;;       (smtpmail-stream-type . ssl))
+    (setq mu4e-maildir-shortcuts
+          '(("/Inbox"                  . ?i)
+            ("/[Gmail].Sent Mail"      . ?s)
+            ("/[Gmail].Trash"          . ?t)
+            ("/[Gmail].Drafts"         . ?d)
+            ("/[Gmail].All Mail"       . ?a))))
+
+    ;; (setq (smtpmail-smtp-server . "smtp.gmail.com")
+    ;;       (smtpmail-smtp-service . 465)
+    ;;       (smtpmail-stream-type . ssl))
+    
 #+end_src
 
 * Minor conveniences

@@ -879,6 +879,11 @@ This makes sure that everything can be a project.
 ** Let projectile call make
 #+BEGIN_SRC emacs-lisp :tangle no
   (global-set-key (kbd "<f5>") 'projectile-compile-project)
+
+  ;; (use-package compile
+  ;;   :custom
+  ;;   (compile-scroll-buffer t))
+
 #+END_SRC
 
 * Perspectives

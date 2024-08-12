@@ -358,6 +358,8 @@
  '(company-tooltip-scrollbar-thumb ((t (:background "#0ccc0ccc0ccc"))))
  '(company-tooltip-scrollbar-track ((t (:background "#199919991999"))))
  '(company-tooltip-selection ((t (:inherit font-lock-function-name-face))))
+ '(erc-input-face ((t (:foreground "spring green"))))
+ '(erc-my-nick-face ((t (:foreground "magenta" :weight bold))))
  '(font-lock-constant-face ((t (:foreground "#00ff7f"))))
  '(font-lock-string-face ((t (:foreground "cornsilk3"))))
  '(helm-bookmark-directory ((t (:inherit helm-ff-directory))))

@@ -1229,7 +1229,7 @@ person with unusual editor defaults.
 
 * Mail with mu4e
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 
   (use-package mu4e
     :if (and (eq system-type 'gnu/linux)

@@ -5,6 +5,14 @@
 #+OPTIONS: toc:4 h:4
 #+ATTR_HTML: :style margin-left: auto; margin-right: auto;
 
+* Emacs Startup Profiler
+#+begin_src emacs-lisp
+  (use-package esup
+    :ensure t
+    ;; To use MELPA Stable use ":pin melpa-stable",
+    :pin melpa)
+#+end_src
+
 * Personal Information
 
 Obviously, you'll want to change this to match your personal
@@ -14,7 +22,7 @@ credentials.
 	user-mail-address "fade@deepsky.com")
 #+END_SRC
 
-* Pass the built-in unix password manager, emacs support
+* Pass, the built-in unix password manager, emacs support
 
 #+BEGIN_SRC emacs-lisp
   (use-package pass
@@ -38,6 +46,47 @@ your current buffer.
       (which-key-mode)
       (setq which-key-idle-delay 1))
   #+END_SRC
+
+* Causal Suite of Transient menus
+#+begin_src emacs-lisp
+  (use-package casual-suite
+    :straight t)
+#+end_src
+
+* Popper for popup windows
+popper solves the problem where you summoon a repl or similar to do a calculation, which then disturbs the feng shui of your carefully layed out windows. Popper puts the windows in a popup overlay which can be dismissed into the background after you are done with it.
+#+begin_src emacs-lisp
+  (use-package popper
+    :straight t
+    :hook (after-init . popper-mode)
+    :bind
+    ("C-\\"    . popper-toggle)
+    ("M-\\"    . popper-cycle)
+    ("C-M-\\"  . popper-toggle-type)
+    ("C-c C-z" . +switch-to-popup)
+    :custom
+    (popper-echo-mode t)
+    (popper-mode-line nil)
+    (popper-window-height 0.33)
+    (popper-reference-buffers
+     '("^\\*sly-[^s]" "\\*Messages\\*" "\\*Backtrace\\*" "\\*Warnings\\*"
+       "\\*Agenda Commands\\*" "\\*Org Select\\*" "\\*Capture\\*" "^CAPTURE-.*\\.org*"
+       "\\*Shell Command Output\\*" "Output\\*$" "\\*vc-.*\\**" "\\*eldoc\\*"
+       "^\\*ielm\\*" "^\\*eshell.*\\*$" "^\\*.*shell.*\\*.*$"
+       ("\\*Async Shell Command\\*" . hide)
+       eat-mode geiser-repl-mode cider-repl-mode ajrepl-mode inf-ruby-mode
+       flymake-diagnostics-buffer-mode compilation-mode comint-mode help-mode))
+    :config
+    (defun +switch-to-popup ()
+      "Switch between the last focused window and the popup window."
+      (interactive)
+      (let ((mru-window (get-mru-window nil nil 'not-this-one-dummy))
+            (current-popup (caar popper-open-popup-alist)))
+        (if current-popup
+            (if (eq (selected-window) current-popup)
+                (select-window mru-window)
+              (select-window current-popup))))))
+#+end_src
 
 * Sane defaults
 Sources for this section include [[https://github.com/magnars/.emacs.d/blob/master/settings/sane-defaults.el][Magnar Sveen]] and [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha Chua]].
@@ -172,12 +221,12 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
          (let* ((fn-list (dired-get-marked-files nil arg)))
            (mapc 'find-file fn-list)))))
 #+END_SRC
+
 * Jinx for spelling, per SummerEmacs.
 #+begin_src emacs-lisp
   (use-package jinx
     :straight t
     :hook 'emacs-startup-hook #'global-jinx-mode)
-
 #+end_src
 * Personal keymaps
 #+begin_src emacs-lisp
@@ -234,10 +283,14 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
   (defvar-keymap prefix-buffer-map-casual
     :doc "Prefix map for C-q for casual"
     "a" #'casual-avy-tmenu
+    "g" #'casual-agenda-tmenu
     "i" #'casual-ibuffer-tmenu
     "c" #'casual-calc-tmenu
     "n" #'casual-info-tmenu
-    "d" #'casual-dired-tmenu)
+    "r" #'casual-re-builder-tmenu
+    "b" #'casual-bookmarks-tmenu
+    "d" #'casual-dired-tmenu
+    "e" #'casual-editkit-main-tmenu)
 
   (defvar-keymap prefix-buffer-map-mark
     :doc "Prefix map for C-q for mark"
@@ -280,6 +333,11 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
     "d" #'org-ql-find-in-org-directory
     "i" #'org-ql-view-recent-items)
 
+  (defvar-keymap prefix-buffer-map-r
+    :doc "Prefix map for C-q for frame configuration to register"
+    "r" #'frameset-to-register
+    "j" #'jump-to-register)
+
   (defvar-keymap prefix-buffer-map-s
     :doc "Prefix map for C-q for spelling"
     ;; "o" #'osx-dictionary-search-word-at-point
@@ -298,6 +356,10 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
     "u" #'undo-tree-undo
     "r" #'undo-tree-redo)
 
+  (defvar-keymap prefix-buffer-map-w
+    :doc "Prefix map for C-q for web"
+    "o" #'open-link-at-point-or-minibuffer-with-choice)
+
   (defvar-keymap prefix-command-q
     :doc "Prefix Map for C-q:"
     "0" prefix-buffer-map-0
@@ -312,10 +374,11 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
     "o" prefix-buffer-map-o
     "p" prefix-buffer-map-p
     "q" 'prefix-buffer-map-q
+    "r" prefix-buffer-map-r
     "s" prefix-buffer-map-s
     "t" prefix-buffer-map-t
     "u" prefix-buffer-map-u
-    "w" 'world-clock)
+    "w" prefix-buffer-map-w)
 
   (which-key-add-keymap-based-replacements prefix-command-q
     "0" `("0x0" . ,prefix-buffer-map-0)
@@ -329,6 +392,7 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
     "o" `("Org" . ,prefix-buffer-map-o)
     "p" `("Packages" . ,prefix-buffer-map-p)
     "q" `("Org-ql" . ,prefix-buffer-map-q)
+    "r" `("WindowRegisters" . ,prefix-buffer-map-r)
     "s" `("Spelling/Dictionary/Jinx" . ,prefix-buffer-map-s)
     "t" `("Terminals" . ,prefix-buffer-map-t)
     "u" `("Undo Tree" . ,prefix-buffer-map-u)
@@ -482,7 +546,7 @@ file if you change this list.
                       (list (expand-file-name "personal-agenda.org" site-org-files)
                             (expand-file-name "notes.org" site-org-files)
                             (expand-file-name "todos.org" site-org-files)
-                            (expand-file-name "Tasks.org" site-org-files)
+                            (expand-file-name "tasks.org" site-org-files)
                             (expand-file-name "people.org" site-org-files)
                             (expand-file-name "Archive.org" site-org-files)))))
 
@@ -544,8 +608,8 @@ file if you change this list.
   (use-package emacsql
     :straight t)
 
-  (use-package emacsql-sqlite
-    :straight t)
+  ;; (use-package emacsql-sqlite
+  ;;   :straight t)
 
   (use-package org-roam
     :straight t
@@ -628,12 +692,36 @@ Makes it all look a bit nicer, I hate looking at asterisks. Also, see
 =org-mode-setup= configuration function at the top of this file.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package org-bullets
+  ;; (use-package org-bullets
+  ;;   :straight t
+  ;;   :after org
+  ;;     :hook (org-mode . org-bullets-mode)
+  ;;     :custom
+  ;;     (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+
+  (use-package org-superstar
     :straight t
     :after org
-      :hook (org-mode . org-bullets-mode)
-      :custom
-      (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+    :hook (org-mode . (lambda ()
+                        (org-superstar-mode 1)))
+    :config
+    (org-superstar-configure-like-org-bullets)
+    ;; Define emoji bullets
+    ;; (setq org-superstar-headline-bullets-list '("💝" "💖" "❤️" "🧡" "💛" "💚" "💜"))
+    ;; (setq org-superstar-headline-bullets-list '("🍉" "🍋" "🍇" "🍐" "🍎" "🍊" "🍓" "🍑"))
+    ;; (setq org-superstar-headline-bullets-list '("🐝" "🦄" "🦋" "🐙" "🐳" "🐬" "🐠" "🐡"))
+    ;; (setq org-superstar-headline-bullets-list '("🎄" "🌳" "🌵" "🪴" "🌴" "🍀" "🌿" "🌱"))
+    ;; (setq org-superstar-headline-bullets-list '("🌼" "🌸" "🌺" "🌻" "🥀" "🌹" "🌷" "💐"))
+    ;; (setq org-superstar-headline-bullets-list '("🐻‍❄️" "🐼" "🐻" "🦊" "🐹" "🐱" "🐶" "🐨"))
+    ;; (setq org-superstar-headline-bullets-list '("☀️" "🌤️" "⛅️" "🌥️" "☁️" "🌦️" "🌧️" "🌨️")) ;; <- Doesn't render some emoji in list
+    ;; (setq org-superstar-headline-bullets-list '("☕️" "🍵" "🥐" "🥮" "🧇" "🥞" "🥚" "🍳"))
+    ;; (setq org-superstar-headline-bullets-list '("🐳" "🪼" "🐙" "🐠" "🐡" "🦀" "🐬" "🐟"))
+    (setq org-superstar-headline-bullets-list    '("🌟" "⭐" "✨" "💫" "👽" "💀" "🤖" "🚀"))
+    ;; (setq org-superstar-headline-bullets-list '("🥃" "🍹" "🧉" "🍷" "🍸" "🍺" "🥂" "🍻"))
+
+    ;; (setq org-superstar-item-bullet-alist '((?+ . "✨") (?- . "🌱") (?* . "⭐️")))
+    ;; (setq org-ellipsis "↴")
+    )
 #+END_SRC
 
 ** Org tags
@@ -827,6 +915,15 @@ exporter for PDF exporting. By changing the command to `latexmk`
 references appear in the PDF output like they should. Source:
 http://tex.stackexchange.com/a/161619.
 
+#+begin_src emacs-lisp
+  (use-package auctex-cont-latexmk
+    :straight t)
+
+  (use-package latex-extra
+    :straight t
+    :hook 'LaTeX-mode-hook #'latex-extra-mode)
+#+end_src
+
 #+BEGIN_SRC emacs-lisp
 (setq org-latex-pdf-process (list "latexmk -pdf %f"))
 #+END_SRC
@@ -910,7 +1007,7 @@ generate the package clause when this file is tangled.
 I would like to have buffers grouped by project, so navigating the
 buffers isn't so cluttered even in the presence of vertico.
 alphapapa's bufler mode looks to solve this problem.
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
   (use-package bufler
     :straight t)
 #+end_src
@@ -1028,6 +1125,7 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
     :straight t
     :after tree-sitter)
 #+end_src
+
 * Dashboard
 Return to the subject of previous sessions fast quick.
 #+BEGIN_SRC emacs-lisp
@@ -1044,6 +1142,7 @@ Return to the subject of previous sessions fast quick.
 
   ;; Function to set a random picture as the startup banner
   (defun set-random-startup-banner ()
+    (interactive)
     (setq dashboard-startup-banner (get-random-file dashboard-banner-dir)))
 
   (use-package dashboard
@@ -1072,7 +1171,7 @@ Return to the subject of previous sessions fast quick.
 
 #+end_src
 
-* List buffers
+* Update Changed File Buffers
 
 source: http://ergoemacs.org/emacs/emacs_buffer_management.html
 
@@ -1155,8 +1254,7 @@ This really is the best PDF management system I've ever used.
     (setf tramp-terminal-type "dumb")
     (add-to-list 'tramp-connection-properties
                  (list (regexp-quote "/ssh:fade@deepsky.com:")
-                       "remote-shell" "/bin/sh"
-                       ))) 
+                       "remote-shell" "/bin/sh"))) 
 #+END_SRC
 
 * Window
@@ -1350,7 +1448,8 @@ This is a configuration file for the GPTel package in Emacs. It sets up the mode
     :straight t
     :config
     (setf  gptel-default-mode 'org-mode
-           gptel-model "codellama:latest"
+           ;; gptel-model "codellama:latest"
+           gptel-model "qwen2.5-coder:7b"
            gptel-directives '((default . "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
                               (programming . "You are a large language model and a careful programmer and insightful system architect. Provide code and explanation as appropriate.")))
     :bind (("C-c t" . 'gptel-send)
@@ -1360,7 +1459,7 @@ This is a configuration file for the GPTel package in Emacs. It sets up the mode
   (setq gptel-backend (gptel-make-ollama "Ollama"
                         :host "localhost:11434"
                         :stream t
-                        :models '("codellama:latest" "zephyr:latest" "dolphin-mixtral:latest")))
+                        :models '("qwen2.5-coder:7b" "codellama:latest" "zephyr:latest" "llama3.2:latest")))
 #+end_src
 
 #+BEGIN_SRC emacs-lisp :tangle no
@@ -1453,7 +1552,6 @@ This is a configuration file for the GPTel package in Emacs. It sets up the mode
     :after flycheck)
 #+END_SRC
    
-** Completion
 ** Dictionary (Websters) support
 I was struggling to find an acceptable english dictionary for local
 off-line use, and googling lead me to a salubrious link tree, starting
@@ -1562,7 +1660,7 @@ No more juggling windows after commiting. It's magit bliss.
 #+END_SRC
 
 *** magit-todo converts :TODO, :FIXME to status actions in magit.
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no 
   (use-package magit-todos
     :straight t
     :after magit
@@ -1787,11 +1885,13 @@ This is the way we do in buffer completion. Problem solved.
                  ("C-p" . corfu-previous)
                  ("<tab>" . corfu-next)
                  ("<backtab>" . corfu-previous)))
-    :init
-    (global-corfu-mode))
+    :config
+    (global-corfu-mode)
+    :hook (after-init . global-corfu-mode))
 #+end_src
 
 * Languages
+
 ** Common Lisp
 *** SLY
     The jury has returned. Sly is superior to Slime.
@@ -1807,20 +1907,39 @@ This is the way we do in buffer completion. Problem solved.
 
     :config
     (progn
-      (setf sly-lisp-implementations
-            '((sbcl ("sbcl" "--core" "/home/fade/sbcl.core")) ;;"--dynamic-space-size" "8GB"
-              (sbcl-vanilla ("/usr/local/bin/sbcl" "--dynamic-space-size" "2500"))
-              (ccl ("/usr/bin/ros" "-L" "ccl-bin" "run"))
-              ;; (ccl ("/usr/local/bin/ccl"))
-              (abcl ("/usr/local/src/abcl/abcl"))
-              (clisp ("/usr/bin/clisp"))
-              (ecl ("/usr/local/bin/ecl"))
-              (decl ("/usr/bin/ecl"))))
-      (setf sly-kill-without-query-p t
-            sly-net-coding-system 'utf-8-unix
-            sly-complete-symbol*-fancy t
-            sly-default-lisp 'sbcl
-            common-lisp-hyperspec-root "file:///home/fade/SourceCode/lisp/HyperSpec/")
+      (defvar corepath (expand-file-name "sbcl.core" (getenv "HOME")))
+      (if (eql system-type 'gnu/linux)
+          (setf sly-lisp-implementations
+                '((sbcl ("sbcl" "--core" "/home/fade/sbcl.core")) ;;"--dynamic-space-size" "8GB"
+                  (sbcl-vanilla ("/usr/local/bin/sbcl" "--dynamic-space-size" "2500"))
+                  (ccl ("/usr/bin/ros" "-L" "ccl-bin" "run"))
+                  ;; (ccl ("/usr/local/bin/ccl"))
+                  (abcl ("/usr/local/src/abcl/abcl"))
+                  (clisp ("/usr/bin/clisp"))
+                  (ecl ("/usr/local/bin/ecl"))
+                  (decl ("/usr/bin/ecl")))
+                sly-kill-without-query-p t
+                sly-net-coding-system 'utf-8-unix
+                sly-complete-symbol*-fancy t
+                sly-default-lisp 'sbcl
+                common-lisp-hyperspec-root "file:///home/fade/SourceCode/lisp/HyperSpec/")
+        ;; else it's probably darwin, $HOME in /Users
+        (setf sly-lisp-implementations
+              '((sbcl ("sbcl" "--core" "/Users/fade/sbcl.core")) ;;"--dynamic-space-size" "8GB"
+                (sbcl-vanilla ("/usr/local/bin/sbcl" "--dynamic-space-size" "2500"))
+                (ccl ("/usr/bin/ros" "-L" "ccl-bin" "run"))
+                ;; (ccl ("/usr/local/bin/ccl"))
+                (abcl ("/usr/local/src/abcl/abcl"))
+                (clisp ("/usr/bin/clisp"))
+                (clasp ("/usr/local/bin/clasp"))
+                (ecl ("/usr/local/bin/ecl"))
+                (decl ("/usr/bin/ecl")))
+              sly-kill-without-query-p t
+              sly-net-coding-system 'utf-8-unix
+              sly-complete-symbol*-fancy t
+              sly-default-lisp 'sbcl
+              common-lisp-hyperspec-root "file:///home/fade/SourceCode/lisp/HyperSpec/"))
+
       (require 'sly-autoloads)
       (load "~/quicklisp/log4sly-setup.el")
       (add-to-list 'load-path "~/SourceCode/lisp/emacs_stuff/sly-stepper")
@@ -2062,60 +2181,41 @@ dialect regularly.
    * C-c C-k :: `skewer-load-buffer'
 
 ** Python
-Integrates with IPython., using elpy jedi, and virtualenvwrapper.
 
 #+BEGIN_SRC emacs-lisp
+  (use-package lsp-mode
+    :straight t)
 
-  ;; (use-package elpy
-  ;;   :ensure t
-  ;;   :config
-  ;;   (setq elpy-rpc-backend "jedi")
-  ;;   (setq python-shell-interpreter "ipython"
-  ;;         python-shell-interpreter-args "-i --simple-prompt")
-  ;;   (elpy-enable))
+  (add-hook 'python-mode-hook 'lsp-deferred)
 
-  ;; (use-package jedi
-  ;;   :ensure t
-  ;;   :init
-  ;;   (add-hook 'python-mode-hook 'jedi:setup)
-  ;;   :config
-  ;;   (local-set-key (kbd "M-.") 'jedi:goto-definition)
-  ;;   (local-set-key (kbd "M-,") 'jedi:goto-definition-pop-marker)
-  ;;   (local-set-key (kbd "M-?") 'jedi:show-doc)
-  ;;   (local-set-key (kbd "M-/") 'jedi:get-in-function-call)
-  ;;   (setq jedi:complete-on-dot t))
+  (use-package lsp-ui
+    :commands lsp-ui-mode
+    :straight t
+    :after lsp-mode)
 
-  ;; (use-package company-jedi
-  ;;   :ensure jedi
-  ;;   :ensure t
-  ;;   :config
-  ;;   (add-to-list 'company-backends 'company-jedi))
-
-  ;; (use-package jinja2-mode
-  ;;   :ensure t)
+  (use-package repeat
+    :config
+    (repeat-mode))
 
   (use-package lsp-pyright
     :straight t
+    :custom (lsp-pyright-langserver-command "pyright")
     :hook (python-mode . (lambda ()
                            (require 'lsp-pyright)
-                           (lsp))))
+                           (lsp)))) ; or lsp-deferred
 
+  (use-package envrc
+    :straight t
+    :hook (after-init . envrc-global-mode))
 #+END_SRC
 
 *** Virtualenvwrapper
-
 #+BEGIN_SRC emacs-lisp
   (use-package virtualenvwrapper
     :ensure t
     :defer t
     :config
     (setq venv-location "~/.virtualenvs"))
-#+END_SRC
-** Typescript mode
- #+BEGIN_SRC emacs-lisp
-  ;; (use-package typescript-mode
-  ;;   :ensure t
-  ;;   :defer t)
 #+END_SRC
 
 * Highlight line containing the point
@@ -2170,6 +2270,12 @@ lot cooler than you may think.
   (use-package ef-themes
     :straight t)
 #+END_SRC
+
+** Doom Themes, sometimes
+#+begin_src emacs-lisp
+  (use-package doom-themes
+    :ensure t)
+#+end_src
 
 ** DeepSky Theme
 
@@ -2322,3 +2428,20 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
                    :line-spacing nil))))))
 #+END_SRC
 
+
+* Yasnippet
+
+ Templates for code fragments
+
+ #+begin_src emacs-lisp
+   (use-package yasnippet
+     :straight t
+     :config
+     (define-key yas-minor-mode-map (kbd "M-z") 'yas-expand)
+     (define-key yas-keymap (kbd "M-n") 'yas-next-field-or-maybe-expand)
+     (define-key yas-keymap (kbd "M-p") 'yas-pre-field))
+
+   (use-package yasnippet-snippets
+     :straight t
+     :after yasnippet)
+ #+end_src

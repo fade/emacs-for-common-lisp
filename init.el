@@ -47,7 +47,8 @@
 
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("ELPA"  . "http://tromey.com/elpa/")
-			 ("gnu"   . "http://elpa.gnu.org/packages/"))) 
+			 ("gnu"   . "http://elpa.gnu.org/packages/")
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/"))) 
 
 (package-initialize)
 

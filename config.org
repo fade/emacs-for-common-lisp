@@ -1449,7 +1449,7 @@ This is a configuration file for the GPTel package in Emacs. It sets up the mode
     :config
     (setf  gptel-default-mode 'org-mode
            ;; gptel-model "codellama:latest"
-           gptel-model "qwen2.5-coder:7b"
+           gptel-model "deepseek-r1:7b" ;"qwen2.5-coder:7b"
            gptel-directives '((default . "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
                               (programming . "You are a large language model and a careful programmer and insightful system architect. Provide code and explanation as appropriate.")))
     :bind (("C-c t" . 'gptel-send)
@@ -1459,7 +1459,7 @@ This is a configuration file for the GPTel package in Emacs. It sets up the mode
   (setq gptel-backend (gptel-make-ollama "Ollama"
                         :host "localhost:11434"
                         :stream t
-                        :models '("qwen2.5-coder:7b" "codellama:latest" "zephyr:latest" "llama3.2:latest")))
+                        :models '("deepseek-r1:7b" "codellama:latest" "zephyr:latest" "llama3.2:latest")))
 #+end_src
 
 #+BEGIN_SRC emacs-lisp :tangle no

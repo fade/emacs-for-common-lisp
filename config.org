@@ -14,7 +14,6 @@
 #+end_src
 
 * Personal Information
-
 Obviously, you'll want to change this to match your personal
 credentials.
 #+BEGIN_SRC emacs-lisp 
@@ -62,7 +61,7 @@ popper solves the problem where you summoon a repl or similar to do a calculatio
     :bind
     ("C-\\"    . popper-toggle)
     ("M-\\"    . popper-cycle)
-    ("C-M-\\"  . popper-toggle-type)
+    ("S-M-\\"  . popper-toggle-type)
     ("C-c C-z" . +switch-to-popup)
     :custom
     (popper-echo-mode t)
@@ -1925,7 +1924,7 @@ This is the way we do in buffer completion. Problem solved.
                 common-lisp-hyperspec-root "file:///home/fade/SourceCode/lisp/HyperSpec/")
         ;; else it's probably darwin, $HOME in /Users
         (setf sly-lisp-implementations
-              '((sbcl ("sbcl" "--core" "/Users/fade/sbcl.core")) ;;"--dynamic-space-size" "8GB"
+              '((sbcl ("sbcl" "--core" "/Users/fade/sbcl.core" "--dynamic-space-size" "8GB")) ;;
                 (sbcl-vanilla ("/usr/local/bin/sbcl" "--dynamic-space-size" "2500"))
                 (ccl ("/usr/bin/ros" "-L" "ccl-bin" "run"))
                 ;; (ccl ("/usr/local/bin/ccl"))
@@ -2423,7 +2422,7 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
                    :variable-pitch-height 1.0
                    :bold-family nil ; use whatever the underlying face has
                    :bold-weight bold
-                   :italic-family nil
+                   :italic-family "EnvyCodeR Nerd Font"
                    :italic-slant italic
                    :line-spacing nil))))))
 #+END_SRC

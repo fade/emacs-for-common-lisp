@@ -1046,6 +1046,7 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
     (setq browse-url-generic-program (executable-find "firefox"))
     (add-hook 'eww-mode-hook #'toggle-word-wrap)
     (add-hook 'eww-mode-hook #'visual-line-mode)
+    ;; (add-hook 'eww-mode-hook #'eww-readable)
     :config
     (use-package s :ensure t)
     (define-key eww-mode-map "o" 'eww)
@@ -1891,6 +1892,17 @@ This is the way we do in buffer completion. Problem solved.
 
 * Languages
 
+** Janet 
+
+#+begin_src emacs-lisp
+  (use-package janet-mode
+    :straight t
+    :config
+    (add-hook 'janet-mode-hook
+              (define-key janet-mode-map "{" #'paredit-open-curly)
+              (define-key janet-mode-map "}" #'paredit-close-curly)))
+#+end_src
+
 ** Common Lisp
 *** SLY
     The jury has returned. Sly is superior to Slime.
@@ -1938,6 +1950,12 @@ This is the way we do in buffer completion. Problem solved.
               sly-complete-symbol*-fancy t
               sly-default-lisp 'sbcl
               common-lisp-hyperspec-root "file:///home/fade/SourceCode/lisp/HyperSpec/"))
+      (defun my-sly-mrepl-goto-end (&rest _)
+        "Force the prompt to the bottom of the REPL window."
+        (with-selected-window (get-buffer-window (sly-mrepl))
+          ;;(goto-char (point-max))
+          (recenter -4)))
+      (advice-add 'sly-mrepl--insert-prompt :after #'my-sly-mrepl-goto-end)
 
       (require 'sly-autoloads)
       (load "~/quicklisp/log4sly-setup.el")
@@ -1947,6 +1965,15 @@ This is the way we do in buffer completion. Problem solved.
 
   (eval-after-load 'sly
     `(define-key sly-prefix-map (kbd "M-h") 'sly-documentation-lookup))
+
+  ;;; I want the repl prompt at the bottom, always... is this a way?
+  ;; (use-package sly-mrepl
+  ;;   :config 
+  ;; (defun my-sly-mrepl-goto-end (&rest _)
+  ;;   (with-selected-window (get-buffer-window (sly-mrepl))
+  ;;     ;;(goto-char (point-max))
+  ;;     (recenter -4)))
+  ;; (advice-add 'sly-mrepl--insert-prompt :after #'my-sly-mrepl-goto-end))
 
   (use-package sly-asdf
     ;; :load-path "~/SourceCode/lisp/sly-asdf"

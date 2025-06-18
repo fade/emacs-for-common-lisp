@@ -119,7 +119,6 @@
          ;; rename org-roam buffers to their enclosed #+TITLE
          (add-hook 'org-mode-hook 'fade/org-mode-rename-buffer)))
 
-
 ;;; Begin initialization
 ;; Turn off mouse interface early in startup to avoid momentary display
 (when window-system

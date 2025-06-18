@@ -54,7 +54,7 @@ your current buffer.
 
 * Popper for popup windows
 popper solves the problem where you summoon a repl or similar to do a calculation, which then disturbs the feng shui of your carefully layed out windows. Popper puts the windows in a popup overlay which can be dismissed into the background after you are done with it.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle n;9uo
   (use-package popper
     :straight t
     :hook (after-init . popper-mode)
@@ -507,6 +507,12 @@ speed keys in Org mode]].
   ;; Save Org buffers after refiling!
   (advice-add 'org-refile :after 'org-save-all-org-buffers)
 #+END_SRC
+
+#+begin_src emacs-lisp
+  (use-package org-transclusion
+    :straight t
+    :bind nil)
+#+end_src
 
 ** Org Tables .. Extended functionality
 
@@ -1460,6 +1466,19 @@ This is a configuration file for the GPTel package in Emacs. It sets up the mode
                         :host "localhost:11434"
                         :stream t
                         :models '("deepseek-r1:7b" "codellama:latest" "zephyr:latest" "llama3.2:latest")))
+#+end_src
+
+Ollama Buddy is an Emacs package that provides a friendly AI assistant
+for various tasks such as code refactoring, generating commit messages,
+dictionary lookups, and more.  It interacts with the Ollama server to
+perform these tasks.
+
+#+begin_src emacs-lisp
+    (use-package ollama-buddy
+      :straight t
+      :bind
+      ("C-c o" . ollama-buddy-menu)
+      ("C-c O" . ollama-buddy-transient-menu-wrapper))
 #+end_src
 
 #+BEGIN_SRC emacs-lisp :tangle no

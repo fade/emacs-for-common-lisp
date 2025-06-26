@@ -621,6 +621,7 @@ file if you change this list.
     :init
     (setq org-roam-v2-ack t)
     :config
+    (setf org-web-tools-pandoc-sleep-time 2.0)
     (setf org-roam-directory (expand-file-name "Roam/" site-org-files))
     (setf org-roam-dailies-directory (expand-file-name "Dailies/" org-roam-directory))
 

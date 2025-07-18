@@ -54,7 +54,7 @@ your current buffer.
 
 * Popper for popup windows
 popper solves the problem where you summoon a repl or similar to do a calculation, which then disturbs the feng shui of your carefully layed out windows. Popper puts the windows in a popup overlay which can be dismissed into the background after you are done with it.
-#+begin_src emacs-lisp :tangle n;9uo
+#+begin_src emacs-lisp :tangle no
   (use-package popper
     :straight t
     :hook (after-init . popper-mode)
@@ -970,15 +970,6 @@ Projectile is an awesome project manager, mostly because it recognizes
 directories with a =.git= directory as projects and helps you manage
 them accordingly.
 
-** Enable projectile globally
-This makes sure that everything can be a project.
-#+BEGIN_SRC emacs-lisp :tangle no
-  (use-package projectile
-    :straight t
-    :init
-    (projectile-mode 1))
-#+END_SRC
-
 ** Let projectile call make
 #+BEGIN_SRC emacs-lisp :tangle no
   (global-set-key (kbd "<f5>") 'projectile-compile-project)
@@ -1717,7 +1708,7 @@ Workspaces in Emacs.
 
 Project navigation and management library for Emacs.
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
 (use-package projectile
   :ensure t
   :diminish projectile-mode
@@ -1912,7 +1903,11 @@ This is the way we do in buffer completion. Problem solved.
 
 * Languages
 
-** Janet 
+** Clojure
+
+
+
+** Janet
 
 #+begin_src emacs-lisp
   (use-package janet-mode

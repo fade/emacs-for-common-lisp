@@ -126,7 +126,8 @@
  '(cua-read-only-cursor-color "#859900")
  '(custom-enabled-themes '(deepsky))
  '(custom-safe-themes
-   '("7212337b36e4cce2628c9451173d910c728b5a760a0ce17cf82cd41af907bd9b"
+   '("7e377879cbd60c66b88e51fad480b3ab18d60847f31c435f15f5df18bdb18184"
+     "7212337b36e4cce2628c9451173d910c728b5a760a0ce17cf82cd41af907bd9b"
      "7e22a8dcf2adcd8b330eab2ed6023fa20ba3b17704d4b186fa9c53f1fab3d4d2"
      "893e6ba11e50a0f2007d0fe67e0d16e9c04aa016ecfd9892c8ed3233d98cecd3"
      "210e1f1c1b675e33aa400075c5c41f26440b2f0dcbe8ad7368a71b92012c267e"

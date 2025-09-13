@@ -119,7 +119,8 @@
      (tramp-connection-local-default-shell-profile
       (shell-file-name . "/bin/sh") (shell-command-switch . "-c"))
      (tramp-connection-local-default-system-profile
-      (path-separator . ":") (null-device . "/dev/null"))))
+      (path-separator . ":") (null-device . "/dev/null")
+      (exec-suffixes ""))))
  '(cua-global-mark-cursor-color "#2aa198")
  '(cua-normal-cursor-color "#839496")
  '(cua-overwrite-cursor-color "#b58900")
@@ -145,6 +146,7 @@
      "f0a99f53cbf7b004ba0c1760aa14fd70f2eabafe4e62a2b3cf5cabae8203113b"
      default))
  '(display-time-mode t)
+ '(elfeed-feeds '("https://news.colonq.computer/atom.xml"))
  '(fci-rule-color "#383838")
  '(flymake-error-bitmap '(flymake-double-exclamation-mark modus-theme-fringe-red))
  '(flymake-note-bitmap '(exclamation-mark modus-theme-fringe-cyan))

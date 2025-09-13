@@ -953,6 +953,13 @@ an Org-mode file.
     :straight t)
 #+end_src
 
+* Dotfiles
+I had hopes for this, but it doesn't work.
+#+begin_src emacs-lisp :tangle no
+  (use-package chezmoi
+    :straight t)
+#+end_src
+
 * Hydra
 Hail Hydra!
 #+BEGIN_SRC emacs-lisp
@@ -2115,6 +2122,25 @@ dialect regularly.
 #+END_SRC
 
 ** Web Development Utilities
+web-mode provides syntax support for html typed and related files.
+#+begin_src emacs-lisp
+  (require 'lass) ;; mode to support shinmera's common lisp LASS compiler
+
+  (use-package web-mode
+    :straight t
+    :mode
+    (("\\.phtml\\'" . web-mode)
+     ("\\.ctml\\'" . web-mode)
+     ("\\.chtml\\'" . web-mode)
+     ("\\.php\\'" . web-mode)
+     ("\\.tpl\\'" . web-mode)
+     ("\\.[agj]sp\\'" . web-mode)
+     ("\\.as[cp]x\\'" . web-mode)
+     ("\\.erb\\'" . web-mode)
+     ("\\.mustache\\'" . web-mode)
+     ("\\.djhtml\\'" . web-mode)))
+
+#+end_src
 ** Zig
 #+begin_src emacs-lisp
   (use-package zig-mode
@@ -2132,7 +2158,7 @@ dialect regularly.
     (use-package js2-mode
       :ensure t
       :init
-      (setq js-basic-indent 2)
+      ;; (setq js-basic-indent 2)
       (setq-default ;; js2-basic-indent 2
                     ;; js2-basic-offset 2
                     ;; js2-auto-indent-p t
@@ -2140,11 +2166,11 @@ dialect regularly.
                     ;; js2-enter-indents-newline t
                     ;; js2-indent-on-enter-key t
                     js2-global-externs (list "window" "module" "require" "buster" "sinon" "assert" "refute" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON" "jQuery" "$"))
-    
+
       (add-hook 'js2-mode-hook
                 (lambda ()
                   (push '("function" . ?ƒ) prettify-symbols-alist)))
-    
+
       (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
       :custom
       (js2-basic-indent 2)
@@ -2357,7 +2383,7 @@ lot cooler than you may think.
     (interactive)
     (mapc #'disable-theme custom-enabled-themes))
 
-  (bind-key "s-<f12>" 'switch-theme)
+  (bind-key "s-<f10>" 'switch-theme)
   (bind-key "s-<f11>" 'disable-active-themes)
 #+END_SRC
 

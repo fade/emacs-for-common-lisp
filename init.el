@@ -132,7 +132,7 @@
   (global-eldoc-mode 1)
   (xterm-mouse-mode 1))
 
-(set-frame-parameter nil 'fullscreen 'maximized)
+;; (set-frame-parameter nil 'fullscreen 'maximized)
 (setq inhibit-startup-message t)
 (setq initial-scratch-message "")
 

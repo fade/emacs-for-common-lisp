@@ -1947,7 +1947,6 @@ This is the way we do in buffer completion. Problem solved.
                   (sbcl ("sbcl" "--dynamic-space-size" "2500"))
                   (sbcl-vanilla ("/usr/local/bin/sbcl" "--dynamic-space-size" "2500"))
                   (ccl ("/usr/bin/ros" "-L" "ccl-bin" "run"))
-                  ;; (ccl ("/usr/local/bin/ccl"))
                   (abcl ("/usr/local/src/abcl/abcl"))
                   (clisp ("/usr/bin/clisp"))
                   (ecl ("/usr/local/bin/ecl"))
@@ -1962,7 +1961,6 @@ This is the way we do in buffer completion. Problem solved.
               '((sbcl ("sbcl" "--core" "/Users/fade/sbcl.core" "--dynamic-space-size" "8GB")) ;;
                 (sbcl-vanilla ("/usr/local/bin/sbcl" "--dynamic-space-size" "2500"))
                 (ccl ("/usr/bin/ros" "-L" "ccl-bin" "run"))
-                ;; (ccl ("/usr/local/bin/ccl"))
                 (abcl ("/usr/local/src/abcl/abcl"))
                 (clisp ("/usr/bin/clisp"))
                 (clasp ("/usr/local/bin/clasp"))
@@ -1974,12 +1972,15 @@ This is the way we do in buffer completion. Problem solved.
               sly-default-lisp 'sbcl
               common-lisp-hyperspec-root "file:///home/fade/SourceCode/lisp/HyperSpec/"))
 
+      ;; the prompt should live at the bottom of the screen; this isn't like... good, but it's better.
       (defun my-sly-mrepl-goto-end (&rest _)
         "Force the prompt to the bottom of the REPL window."
         (with-selected-window (get-buffer-window (sly-mrepl))
           ;;(goto-char (point-max))
           (recenter -4)))
+
       (advice-add 'sly-mrepl--insert-prompt :after #'my-sly-mrepl-goto-end)
+      ;; /prompt
 
       (require 'sly-autoloads)
       (load "~/quicklisp/log4sly-setup.el")

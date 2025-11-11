@@ -425,7 +425,7 @@ file, and also when you enter an org file of any kind, where the
 configuration around faces and org functions just doesn't work.
 
 On Org mode version 9 I wasn't able to execute source blocks out of
-the box. [[https://emacs.stackexchange.com/a/28604][Others have run into the same issue too]]. The solution is to
+the box. [[https://emacs.stackexchange.com/a/28604][Others have run into the same issue, also]]. The solution is to
 remove the .elc files from the package directory:
 
 #+BEGIN_SRC sh :var ORG_DIR=(let* ((org-v (cadr (split-string (org-version nil t) "@"))) (len (length org-v))) (substring org-v 1 (- len 2)))
@@ -1940,6 +1940,7 @@ This is the way we do in buffer completion. Problem solved.
 
     :config
     (progn
+      (defvar  sly-elide-output nil)
       (defvar corepath (expand-file-name "sbcl.core" (getenv "HOME")))
       (if (eql system-type 'gnu/linux)
           (setf sly-lisp-implementations
@@ -1971,6 +1972,7 @@ This is the way we do in buffer completion. Problem solved.
               sly-complete-symbol*-fancy t
               sly-default-lisp 'sbcl
               common-lisp-hyperspec-root "file:///home/fade/SourceCode/lisp/HyperSpec/"))
+      
 
       ;; the prompt should live at the bottom of the screen; this isn't like... good, but it's better.
       (defun my-sly-mrepl-goto-end (&rest _)
@@ -1988,38 +1990,29 @@ This is the way we do in buffer completion. Problem solved.
       (require 'sly-stepper-autoloads)
       (global-log4sly-mode 1)))
 
-  (eval-after-load 'sly
-    `(define-key sly-prefix-map (kbd "M-h") 'sly-documentation-lookup))
+    (eval-after-load 'sly
+      `(define-key sly-prefix-map (kbd "M-h") 'sly-documentation-lookup))
 
-  ;;; I want the repl prompt at the bottom, always... is this a way?
-  ;; (use-package sly-mrepl
-  ;;   :config 
-  ;; (defun my-sly-mrepl-goto-end (&rest _)
-  ;;   (with-selected-window (get-buffer-window (sly-mrepl))
-  ;;     ;;(goto-char (point-max))
-  ;;     (recenter -4)))
-  ;; (advice-add 'sly-mrepl--insert-prompt :after #'my-sly-mrepl-goto-end))
+    (use-package sly-asdf
+      ;; :load-path "~/SourceCode/lisp/sly-asdf"
+      :straight t
+      :after sly)
 
-  (use-package sly-asdf
-    ;; :load-path "~/SourceCode/lisp/sly-asdf"
-    :straight t
-    :after sly)
+    (use-package sly-macrostep
+      :straight t
+      :after sly)
 
-  (use-package sly-macrostep
-    :straight t
-    :after sly)
+    (use-package sly-named-readtables
+      :straight t
+      :after sly)
 
-  (use-package sly-named-readtables
-    :straight t
-    :after sly)
+    (use-package sly-repl-ansi-color
+      :straight t
+      :after sly)
 
-  (use-package sly-repl-ansi-color
-    :straight t
-    :after sly)
-
-  (use-package sly-quicklisp
-    :straight t
-    :after sly)
+    (use-package sly-quicklisp
+      :straight t
+      :after sly)
 #+END_SRC
 
 *** Paredit

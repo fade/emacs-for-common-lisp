@@ -6,7 +6,8 @@
 #+ATTR_HTML: :style margin-left: auto; margin-right: auto;
 
 #+begin_src emacs-lisp
-  ;;; config.el ---  DeepSky emacs config file -*- lexical-binding: t; -*-
+  ;;;  -*- lexical-binding: t; -*-
+  ;;; config.el ---  DeepSky emacs config file
   ;;; Commentary: free code, clear conscience.
   ;;; Copyright (c) 2018-2025 Brian O'Reilly <fade@deepsky.com>
 

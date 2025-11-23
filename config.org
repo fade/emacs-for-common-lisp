@@ -18,7 +18,7 @@
 * Emacs Startup Profiler
 #+begin_src emacs-lisp
   (use-package esup
-    :ensure t
+    :straight t
     ;; To use MELPA Stable use ":pin melpa-stable",
     :pin melpa)
 #+end_src
@@ -49,7 +49,7 @@ your current buffer.
 
   #+BEGIN_SRC emacs-lisp 
     (use-package which-key
-      :ensure t
+      :straight t
       :diminish which-key-mode
       :config
       (which-key-mode)
@@ -105,7 +105,7 @@ package by Bodizar Bhatzov.
 
 #+BEGIN_SRC emacs-lisp
 (use-package diminish
-  :ensure t)
+  :straight t)
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -256,6 +256,11 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
     "f" #'0x0-upload-file
     "t" #'0x0-upload-text)
 
+  (defvar-keymap prefix-buffer-map-a
+    :doc "Prefix map for C-q for ace-window"
+    "o" #'ace-window
+    "s" #'ace-swap-window)
+
   (defvar-keymap prefix-buffer-map-b
     :doc "Prefix map for C-q for buffers"
     "s" #'switch-to-buffer
@@ -381,6 +386,7 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
   (defvar-keymap prefix-command-q
     :doc "Prefix Map for C-q:"
     "0" prefix-buffer-map-0
+    "a" prefix-buffer-map-a
     "b" prefix-buffer-map-b
     "c" prefix-buffer-map-c
     "e" prefix-buffer-map-e
@@ -400,6 +406,7 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
 
   (which-key-add-keymap-based-replacements prefix-command-q
     "0" `("0x0" . ,prefix-buffer-map-0)
+    "a" `("Ace Window" . ,prefix-buffer-map-a)
     "b" `("Buffer" . ,prefix-buffer-map-b)
     "c" `("Consult" . ,prefix-buffer-map-c)
     "e" `("Ement/ERC" . ,prefix-buffer-map-e)
@@ -420,6 +427,7 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
   (keymap-set global-map "C-q" prefix-command-q)
 
 #+end_src
+
 * Org mode
 
 Org mode is one of the killer applications that run inside Emacs. It
@@ -1061,7 +1069,7 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
     (add-hook 'eww-mode-hook #'visual-line-mode)
     ;; (add-hook 'eww-mode-hook #'eww-readable)
     :config
-    (use-package s :ensure t)
+    (use-package s :straight t)
     (define-key eww-mode-map "o" 'eww)
     (define-key eww-mode-map "O" 'eww-browse-with-external-browser)
     (define-key eww-mode-map "j" 'next-line)
@@ -1277,7 +1285,7 @@ an Org-mode file.
 
 #+BEGIN_SRC emacs-lisp
   (use-package tramp
-    :ensure t
+    :straight t
     :config
     ;; tramp hangs when remote has 'weird' prompt. Check in for this terminal type.
     (setf tramp-terminal-type "dumb")
@@ -1575,22 +1583,22 @@ perform these tasks.
 ** flycheck
 #+BEGIN_SRC emacs-lisp
   (use-package flycheck
-    :ensure t
+    :straight t
     :diminish flycheck-mode
     :init (global-flycheck-mode)
     :config
     (add-hook 'sh-mode-hook 'flycheck-mode))
 
   (use-package flycheck-cython
-    :ensure t
+    :straight t
     :after flycheck)
 
   ;; (use-package flycheck-clojure
-  ;;   :ensure t
+  ;;   :straight t
   ;;   :init (flycheck-clojure-setup))
 
   (use-package flycheck-nim
-    :ensure t
+    :straight t
     :after flycheck)
 #+END_SRC
    
@@ -1626,7 +1634,7 @@ This package gives richer help information, and makes interrogating
 emacs more fruitful.
 #+BEGIN_SRC emacs-lisp
   (use-package helpful
-    :ensure t
+    :straight t
     :config
     (global-set-key (kbd "C-h f") #'helpful-callable)
     (global-set-key (kbd "C-h v") #'helpful-variable)
@@ -1682,6 +1690,23 @@ access magit.
     :config
     (add-hook 'prog-mode-hook 'git-ps1-mode)
     (add-hook 'dired-mode-hook 'git-ps1-mode))
+
+  ;; (use-package git-gutter
+  ;;   :hook (prog-mode . git-gutter-mode)
+  ;;   :config (setq git-gutter:update-interval 0.02))
+
+  ;; ;;; not strictly magit related.
+  ;; (use-package git-gutter-fringe
+  ;;   :config
+  ;;   (define-fringe-bitmap 'git-gutter-fr:added [0] nil nil '(center repeated))
+  ;;   (define-fringe-bitmap 'git-gutter-fr:modified [0] nil nil '(center repeated))
+  ;;   (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240] nil nil 'bottom))
+
+  ;; (setq git-gutter-fr:side 'right-fringe)
+  ;; (fringe-mode '(15 . 3))
+
+  ;; Use this to change the fringe for and background color
+  ;; (set-face-attribute 'fringe nil :background "#0d0e1c" :foreground "ffffff")
 #+END_SRC
 
 *** Fullscreen magit
@@ -1722,7 +1747,7 @@ We'll also need to =(require 'multiple-cusors)= because of [[https://github.com/
 
 #+BEGIN_SRC emacs-lisp
   (use-package multiple-cursors
-    :ensure t
+    :straight t
     :bind (("C-S-c C-S-c" . mc/edit-lines)
            ("C->"         . mc/mark-next-like-this)
            ("C-<"         . mc/mark-previous-like-this)
@@ -1737,7 +1762,7 @@ Workspaces in Emacs.
 
 #+BEGIN_SRC emacs-lisp
 (use-package perspective
-  :ensure t
+  :straight t
   :defer t
   :config (persp-mode))
 #+END_SRC
@@ -1748,7 +1773,7 @@ Project navigation and management library for Emacs.
 
 #+BEGIN_SRC emacs-lisp :tangle no
 (use-package projectile
-  :ensure t
+  :straight t
   :diminish projectile-mode
   :commands (projectile-mode projectile-switch-project)
   :bind ("C-c p p" . projectile-switch-project)
@@ -1768,7 +1793,7 @@ keep things portable.
 
 #+BEGIN_SRC emacs-lisp
   (use-package restclient
-    :ensure t
+    :straight t
     ;; :load-path "~/SourceCode/lisp/emacs_stuff/restclient.el"
     :mode ("\\.restclient\\'" . restclient-mode))
 #+END_SRC
@@ -1806,10 +1831,11 @@ buffer navigation, but applies it to windows. The default keys are
 
 #+BEGIN_SRC emacs-lisp
   (use-package ace-window
-    :ensure t
+    :straight t
     :config
     (ace-window-display-mode)
     :bind ("s-o" . ace-window))
+
 #+END_SRC
 
 * Ement
@@ -2123,7 +2149,7 @@ dialect regularly.
 ** YAML mode
 #+BEGIN_SRC emacs-lisp
 (use-package yaml-mode
-  :ensure t
+  :straight t
   :defer t
   :config
   (add-hook 'yaml-mode-hook '(lambda () (ansible 1))))
@@ -2131,18 +2157,18 @@ dialect regularly.
 ** Ansible
 #+BEGIN_SRC emacs-lisp
   (use-package ansible
-    :ensure t
+    :straight t
     ;; :load-path "~/SourceCode/lisp/emacs_stuff/emacs-ansible"
     :defer t
     :config
     (use-package ansible-doc
-    :ensure t
+    :straight t
     :defer t)
     (use-package ansible-vault
-      :ensure t
+      :straight t
       :defer t)
     (use-package company-ansible
-      :ensure t
+      :straight t
       :defer t))
 #+END_SRC
 
@@ -2175,13 +2201,13 @@ web-mode provides syntax support for html typed and related files.
 ** Lorem Ipsum is useful in more places than just the web, but this is where it traditionally goes.
 #+BEGIN_SRC emacs-lisp
   (use-package lorem-ipsum
-    :ensure t)
+    :straight t)
 #+end_src
 
 ** JavaScript
   #+BEGIN_SRC emacs-lisp 
     (use-package js2-mode
-      :ensure t
+      :straight t
       :init
       ;; (setq js-basic-indent 2)
       (setq-default ;; js2-basic-indent 2
@@ -2210,7 +2236,7 @@ web-mode provides syntax support for html typed and related files.
 
   #+BEGIN_SRC emacs-lisp 
    (use-package color-identifiers-mode
-       :ensure t
+       :straight t
        :init
          (add-hook 'js2-mode-hook 'color-identifiers-mode))
   #+END_SRC
@@ -2253,7 +2279,7 @@ web-mode provides syntax support for html typed and related files.
 
   #+BEGIN_SRC emacs-lisp 
   (use-package js2-refactor
-    :ensure t
+    :straight t
     :init   (add-hook 'js2-mode-hook 'js2-refactor-mode)
     :config (js2r-add-keybindings-with-prefix "C-c ."))
   #+END_SRC
@@ -2264,7 +2290,7 @@ web-mode provides syntax support for html typed and related files.
 
     #+BEGIN_SRC emacs-lisp 
   (use-package skewer-mode
-     :ensure t
+     :straight t
      :init (add-hook 'js2-mode-hook 'skewer-mode))
     #+END_SRC
 
@@ -2306,7 +2332,7 @@ web-mode provides syntax support for html typed and related files.
 *** Virtualenvwrapper
 #+BEGIN_SRC emacs-lisp
   (use-package virtualenvwrapper
-    :ensure t
+    :straight t
     :defer t
     :config
     (setq venv-location "~/.virtualenvs"))
@@ -2335,7 +2361,7 @@ lot cooler than you may think.
 
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-mode
-    :ensure t
+    :straight t
     :diminish rainbow-mode
     ;; apply this mode to all programming modes.
     :init
@@ -2355,7 +2381,7 @@ lot cooler than you may think.
    
 #+BEGIN_SRC emacs-lisp
   (use-package color-theme-approximate
-    :ensure t
+    :straight t
     :config
     (unless (display-graphic-p)
       (autoload 'color-theme-approximate-on "color-theme-approximate")
@@ -2368,7 +2394,7 @@ lot cooler than you may think.
 ** Doom Themes, sometimes
 #+begin_src emacs-lisp
   (use-package doom-themes
-    :ensure t)
+    :straight t)
 #+end_src
 
 ** DeepSky Theme
@@ -2424,7 +2450,7 @@ the load average.
 ** Swap Buffer Windows
 #+BEGIN_SRC emacs-lisp
   (use-package buffer-move
-    :ensure t
+    :straight t
     :config
     (progn
       (global-set-key (kbd "<C-M-s-up>")     'buf-move-up)

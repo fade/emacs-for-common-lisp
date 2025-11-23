@@ -41,15 +41,11 @@
     (files--ensure-directory (expand-file-name "config/" user-emacs-directory))
     (files--ensure-directory (expand-file-name "data/" user-emacs-directory))))
 
-;;; Set up package
-(require 'package)
 
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
                          ("ELPA"  . "http://tromey.com/elpa/")
 			 ("gnu"   . "http://elpa.gnu.org/packages/")
                          ("nongnu" . "https://elpa.nongnu.org/nongnu/"))) 
-
-(package-initialize)
 
 ;;; Bootstrap straight package manager
 ;; Install straight.el
@@ -68,11 +64,18 @@
   (load bootstrap-file nil 'nomessage))
 
 
+;;; emacs default package manager still provides various things
+;;; Set up package
+(require 'package)
+
+(package-initialize)
+
+(straight-use-package 'rainbow-mode)
+
 ;;; Bootstrap use-package
 
 (unless (package-installed-p 'use-package)
   (straight-use-package 'use-package))
-
 
 ;; From use-package README
 

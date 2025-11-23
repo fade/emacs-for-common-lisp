@@ -1,4 +1,4 @@
-;;; All of the things that need to happen first and soon.
+;;; All of the things that need to happen first and soon.  -*- lexical-binding: t; -*-
 
 (defvar run-email nil)
 
@@ -75,6 +75,7 @@
 
 ;; Packages will be initialized later
 (setopt package-enable-at-startup nil)
+(setq package-enable-at-startup nil)
 
 ;; Silence compiler warnings and remove old versions of native-compiled files
 (setopt native-compile-prune-cache t

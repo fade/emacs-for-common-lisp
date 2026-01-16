@@ -1851,126 +1851,10 @@ increasingly obvious that the young'uns won't be brought to IRC.
     (ement-set-display-name "Fade"))
 #+end_src
 
-* Completion
-#+BEGIN_SRC emacs-lisp 
-  ;; vertico is the base for our Helm exodus.
-  (use-package vertico
-    :straight t
-    :init
-    (vertico-mode 1)
-    :custom
-    (vertico-count 13)
-    (vertico-resize t)
-    (vertico-cycle t)
-    :config
-    (vertico-mode))
-
-  ;; this will put most recent items at the top of any given vertico selection.
-  (use-package savehist
-    :straight t
-    :hook (after-init . savehist-mode)
-    :custom
-    (savehist-autosave-interval 60)
-    (savehist-file (no-littering-expand-var-file-name "savehist"))
-    (savehist-ignored-variables '(ement-room-message-history)))
-
-  ;; completion selection (narrowing) enhancements.
-  (use-package consult
-    :straight t
-    :bind
-    ("s-s o" . consult-outline)
-    ("C-s" . consult-line)
-    ("s-s s" . consult-ripgrep))
-
-  ;; consult conveniences around notes and note-taking.
-  (use-package consult-notes
-    :straight t)
-
-  ;; this is a completion style, which defines how we match against input.
-  (use-package orderless
-    :straight t
-    :custom
-    (completion-styles '(orderless))
-    (completion-category-overrides '((file (styles . (partial-completion)))))
-    (setq completion-category-defaults nil))
-
-  ;; metadata around completion selections
-  (use-package marginalia
-    :straight t
-    :custom 
-    (setq marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
-    :init
-    (marginalia-mode 1))
-
-  ;; actions within completion selections
-  (use-package embark
-    :straight t
-    :defines
-    (embark-multitarget-actions embark-general-map embark-keymap-alist)
-    :functions
-    (embark-copy-as-kill +copy-grep-results-as-kill-fn+)
-    :bind
-    ("C-." . embark-act)
-    ("C-h B" . embark-bindings)
-    (:map minibuffer-local-map
-          ("C-c C-l" . embark-collect)
-          ("C-c C-e" . embark-export))
-    :custom
-    (prefix-help-command #'embark-prefix-help-command)
-    ;; (embark-cycle-key ".")
-    (embark-indicators '(embark-minimal-indicator
-                         embark-highlight-indicator
-                         embark-isearch-highlight-indicator))
-    :config
-    (defun +copy-grep-results-as-kill-fn (strings)
-      (embark-copy-as-kill
-       (mapcar (lambda (string)
-                 (substring string
-                            (1+ (next-single-property-change
-                                 (1+ (next-single-property-change 0 'face string))
-                                 'face string))))
-               strings)))
-
-    (add-to-list 'embark-multitarget-actions '+copy-grep-results-as-kill-fn)
-
-    (defvar-keymap embark-consult-grep-map
-      :doc "Keymap for actions for consult-grep results."
-      :parent embark-general-map
-      "w" #'+copy-grep-results-as-kill-fn)
-
-    (setf (alist-get 'consult-grep embark-keymap-alist) 'embark-consult-grep-map))
-
-  (use-package embark-consult
-    :hook (embark-collect-mode . consult-preview-at-point-mode))
-
-#+end_src
-
-* Corfu
-This is the way we do in buffer completion. Problem solved.
-#+begin_src emacs-lisp
-  (use-package corfu
-    :straight t
-    :custom
-    (corfu-cycle t)
-    (corfu-auto t)
-    (corfu-scroll-margin 5)
-    (corfu-separator ?\s)
-    :bind (:map corfu-map
-                (("C-n" . corfu-next)
-                 ("C-p" . corfu-previous)
-                 ("<tab>" . corfu-next)
-                 ("<backtab>" . corfu-previous)))
-    :config
-    (global-corfu-mode)
-    :hook (after-init . global-corfu-mode))
-#+end_src
 
 * Languages
 
 ** Clojure
-
-
-
 ** Janet
 
 #+begin_src emacs-lisp
@@ -2500,7 +2384,7 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
   (if window-system
       (progn
         (add-to-list 'default-frame-alist '(font . "EnvyCodeR Nerd Font"))
-        (set-face-attribute 'variable-pitch nil :font "Iosevka Comfy Duo" :height 120 :weight 'regular)
+        ;; (set-face-attribute 'variable-pitch nil :font "Iosevka Comfy Duo" :height 120 :weight 'regular)
         (set-face-attribute 'default nil :font "EnvyCodeR Nerd Font" :height 120)
         (set-face-attribute 'fixed-pitch nil :font "EnvyCodeR Nerd Font-11")
 
@@ -2565,3 +2449,116 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
      :straight t
      :after yasnippet)
  #+end_src
+* Completion
+#+BEGIN_SRC emacs-lisp 
+  ;; vertico is the base for our Helm exodus.
+  (use-package vertico
+    :straight t
+    :init
+    (vertico-mode 1)
+    :custom
+    (vertico-count 13)
+    (vertico-resize t)
+    (vertico-cycle t)
+    :config
+    (vertico-mode))
+
+  ;; this will put most recent items at the top of any given vertico selection.
+  (use-package savehist
+    :straight t
+    :hook (after-init . savehist-mode)
+    :custom
+    (savehist-autosave-interval 60)
+    (savehist-file (no-littering-expand-var-file-name "savehist"))
+    (savehist-ignored-variables '(ement-room-message-history)))
+
+  ;; completion selection (narrowing) enhancements.
+  (use-package consult
+    :straight t
+    :bind
+    ("s-s o" . consult-outline)
+    ("C-s" . consult-line)
+    ("s-s s" . consult-ripgrep))
+
+  ;; consult conveniences around notes and note-taking.
+  (use-package consult-notes
+    :straight t)
+
+  ;; this is a completion style, which defines how we match against input.
+  (use-package orderless
+    :straight t
+    :custom
+    (completion-styles '(orderless))
+    (completion-category-overrides '((file (styles . (partial-completion)))))
+    (setq completion-category-defaults nil))
+
+  ;; metadata around completion selections
+  (use-package marginalia
+    :straight t
+    :custom 
+    (setq marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+    :init
+    (marginalia-mode 1))
+
+  ;; actions within completion selections
+  (use-package embark
+    :straight t
+    :defines
+    (embark-multitarget-actions embark-general-map embark-keymap-alist)
+    :functions
+    (embark-copy-as-kill +copy-grep-results-as-kill-fn+)
+    :bind
+    ("C-." . embark-act)
+    ("C-h B" . embark-bindings)
+    (:map minibuffer-local-map
+          ("C-c C-l" . embark-collect)
+          ("C-c C-e" . embark-export))
+    :custom
+    (prefix-help-command #'embark-prefix-help-command)
+    ;; (embark-cycle-key ".")
+    (embark-indicators '(embark-minimal-indicator
+                         embark-highlight-indicator
+                         embark-isearch-highlight-indicator))
+    :config
+    (defun +copy-grep-results-as-kill-fn (strings)
+      (embark-copy-as-kill
+       (mapcar (lambda (string)
+                 (substring string
+                            (1+ (next-single-property-change
+                                 (1+ (next-single-property-change 0 'face string))
+                                 'face string))))
+               strings)))
+
+    (add-to-list 'embark-multitarget-actions '+copy-grep-results-as-kill-fn)
+
+    (defvar-keymap embark-consult-grep-map
+      :doc "Keymap for actions for consult-grep results."
+      :parent embark-general-map
+      "w" #'+copy-grep-results-as-kill-fn)
+
+    (setf (alist-get 'consult-grep embark-keymap-alist) 'embark-consult-grep-map))
+
+  (use-package embark-consult
+    :hook (embark-collect-mode . consult-preview-at-point-mode))
+
+#+end_src
+
+* Corfu
+This is the way we do in buffer completion. Problem solved.
+#+begin_src emacs-lisp
+  (use-package corfu
+    :straight t
+    :custom
+    (corfu-cycle t)
+    (corfu-auto t)
+    (corfu-scroll-margin 5)
+    (corfu-separator ?\s)
+    :bind (:map corfu-map
+                (("C-n" . corfu-next)
+                 ("C-p" . corfu-previous)
+                 ("<tab>" . corfu-next)
+                 ("<backtab>" . corfu-previous)))
+    ;; :config
+    ;; (global-corfu-mode)
+    :hook (after-init . global-corfu-mode))
+#+end_src

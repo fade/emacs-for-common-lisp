@@ -45,6 +45,10 @@
                       (delete-dups (append file-name-handler-alist
                                            old-file-name-handler-alist))))))
 
+;; Packages will be initialized later
+(setopt package-enable-at-startup nil)
+(setq package-enable-at-startup nil)
+
 ;;; Following from Lionyx <Rahul Juliato> in #systemcrafters
 ;;; Native Compile Settings
 ;; I use a <emacs-default-dir>/eln-cache-<machine-hostname>/ dir to store
@@ -72,10 +76,6 @@
 ;; Disable site-wide initializations
 (setq site-run-file nil
       inhibit-default-init t)
-
-;; Packages will be initialized later
-(setopt package-enable-at-startup nil)
-(setq package-enable-at-startup nil)
 
 ;; Silence compiler warnings and remove old versions of native-compiled files
 (setopt native-compile-prune-cache t

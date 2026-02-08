@@ -15,7 +15,8 @@
  '(column-number-mode t)
  '(compilation-message-face 'default)
  '(connection-local-criteria-alist
-   '(((:application tramp :protocol "kubernetes")
+   '(((:application vc-git) vc-git-connection-default-profile)
+     ((:application tramp :protocol "kubernetes")
       tramp-kubernetes-connection-local-default-profile)
      ((:application tramp :protocol "flatpak")
       tramp-container-connection-local-default-flatpak-profile
@@ -25,7 +26,8 @@
       tramp-connection-local-default-system-profile
       tramp-connection-local-default-shell-profile)))
  '(connection-local-profile-alist
-   '((tramp-flatpak-connection-local-default-profile
+   '((vc-git-connection-default-profile (vc-git--program-version))
+     (tramp-flatpak-connection-local-default-profile
       (tramp-remote-path "/app/bin" tramp-default-remote-path "/bin"
                          "/usr/bin" "/sbin" "/usr/sbin"
                          "/usr/local/bin" "/usr/local/sbin"
@@ -195,6 +197,7 @@
    '("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D"
      "#2aa198" "#d33682" "#6c71c4"))
  '(objed-cursor-color "#ff5555")
+ '(org-src-content-indentation 2 nil nil "Customized with use-package org")
  '(package-selected-packages
    '(embark marginalia orderless consult vertico ob-restclient
             terraform-doc terraform-mode telephone-line 0x0
@@ -242,7 +245,8 @@
    ["#282a36" "#ff5555" "#50fa7b" "#f1fa8c" "#61bfff" "#ff79c6" "#8be9fd"
     "#f8f8f2"])
  '(safe-local-variable-values
-   '((Package . POSTMODERN-TESTS) (sly-load-failed-fasl . ask)
+   '((Package . UTILS) (Package . TREE) (Package . POSTMODERN-TESTS)
+     (sly-load-failed-fasl . ask)
      (c-file-offsets (innamespace . 0) (substatement-open . 0)
                      (c . c-lineup-dont-change) (inextern-lang . 0)
                      (comment-intro . c-lineup-dont-change)

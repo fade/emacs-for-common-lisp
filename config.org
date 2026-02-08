@@ -2291,12 +2291,14 @@ lot cooler than you may think.
   (progn
     ;; on the terminal, the theme situation needs more attention.
     (message "Loading DeepSky theme... ")
-    (load-theme 'deepsky-modus-fade t)
+    ;; (load-theme 'deepsky-modus-fade t)
+    (load-theme 'deepsky-moonunit t)
     (message "Configuring mode-line appearance...")
     (set-face-attribute `mode-line nil
                         :box nil)
-    (message "Setting cursor colour...")
-    (set-cursor-color "yellow"))
+    ;; (message "Setting cursor colour...")
+    ;;(set-cursor-color "yellow")
+    )
 
 #+END_SRC
 
@@ -2429,7 +2431,9 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
                    :bold-weight bold
                    :italic-family "EnvyCodeR Nerd Font"
                    :italic-slant italic
-                   :line-spacing nil))))))
+                   :line-spacing nil)))
+          (fontaine-set-preset 'regular)
+          (fontaine-mode 1))))
 #+END_SRC
 
 

@@ -25,7 +25,9 @@
 ;;; Themes need finding.
 (add-to-list 'custom-theme-load-path
              (expand-file-name "themes/" user-emacs-directory))
-
+;;; But, one by one, like we're savages...
+(add-to-list 'custom-theme-load-path
+             (expand-file-name "modus-themes" (expand-file-name "themes/" "~/SourceCode/lisp/emacs_stuff/")))
 ;; where I'm developing my theme.
 (add-to-list 'custom-theme-load-path
              (expand-file-name "deepsky-themes-moonunit" (expand-file-name "themes/" "~/SourceCode/lisp/emacs_stuff/")))

@@ -71,20 +71,8 @@
   (load bootstrap-file nil 'nomessage))
 
 
-;;; emacs default package manager still provides various things
-;;; Set up package
-(require 'package)
-
-(package-initialize)
-
 (straight-use-package 'rainbow-mode)
-
-;;; Bootstrap use-package
-
-(unless (package-installed-p 'use-package)
-  (straight-use-package 'use-package))
-
-;; From use-package README
+(straight-use-package 'use-package)
 
 (eval-when-compile
   (require 'use-package))

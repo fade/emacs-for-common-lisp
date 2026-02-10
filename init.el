@@ -27,10 +27,13 @@
              (expand-file-name "themes/" user-emacs-directory))
 ;;; But, one by one, like we're savages...
 (add-to-list 'custom-theme-load-path
-             (expand-file-name "modus-themes" (expand-file-name "themes/" "~/SourceCode/lisp/emacs_stuff/")))
+             (expand-file-name "modus-themes/" (expand-file-name "themes/" "~/SourceCode/lisp/emacs_stuff/")))
+;; modus-themes.el must also be on load-path for (require 'modus-themes)
+(add-to-list 'load-path
+             (expand-file-name "modus-themes/" (expand-file-name "themes/" "~/SourceCode/lisp/emacs_stuff/")))
 ;; where I'm developing my theme.
 (add-to-list 'custom-theme-load-path
-             (expand-file-name "deepsky-themes-moonunit" (expand-file-name "themes/" "~/SourceCode/lisp/emacs_stuff/")))
+             (expand-file-name "deepsky-themes-moonunit/" (expand-file-name "themes/" "~/SourceCode/lisp/emacs_stuff/")))
 
 ;; where we hold transient saves and other such data. The arity of
 ;; files--ensure-directory changed from emacs29 to emacs30.

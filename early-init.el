@@ -50,7 +50,7 @@
 (setq package-enable-at-startup nil)
 
 ;;; Following from Lionyx <Rahul Juliato> in #systemcrafters
-;;; Native Compile Settings
+;;; Native Compile Settings:
 ;; I use a <emacs-default-dir>/eln-cache-<machine-hostname>/ dir to store
 ;; my different machines' eln compiled code. This allows the same config
 ;; to be used on several machines without conflicts.

@@ -2292,6 +2292,7 @@ lot cooler than you may think.
     ;; on the terminal, the theme situation needs more attention.
     (message "Loading DeepSky theme... ")
     ;; (load-theme 'deepsky-modus-fade t)
+    ;; (require 'deepsky-moonunit-theme)
     (load-theme 'deepsky-moonunit t)
     (message "Configuring mode-line appearance...")
     (set-face-attribute `mode-line nil

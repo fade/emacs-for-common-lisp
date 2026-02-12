@@ -1926,9 +1926,9 @@ increasingly obvious that the young'uns won't be brought to IRC.
       ;; /prompt
 
       (require 'sly-autoloads)
-      (load "~/quicklisp/log4sly-setup.el")
       (add-to-list 'load-path "~/SourceCode/lisp/emacs_stuff/sly-stepper")
       (require 'sly-stepper-autoloads)
+      (load "~/quicklisp/log4sly-setup.el")
       (global-log4sly-mode 1)))
 
     (eval-after-load 'sly

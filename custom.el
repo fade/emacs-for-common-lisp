@@ -129,9 +129,11 @@
  '(cua-normal-cursor-color "#839496")
  '(cua-overwrite-cursor-color "#b58900")
  '(cua-read-only-cursor-color "#859900")
- '(custom-enabled-themes '(deepsky))
+ '(custom-enabled-themes '(deepsky-moonunit))
  '(custom-safe-themes
-   '("7e377879cbd60c66b88e51fad480b3ab18d60847f31c435f15f5df18bdb18184"
+   '("6dcce19a836c6395ab0e4db1ffb952bf0d378f6534c449d3a55493e274e06ceb"
+     "8bc56ff700e800462880f1b1126faf954b695745b1b6864b0804c5a04a52253e"
+     "7e377879cbd60c66b88e51fad480b3ab18d60847f31c435f15f5df18bdb18184"
      "7212337b36e4cce2628c9451173d910c728b5a760a0ce17cf82cd41af907bd9b"
      "7e22a8dcf2adcd8b330eab2ed6023fa20ba3b17704d4b186fa9c53f1fab3d4d2"
      "893e6ba11e50a0f2007d0fe67e0d16e9c04aa016ecfd9892c8ed3233d98cecd3"
@@ -198,7 +200,6 @@
      "#2aa198" "#d33682" "#6c71c4"))
  '(objed-cursor-color "#ff5555")
  '(org-src-content-indentation 2 nil nil "Customized with use-package org")
- ;; package-selected-packages removed; straight.el manages all packages
  '(pdf-view-midnight-colors (cons "#f8f8f2" "#282a36"))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
@@ -327,7 +328,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Envy Code R" :foundry "ENVY" :slant normal :weight regular :height 100 :width normal))))
  '(avy-lead-face ((t (:background "medium blue" :foreground "yellow"))))
  '(avy-lead-face-2 ((t (:background "dark turquoise" :foreground "midnight blue"))))
  '(company-scrollbar-bg ((t (:background "#199919991999"))) t)

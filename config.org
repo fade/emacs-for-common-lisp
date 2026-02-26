@@ -2225,7 +2225,7 @@ web-mode provides syntax support for html typed and related files.
 
 
 * Highlight line containing the point
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
   (when window-system (add-hook 'prog-mode-hook 'hl-line-mode))
 
   (defadvice hl-line-mode (after

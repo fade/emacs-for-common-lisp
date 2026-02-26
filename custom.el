@@ -340,7 +340,7 @@
  '(erc-input-face ((t (:foreground "spring green"))))
  '(erc-my-nick-face ((t (:foreground "magenta" :weight bold))))
  '(font-lock-constant-face ((t (:foreground "#00ff7f"))))
- '(font-lock-string-face ((t (:foreground "cornsilk3"))))
+ '(font-lock-string-face ((t (:foreground "lightyellow1"))))
  '(helm-bookmark-directory ((t (:inherit helm-ff-directory))))
  '(helm-buffer-directory ((t (:inherit helm-ff-directory))))
  '(org-modern-tag ((t (:inherit (secondary-selection org-modern-label) :background "yellow" :foreground "blue")))))

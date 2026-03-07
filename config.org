@@ -2572,7 +2572,12 @@ This is the way we do in buffer completion. Problem solved.
 
   (when (not (display-graphic-p))
     (use-package corfu-terminal
-      :straight
+      :straight t
+      :vc (:url
+           "https://codeberg.org/akib/emacs-corfu-terminal.git"
+           :branch "master")
       :config
       (corfu-terminal-mode +1)))
+
+
 #+end_src

@@ -2570,6 +2570,10 @@ This is the way we do in buffer completion. Problem solved.
     ;; (global-corfu-mode)
     :hook (after-init . global-corfu-mode))
 
+  ;; corfu popup frames have some issues on terminal sessions. this
+  ;; still doesn't fix it (within screen), so if you want to use this
+  ;; config on a terminal, you might want to revisit the choice of corfu
+  ;; entirely.
   (when (not (display-graphic-p))
     (use-package corfu-terminal
       :straight t

@@ -2569,4 +2569,10 @@ This is the way we do in buffer completion. Problem solved.
     ;; :config
     ;; (global-corfu-mode)
     :hook (after-init . global-corfu-mode))
+
+  (when (not (display-graphic-p))
+    (use-package corfu-terminal
+      :straight
+      :config
+      (corfu-terminal-mode +1)))
 #+end_src

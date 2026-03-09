@@ -2301,7 +2301,8 @@ lot cooler than you may think.
     (set-face-attribute `mode-line nil
                         :box nil)
     (blink-cursor-mode 1)
-    (setf blink-cursor-blinks -1))
+    (setf blink-cursor-blinks -1)
+    (set-cursor-color "yellow")
 
 #+END_SRC
 

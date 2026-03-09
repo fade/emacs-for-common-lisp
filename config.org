@@ -1,4 +1,4 @@
-#+Startup: overview
+g#+Startup: overview
 #+TITLE: Emacs Configuration
 #+AUTHOR: Brian O'Reilly
 #+EMAIL: <fade@deepsky.com>
@@ -1928,7 +1928,7 @@ increasingly obvious that the young'uns won't be brought to IRC.
       (require 'sly-autoloads)
       (add-to-list 'load-path "~/SourceCode/lisp/emacs_stuff/sly-stepper")
       (require 'sly-stepper-autoloads)
-      (load "~/quicklisp/log4sly-setup.el")
+      (load "~/SourceCode/lisp/log4cl/elisp/log4sly.el")
       (global-log4sly-mode 1)))
 
     (eval-after-load 'sly
@@ -2295,14 +2295,13 @@ lot cooler than you may think.
     ;; on the terminal, the theme situation needs more attention.
     (message "Loading DeepSky theme... ")
     ;; (load-theme 'deepsky-modus-fade t)
-    ;; (require 'deepsky-moonunit-theme)
+    (require 'deepsky-moonunit-theme)
     (load-theme 'deepsky-moonunit t)
     (message "Configuring mode-line appearance...")
     (set-face-attribute `mode-line nil
                         :box nil)
-    ;; (message "Setting cursor colour...")
-    ;;(set-cursor-color "yellow")
-    )
+    (blink-cursor-mode 1)
+    (setf blink-cursor-blinks -1))
 
 #+END_SRC
 
@@ -2574,7 +2573,8 @@ This is the way we do in buffer completion. Problem solved.
   ;; still doesn't fix it (within screen), so if you want to use this
   ;; config on a terminal, you might want to revisit the choice of corfu
   ;; entirely.
-  (when (not (display-graphic-p))
+  (when (and (not (display-graphic-p))
+             (not (version< emacs-version "31"))) 
     (use-package corfu-terminal
       :straight t
       :vc (:url

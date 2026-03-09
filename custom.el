@@ -131,7 +131,13 @@
  '(cua-read-only-cursor-color "#859900")
  '(custom-enabled-themes '(deepsky-moonunit))
  '(custom-safe-themes
-   '("6dcce19a836c6395ab0e4db1ffb952bf0d378f6534c449d3a55493e274e06ceb"
+   '("26119be0a36a2974d260f55794d0902e87ca644835f9bceef8f7da75d7636ced"
+     "72d6598a5744c24359c0ec2d88a1278dcb9a6ff27838b67c7671330337aa0823"
+     "dde7fb0b1ed1bb5b61e62bf1a00696cf099a2b290718aee9b377365b3ed992f0"
+     "f205f6f7fc55a6b1e206e88445931ac46ec9a70f124291667809707ddbe63c04"
+     "8fbf2d585f1138caaafa9e523fa3a20614c1d1dcc6002c9808c3e40028e21df4"
+     "644c9275106403f808c545ae06788cd02d77f2729b796e53d4512a90b7563a81"
+     "6dcce19a836c6395ab0e4db1ffb952bf0d378f6534c449d3a55493e274e06ceb"
      "8bc56ff700e800462880f1b1126faf954b695745b1b6864b0804c5a04a52253e"
      "7e377879cbd60c66b88e51fad480b3ab18d60847f31c435f15f5df18bdb18184"
      "7212337b36e4cce2628c9451173d910c728b5a760a0ce17cf82cd41af907bd9b"
@@ -343,4 +349,7 @@
  '(font-lock-string-face ((t (:foreground "lightyellow1"))))
  '(helm-bookmark-directory ((t (:inherit helm-ff-directory))))
  '(helm-buffer-directory ((t (:inherit helm-ff-directory))))
+ '(helm-selection ((t (:extend t :background "cadet blue" :distant-foreground "black"))))
+ '(isearch ((t (:background "#ffff00" :foreground "blue"))))
+ '(isearch-group-2 ((t (:background "dim gray" :foreground "yellow"))))
  '(org-modern-tag ((t (:inherit (secondary-selection org-modern-label) :background "yellow" :foreground "blue")))))

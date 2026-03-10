@@ -2296,13 +2296,13 @@ lot cooler than you may think.
     (message "Loading DeepSky theme... ")
     ;; (load-theme 'deepsky-modus-fade t)
     (require 'deepsky-moonunit-theme)
-    (load-theme 'deepsky-moonunit t)
+    (load-theme 'deepsky-moonunit t nil)
     (message "Configuring mode-line appearance...")
     (set-face-attribute `mode-line nil
                         :box nil)
     (blink-cursor-mode 1)
     (setf blink-cursor-blinks -1)
-    (set-cursor-color "yellow")
+    (set-cursor-color "yellow"))
 
 #+END_SRC
 
@@ -2574,15 +2574,15 @@ This is the way we do in buffer completion. Problem solved.
   ;; still doesn't fix it (within screen), so if you want to use this
   ;; config on a terminal, you might want to revisit the choice of corfu
   ;; entirely.
-  (when (and (not (display-graphic-p))
-             (not (version< emacs-version "31"))) 
-    (use-package corfu-terminal
-      :straight t
-      :vc (:url
-           "https://codeberg.org/akib/emacs-corfu-terminal.git"
-           :branch "master")
-      :config
-      (corfu-terminal-mode +1)))
+  ;; (when (and (not (display-graphic-p))
+  ;;            (not (version< emacs-version "31"))) 
+  ;;   (use-package corfu-terminal
+  ;;     :straight t
+  ;;     :vc (:url
+  ;;          "https://codeberg.org/akib/emacs-corfu-terminal.git"
+  ;;          :branch "master")
+  ;;     :config
+  ;;     (corfu-terminal-mode +1)))
 
 
 #+end_src

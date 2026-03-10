@@ -352,4 +352,5 @@
  '(helm-selection ((t (:extend t :background "cadet blue" :distant-foreground "black"))))
  '(isearch ((t (:background "#ffff00" :foreground "blue"))))
  '(isearch-group-2 ((t (:background "dim gray" :foreground "yellow"))))
+ '(magit-diff-removed-highlight ((t (:extend t :background "#008b8b" :foreground "#ffffff"))))
  '(org-modern-tag ((t (:inherit (secondary-selection org-modern-label) :background "yellow" :foreground "blue")))))

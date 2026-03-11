@@ -8,8 +8,8 @@
  '(ansi-color-faces-vector
    [default bold shadow italic underline success warning error])
  '(ansi-color-names-vector
-   ["#000000" "#8b0000" "#00ff00" "#ffa500" "#7b68ee" "#dc8cc3" "#93e0e3"
-    "#dcdccc"])
+   ["#595959" "#ff8059" "#44bc44" "#eecc00" "#2fafff" "#feacd0" "#00d3d0"
+    "#a6a6a6"])
  '(awesome-tray-mode-line-active-color "#2fafff")
  '(awesome-tray-mode-line-inactive-color "#323232")
  '(column-number-mode t)
@@ -131,7 +131,10 @@
  '(cua-read-only-cursor-color "#859900")
  '(custom-enabled-themes '(deepsky-moonunit))
  '(custom-safe-themes
-   '("26119be0a36a2974d260f55794d0902e87ca644835f9bceef8f7da75d7636ced"
+   '("14d62ab7d23ec130697c9050718e7e3a230a97f30f838a475c8f45e0a262d050"
+     "114690b562ef993b00bd08e41a66c5012c2e8b186761df9a3a10b154b66110e3"
+     "af5dd4ae31f71fff89cbf8471be3a904a2e94e4f7c09773d7b004010373b371e"
+     "26119be0a36a2974d260f55794d0902e87ca644835f9bceef8f7da75d7636ced"
      "72d6598a5744c24359c0ec2d88a1278dcb9a6ff27838b67c7671330337aa0823"
      "dde7fb0b1ed1bb5b61e62bf1a00696cf099a2b290718aee9b377365b3ed992f0"
      "f205f6f7fc55a6b1e206e88445931ac46ec9a70f124291667809707ddbe63c04"
@@ -193,9 +196,9 @@
      ("XXX+" . "#f4923b") ("REVIEW" . "#6ae4b9")
      ("DEPRECATED" . "#bfd9ff")))
  '(ibuffer-deletion-face 'modus-theme-mark-del)
- '(ibuffer-filter-group-name-face 'modus-theme-mark-symbol)
+ '(ibuffer-filter-group-name-face 'bold)
  '(ibuffer-marked-face 'modus-theme-mark-sel)
- '(ibuffer-title-face 'modus-theme-pseudo-header)
+ '(ibuffer-title-face 'default)
  '(jdee-db-active-breakpoint-face-colors (cons "#1E2029" "#bd93f9"))
  '(jdee-db-requested-breakpoint-face-colors (cons "#1E2029" "#50fa7b"))
  '(jdee-db-spec-breakpoint-face-colors (cons "#1E2029" "#565761"))
@@ -206,7 +209,7 @@
      "#2aa198" "#d33682" "#6c71c4"))
  '(objed-cursor-color "#ff5555")
  '(org-src-content-indentation 2 nil nil "Customized with use-package org")
- '(pdf-view-midnight-colors (cons "#f8f8f2" "#282a36"))
+ '(pdf-view-midnight-colors '("#ffffff" . "#110b11"))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
  '(rustic-ansi-faces

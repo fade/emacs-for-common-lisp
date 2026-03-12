@@ -428,6 +428,7 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
 
 #+end_src
 
+
 * Org mode
 
 Org mode is one of the killer applications that run inside Emacs. It
@@ -1136,7 +1137,7 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
         ("tree-sitter-cpp"))
 
        ("https://github.com/tree-sitter/tree-sitter-c"
-        (tree-sitter-c))))
+        ("tree-sitter-c"))))
 
     :config
     (setq treesit-extra-load-path (list (expand-file-name "tree-sit" user-emacs-directory)))

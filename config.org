@@ -1106,38 +1106,59 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
                treesit-parser-manager-remove-grammar)
     :custom
     (treesit-parser-manager-grammars
-     '(("https://github.com/tree-sitter/tree-sitter-rust"
+     '(("https://github.com/tree-sitter-grammars/tree-sitter-rust"
         ("tree-sitter-rust"))
 
        ("https://github.com/ikatyang/tree-sitter-toml"
         ("tree-sitter-toml"))
 
-       ("https://github.com/elixir-lang/tree-sitter-elixir"
-        ("tree-sitter-elixir"))
-
-       ("https://github.com/tree-sitter/tree-sitter-typescript"
+       ("https://github.com/tree-sitter-grammars/tree-sitter-typescript"
         ("tree-sitter-typescript/tsx" "tree-sitter-typescript/typescript"))
 
-       ("https://github.com/tree-sitter/tree-sitter-javascript"
+       ("https://github.com/tree-sitter-grammars/tree-sitter-javascript"
         ("tree-sitter-javascript"))
 
-       ("https://github.com/tree-sitter/tree-sitter-css"
+       ("https://github.com/tree-sitter-grammars/tree-sitter-css"
         ("tree-sitter-css"))
 
        ("https://github.com/serenadeai/tree-sitter-scss"
         ("tree-sitter-scss"))
 
-       ("https://github.com/tree-sitter/tree-sitter-json"
+       ("https://github.com/tree-sitter-grammars/tree-sitter-json"
         ("tree-sitter-json"))
 
-       ("https://github.com/tree-sitter/tree-sitter-go"
+       ("https://github.com/tree-sitter-grammars/tree-sitter-go"
         ("tree-sitter-go"))
 
-       ("https://github.com/tree-sitter/tree-sitter-cpp"
+       ("https://github.com/tree-sitter-grammars/tree-sitter-cpp"
         ("tree-sitter-cpp"))
 
-       ("https://github.com/tree-sitter/tree-sitter-c"
-        ("tree-sitter-c"))))
+       ("https://github.com/tree-sitter-grammars/tree-sitter-c"
+        ("tree-sitter-c"))
+
+       ("https://github.com/tree-sitter-grammars/tree-sitter-markdown"
+        ("tree-sitter-markdown"))
+
+       ("https://github.com/tree-sitter-grammars/tree-sitter-lua"
+        ("tree-sitter-lua"))
+
+       ("https://github.com/tree-sitter-grammars/tree-sitter-make"
+        ("tree-sitter-make"))
+
+       ("https://github.com/tree-sitter-grammars/tree-sitter-yaml"
+        ("tree-sitter-yaml"))
+
+       ("https://github.com/tree-sitter-grammars/tree-sitter-haskell"
+        ("tree-sitter-haskell"))
+
+       ("https://github.com/tree-sitter-grammars/tree-sitter-diff"
+        ("tree-sitter-diff"))
+
+       ("https://github.com/tree-sitter-grammars/tree-sitter-ssh-config"
+        ("tree-sitter-ssh-config"))
+
+       ("https://github.com/tree-sitter-grammars/tree-sitter-commonlisp"
+        ("tree-sitter-commonlisp"))))
 
     :config
     (setq treesit-extra-load-path (list (expand-file-name "tree-sit" user-emacs-directory)))

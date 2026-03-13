@@ -16,7 +16,7 @@ g#+Startup: overview
 #+end_src
 
 * Emacs Startup Profiler
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (use-package esup
     :straight t
     ;; To use MELPA Stable use ":pin melpa-stable",

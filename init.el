@@ -49,11 +49,6 @@
     (files--ensure-directory (expand-file-name "data/" user-emacs-directory))))
 
 
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ("ELPA"  . "http://tromey.com/elpa/")
-			 ("gnu"   . "http://elpa.gnu.org/packages/")
-                         ("nongnu" . "https://elpa.nongnu.org/nongnu/"))) 
-
 ;;; Bootstrap straight package manager
 ;; Install straight.el
 

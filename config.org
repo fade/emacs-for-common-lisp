@@ -1133,11 +1133,11 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
        ("https://github.com/tree-sitter-grammars/tree-sitter-cpp"
         ("tree-sitter-cpp"))
 
-       ("https://github.com/tree-sitter-grammars/tree-sitter-c"
-        ("tree-sitter-c"))
+       ;; ("https://github.com/tree-sitter-grammars/tree-sitter-c"
+       ;;  ("tree-sitter-c"))
 
-       ("https://github.com/tree-sitter-grammars/tree-sitter-markdown"
-        ("tree-sitter-markdown"))
+       ;; ("https://github.com/tree-sitter-grammars/tree-sitter-markdown"
+       ;;  ("tree-sitter-markdown"))
 
        ("https://github.com/tree-sitter-grammars/tree-sitter-lua"
         ("tree-sitter-lua"))
@@ -1157,8 +1157,8 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
        ("https://github.com/tree-sitter-grammars/tree-sitter-ssh-config"
         ("tree-sitter-ssh-config"))
 
-       ("https://github.com/tree-sitter-grammars/tree-sitter-commonlisp"
-        ("tree-sitter-commonlisp"))))
+       ;; ("https://github.com/tree-sitter-grammars/tree-sitter-commonlisp"
+       ;;  ("tree-sitter-commonlisp"))))
 
     :config
     (setq treesit-extra-load-path (list (expand-file-name "tree-sit" user-emacs-directory)))

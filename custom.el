@@ -129,7 +129,6 @@
  '(cua-normal-cursor-color "#839496")
  '(cua-overwrite-cursor-color "#b58900")
  '(cua-read-only-cursor-color "#859900")
- '(custom-enabled-themes '(deepsky-moonunit))
  '(custom-safe-themes
    '("14d62ab7d23ec130697c9050718e7e3a230a97f30f838a475c8f45e0a262d050"
      "114690b562ef993b00bd08e41a66c5012c2e8b186761df9a3a10b154b66110e3"

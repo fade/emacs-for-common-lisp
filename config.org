@@ -1158,7 +1158,9 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
         ("tree-sitter-ssh-config"))
 
        ;; ("https://github.com/tree-sitter-grammars/tree-sitter-commonlisp"
-       ;;  ("tree-sitter-commonlisp"))))
+       ;;  ("tree-sitter-commonlisp"))
+
+       ))
 
     :config
     (setq treesit-extra-load-path (list (expand-file-name "tree-sit" user-emacs-directory)))

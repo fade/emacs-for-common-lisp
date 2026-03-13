@@ -1952,7 +1952,7 @@ increasingly obvious that the young'uns won't be brought to IRC.
       (require 'sly-autoloads)
       (add-to-list 'load-path "~/SourceCode/lisp/emacs_stuff/sly-stepper")
       (require 'sly-stepper-autoloads)
-      (load "~/SourceCode/lisp/log4cl/elisp/log4sly.el")
+      (load (expand-file-name "~/SourceCode/lisp/log4cl/elisp/log4sly.el"))
       (global-log4sly-mode 1)))
 
     (eval-after-load 'sly

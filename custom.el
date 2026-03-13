@@ -215,8 +215,8 @@
    ["#282a36" "#ff5555" "#50fa7b" "#f1fa8c" "#61bfff" "#ff79c6" "#8be9fd"
     "#f8f8f2"])
  '(safe-local-variable-values
-   '((Package . UTILS) (Package . TREE) (Package . POSTMODERN-TESTS)
-     (sly-load-failed-fasl . ask)
+   '((lexical-bindings . t) (Package . UTILS) (Package . TREE)
+     (Package . POSTMODERN-TESTS) (sly-load-failed-fasl . ask)
      (c-file-offsets (innamespace . 0) (substatement-open . 0)
                      (c . c-lineup-dont-change) (inextern-lang . 0)
                      (comment-intro . c-lineup-dont-change)

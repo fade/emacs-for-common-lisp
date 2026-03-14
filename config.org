@@ -2415,7 +2415,7 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
       (progn
         (add-to-list 'default-frame-alist '(font . "EnvyCodeR Nerd Font"))
         ;; (set-face-attribute 'variable-pitch nil :font "Iosevka Comfy Duo" :height 120 :weight 'regular)
-        (set-face-attribute 'default nil :font "EnvyCodeR Nerd Font" :height 120)
+        (set-face-attribute 'default nil :font "EnvyCodeR Nerd Font" :height 100)
         (set-face-attribute 'fixed-pitch nil :font "EnvyCodeR Nerd Font-11")
 
         (use-package fontaine
@@ -2578,26 +2578,28 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
 * Corfu
 This is the way we do in buffer completion. Problem solved.
 #+begin_src emacs-lisp
-  (use-package corfu
-    :straight t
-    :custom
-    (corfu-cycle t)
-    (corfu-auto t)
-    (corfu-scroll-margin 5)
-    (corfu-separator ?\s)
-    :bind (:map corfu-map
-                (("C-n" . corfu-next)
-                 ("C-p" . corfu-previous)
-                 ("<tab>" . corfu-next)
-                 ("<backtab>" . corfu-previous)))
-    ;; :config
-    ;; (global-corfu-mode)
-    :hook (after-init . global-corfu-mode))
+  (when (display-graphic-p)
+    (use-package corfu
+      :straight t
+      :custom
+      (corfu-cycle t)
+      (corfu-auto t)
+      (corfu-scroll-margin 5)
+      (corfu-separator ?\s)
+      :bind (:map corfu-map
+                  (("C-n" . corfu-next)
+                   ("C-p" . corfu-previous)
+                   ("<tab>" . corfu-next)
+                   ("<backtab>" . corfu-previous)))
+      ;; :config
+      ;; (global-corfu-mode)
+      :hook (after-init . global-corfu-mode)))
 
   ;; corfu popup frames have some issues on terminal sessions. this
   ;; still doesn't fix it (within screen), so if you want to use this
   ;; config on a terminal, you might want to revisit the choice of corfu
   ;; entirely.
+
   ;; (when (and (not (display-graphic-p))
   ;;            (not (version< emacs-version "31"))) 
   ;;   (use-package corfu-terminal

@@ -2416,7 +2416,7 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
         (add-to-list 'default-frame-alist '(font . "EnvyCodeR Nerd Font"))
         ;; (set-face-attribute 'variable-pitch nil :font "Iosevka Comfy Duo" :height 120 :weight 'regular)
         (set-face-attribute 'default nil :font "EnvyCodeR Nerd Font" :height 100)
-        (set-face-attribute 'fixed-pitch nil :font "EnvyCodeR Nerd Font-11")
+        (set-face-attribute 'fixed-pitch nil :font "EnvyCodeR Nerd Font-10")
 
         (use-package fontaine
           :straight t

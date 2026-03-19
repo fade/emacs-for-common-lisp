@@ -6,10 +6,9 @@ g#+Startup: overview
 #+ATTR_HTML: :style margin-left: auto; margin-right: auto;
 
 #+begin_src emacs-lisp
-  ;;;  -*- lexical-binding: t; -*-
-  ;;; config.el ---  DeepSky emacs config file
-  ;;; Commentary: free code, clear conscience.
-  ;;; Copyright (c) 2018-2025 Brian O'Reilly <fade@deepsky.com>
+  ;;;  config.el ---  DeepSky emacs config file  -*- lexical-binding: t; -*-
+  ;;; Commentary: free code, clear conscience. GPLv3
+  ;;; Copyright ©️ 2018-2025 Brian O'Reilly <fade@deepsky.com>
 
   ;;; Code:
 

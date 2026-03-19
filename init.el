@@ -1,6 +1,6 @@
 ;;; init.el --- Base emacs config file -*- lexical-binding: t; -*-
-;;; Commentary:
-;; Copyright (c) 2018-2023 Brian O'Reilly <fade@deepsky.com>
+;;; Commentary: free code, clear conscience. GPLv3
+;;; Copyright ©️ 2018-2025 Brian O'Reilly <fade@deepsky.com>
 
 ;;; Code:
 
@@ -10,9 +10,17 @@
 ;;; Silence compiler warnings from native-comp; they're too disruptive.
 (setq native-comp-async-report-warnings-errors nil)
 
-;;; straight is failing due to a reference to a void symbol, the
-;;; symbol being deprecated and missing in emacs29
+;;; flycheck creates a trully incredible number of extremely annoying
+;;; warnings about code that is totally fine, but which does not pass
+;;; style guides for GNU files. Many of these checks are complaining
+;;; about things that I will never ever fix, so it's just a lot of
+;;; visual noise that I really want to go away. Bind this hook to kill
+;;; it before it can start.
+(add-hook 'emacs-lisp-mode-hook (lambda () (flycheck-mode -1)))
 
+;;; straight is failing due to a reference to a void symbol, the
+;;; symbol being deprecated and missing in emacs29, set it to nothing
+;;; to shutup the machine.
 (defvar native-comp-deferred-compilation-deny-list nil)
 
 ;; I put 'org-spiffs in a subdir of emacs.d, which needs finding:

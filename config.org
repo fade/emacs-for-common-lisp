@@ -1,4 +1,4 @@
-g#+Startup: overview
+#+Startup: overview
 #+TITLE: Emacs Configuration
 #+AUTHOR: Brian O'Reilly
 #+EMAIL: <fade@deepsky.com>

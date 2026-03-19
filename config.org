@@ -2472,8 +2472,35 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
                    :italic-family "EnvyCodeR Nerd Font"
                    :italic-slant italic
                    :line-spacing nil)))
+          
           (fontaine-set-preset 'regular)
-          (fontaine-mode 1))))
+
+          ;; (with-eval-after-load 'fontaine
+          ;;   (fontaine-add-preset 'custom-comments-italic
+          ;;                        '(:font-lock-comment-face (:slant italic))))
+
+          (fontaine-mode 1)
+
+          ;;; fontaine is implemented as a theme now, so we need to
+          ;;; ensure it is applied when themes change.
+          ;;; emacs-version >= 29
+          (add-hook 'enable-theme-functions #'fontaine-apply-current-preset)
+
+          ;;; emacs-version < 29
+          ;; Set up the `after-enable-theme-hook'
+          ;; (defvar after-enable-theme-hook nil
+          ;;   "Normal hook run after enabling a theme.")
+
+          ;; (defun run-after-enable-theme-hook (&rest _args)
+          ;;   "Run `after-enable-theme-hook'."
+          ;;   (run-hooks 'after-enable-theme-hook))
+
+          ;; (advice-add 'enable-theme :after #'run-after-enable-theme-hook)
+
+          ;; (add-hook 'after-enable-theme-hook #'fontaine-apply-current-preset)
+
+          )))
+
 #+END_SRC
 
 

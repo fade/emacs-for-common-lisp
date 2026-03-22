@@ -1697,7 +1697,14 @@ perform these tasks.
     :diminish flycheck-mode
     :init (global-flycheck-mode)
     :config
-    (add-hook 'sh-mode-hook 'flycheck-mode))
+    (add-hook 'sh-mode-hook 'flycheck-mode)
+    ;;; flycheck creates a trully incredible number of extremely annoying
+    ;;; warnings about code that is totally fine, but which does not pass
+    ;;; style guides for GNU files. Many of these checks are complaining
+    ;;; about things that I will never ever fix, so it's just a lot of
+    ;;; visual noise that I really want to go away. Bind this hook to kill
+    ;;; it before it can start.
+    (add-hook 'emacs-lisp-mode-hook (lambda () (flycheck-mode -1))))
 
   (use-package flycheck-cython
     :straight t

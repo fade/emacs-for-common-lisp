@@ -10,14 +10,6 @@
 ;;; Silence compiler warnings from native-comp; they're too disruptive.
 (setq native-comp-async-report-warnings-errors nil)
 
-;;; flycheck creates a trully incredible number of extremely annoying
-;;; warnings about code that is totally fine, but which does not pass
-;;; style guides for GNU files. Many of these checks are complaining
-;;; about things that I will never ever fix, so it's just a lot of
-;;; visual noise that I really want to go away. Bind this hook to kill
-;;; it before it can start.
-(add-hook 'emacs-lisp-mode-hook (lambda () (flycheck-mode -1)))
-
 ;;; straight is failing due to a reference to a void symbol, the
 ;;; symbol being deprecated and missing in emacs29, set it to nothing
 ;;; to shutup the machine.

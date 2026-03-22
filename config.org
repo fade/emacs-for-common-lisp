@@ -2372,6 +2372,16 @@ lot cooler than you may think.
     (add-hook 'prog-mode-hook 'rainbow-mode))
 #+END_SRC
 
+* DNS-Mode
+We need to edit Bind9 zone files with distressing regularity. I need
+   to just buckle down and finally fix my nameservice solution so
+   there's decent tooling around it.
+
+#+begin_src emacs-lisp
+  (use-package dns-mode
+    :straight t)
+#+end_src
+
 * Misc
 ** Display Time
 

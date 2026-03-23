@@ -1243,8 +1243,8 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
        ("https://github.com/tree-sitter-grammars/tree-sitter-ssh-config"
         ("tree-sitter-ssh-config"))
 
-       ;; ("https://github.com/tree-sitter-grammars/tree-sitter-commonlisp"
-       ;;  ("tree-sitter-commonlisp"))
+       ("https://github.com/tree-sitter-grammars/tree-sitter-commonlisp"
+        ("tree-sitter-commonlisp"))
 
        ))
 

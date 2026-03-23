@@ -62,7 +62,10 @@ your current buffer.
 #+end_src
 
 * Popper for popup windows
-popper solves the problem where you summoon a repl or similar to do a calculation, which then disturbs the feng shui of your carefully layed out windows. Popper puts the windows in a popup overlay which can be dismissed into the background after you are done with it.
+[[https://github.com/karthink/popper][Popper]] solves the problem where you summon a repl or similar to do a
+calculation, which then disturbs the feng shui of your carefully laid
+out windows. Popper puts the windows in a popup overlay which can be
+dismissed into the background after you are done with it.
 #+begin_src emacs-lisp :tangle no
   (use-package popper
     :straight t

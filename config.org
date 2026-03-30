@@ -2367,12 +2367,13 @@ it will automatically highlight it in the appropriate color. This is a
 lot cooler than you may think.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package rainbow-mode
-    :straight t
-    :diminish rainbow-mode
-    ;; apply this mode to all programming modes.
-    :init
-    (add-hook 'prog-mode-hook 'rainbow-mode))
+  (when (display-graphic-p)
+    (use-package rainbow-mode
+      :straight t
+      :diminish rainbow-mode
+      ;; apply this mode to all programming modes.
+      :init
+      (add-hook 'prog-mode-hook 'rainbow-mode)))
 #+END_SRC
 
 * DNS-Mode
@@ -2526,7 +2527,6 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
 
 
 * Yasnippet
-
  Templates for code fragments
 
  #+begin_src emacs-lisp
@@ -2654,21 +2654,5 @@ This is the way we do in buffer completion. Problem solved.
       ;; :config
       ;; (global-corfu-mode)
       :hook (after-init . global-corfu-mode)))
-
-  ;; corfu popup frames have some issues on terminal sessions. this
-  ;; still doesn't fix it (within screen), so if you want to use this
-  ;; config on a terminal, you might want to revisit the choice of corfu
-  ;; entirely.
-
-  ;; (when (and (not (display-graphic-p))
-  ;;            (not (version< emacs-version "31"))) 
-  ;;   (use-package corfu-terminal
-  ;;     :straight t
-  ;;     :vc (:url
-  ;;          "https://codeberg.org/akib/emacs-corfu-terminal.git"
-  ;;          :branch "master")
-  ;;     :config
-  ;;     (corfu-terminal-mode +1)))
-
 
 #+end_src

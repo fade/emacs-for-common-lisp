@@ -442,7 +442,7 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
    kind of approximates the effect of a graphical emacs frame, in a
    text console.
    
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
   (use-package color-theme-approximate
     :straight t
     :config

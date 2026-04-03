@@ -1305,6 +1305,29 @@ Return to the subject of previous sessions fast quick.
 
 #+end_src
 
+* Agent Shell
+[[https://github.com/xenodium/agent-shell][Agent Shell]] provides a native Emacs interface for interacting with LLM agents using the Agent Client Protocol (ACP). It supports Gemini CLI, Claude Code, and other agents.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package agent-shell
+    :straight (agent-shell :type git :host github :repo "xenodium/agent-shell")
+    :bind (("C-c a s" . agent-shell)
+           ("C-c a d" . (lambda () (interactive) (save-excursion (mark-defun) (agent-shell))))
+           ("C-c a r" . agent-shell))
+    :hook (agent-shell-mode . agent-shell-completion-mode)
+    :config
+    ;; Default to Gemini CLI.
+    (setq agent-shell-default-agent "gemini")
+    ;; Ensure gemini-cli is called with the ACP flag.
+    (setq agent-shell-google-gemini-acp-command "gemini --experimental-acp")
+    
+    ;; Integrate with Sly for Common Lisp workflows.
+    (with-eval-after-load 'sly
+      (define-key sly-mode-map (kbd "C-c a d") 
+                  (lambda () (interactive) (save-excursion (mark-defun) (agent-shell))))
+      (define-key sly-mode-map (kbd "C-c a r") #'agent-shell)))
+#+end_src
+
 * Update Changed File Buffers
 
 source: http://ergoemacs.org/emacs/emacs_buffer_management.html

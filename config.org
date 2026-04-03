@@ -251,16 +251,16 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
 * Personal keymaps
 Personal keymaps are located under the =C-q= prefix. The =C-q v= prefix map provides a unified interface for AI assistants and agents, including both gptel (for inline assistant tasks) and agent-shell (for autonomous project-level tasks).
 
-|--------+-----+---------------------+----------------------------------------------|
-| Prefix | Key | Command             | Description                                  |
-|--------+-----+---------------------+----------------------------------------------|
-| C-q v  | g   | gptel-send          | Send the active region or buffer to gptel    |
-| C-q v  | m   | gptel-menu          | Open the gptel configuration transient menu  |
-| C-q v  | r   | gptel-rewrite       | Refactor or rewrite the active region        |
+|--------+-----+----------------------+----------------------------------------------|
+| Prefix | Key | Command              | Description                                  |
+|--------+-----+----------------------+----------------------------------------------|
+| C-q v  | g   | gptel-send           | Send the active region or buffer to gptel    |
+| C-q v  | m   | gptel-menu           | Open the gptel configuration transient menu  |
+| C-q v  | r   | gptel-rewrite        | Refactor or rewrite the active region        |
 | C-q v  | c   | agent-shell (claude) | Start a Claude agent shell                   |
-| C-q v  | s   | agent-shell         | Start or switch to an autonomous agent shell |
-| C-q v  | d   | agent-shell (defun) | Send the current Lisp defun to the agent     |
-|--------+-----+---------------------+----------------------------------------------|
+| C-q v  | s   | agent-shell          | Start or switch to an autonomous agent shell |
+| C-q v  | d   | agent-shell (defun)  | Send the current Lisp defun to the agent     |
+|--------+-----+----------------------+----------------------------------------------|
 
 #+begin_src emacs-lisp
   ;; Global Prefix for personal binds
@@ -1344,9 +1344,9 @@ Return to the subject of previous sessions fast quick.
     ;; Default to Gemini CLI.
     (setq agent-shell-default-agent "gemini")
     ;; Ensure gemini-cli is called with the ACP flag.
-    (setq agent-shell-google-gemini-acp-command "gemini --experimental-acp")
+    (setq agent-shell-google-gemini-acp-command '("gemini" "--experimental-acp"))
     ;; Ensure claude-code is called with the ACP flag.
-    (setq agent-shell-anthropic-claude-acp-command "claude --experimental-acp")
+    (setq agent-shell-anthropic-claude-acp-command '("claude" "--experimental-acp"))
     
     ;; Integrate with Sly for Common Lisp workflows.
     (with-eval-after-load 'sly

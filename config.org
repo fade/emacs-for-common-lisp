@@ -249,6 +249,18 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
     :hook 'emacs-startup-hook #'global-jinx-mode)
 #+end_src
 * Personal keymaps
+Personal keymaps are located under the =C-q= prefix. The =C-q v= prefix map provides a unified interface for AI assistants and agents, including both gptel (for inline assistant tasks) and agent-shell (for autonomous project-level tasks).
+
+| Prefix | Key | Command            | Description                                  |
+|--------+-----+--------------------+----------------------------------------------|
+| C-q v  | g   | gptel-send         | Send the active region or buffer to gptel    |
+| C-q v  | m   | gptel-menu         | Open the gptel configuration transient menu  |
+| C-q v  | r   | gptel-rewrite      | Refactor or rewrite the active region        |
+| C-q v  | c   | agent-shell claude | Start a Claude agent shell                   |
+| C-q v  | s   | agent-shell        | Start or switch to an autonomous agent shell |
+| C-q v  | d   | agent-shell defun  | Send the current Lisp defun to the agent     |
+|--------+-----+--------------------+----------------------------------------------|
+
 #+begin_src emacs-lisp
   ;; Global Prefix for personal binds
   ;; this system is largely derivative of SummerEmacs' setup
@@ -381,6 +393,15 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
     "u" #'undo-tree-undo
     "r" #'undo-tree-redo)
 
+  (defvar-keymap prefix-buffer-map-v
+    :doc "Prefix map for C-q for AI (gptel/agent-shell)"
+    "g" #'gptel-send
+    "m" #'gptel-menu
+    "r" #'gptel-rewrite
+    "c" (lambda () (interactive) (let ((agent-shell-default-agent "claude")) (agent-shell)))
+    "s" #'agent-shell
+    "d" (lambda () (interactive) (save-excursion (mark-defun) (agent-shell))))
+
   (defvar-keymap prefix-buffer-map-w
     :doc "Prefix map for C-q for web"
     "o" #'open-link-at-point-or-minibuffer-with-choice)
@@ -404,6 +425,7 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
     "s" prefix-buffer-map-s
     "t" prefix-buffer-map-t
     "u" prefix-buffer-map-u
+    "v" prefix-buffer-map-v
     "w" prefix-buffer-map-w)
 
   (which-key-add-keymap-based-replacements prefix-command-q
@@ -423,6 +445,7 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
     "s" `("Spelling/Dictionary/Jinx" . ,prefix-buffer-map-s)
     "t" `("Terminals" . ,prefix-buffer-map-t)
     "u" `("Undo Tree" . ,prefix-buffer-map-u)
+    "v" `("AI/Agents" . ,prefix-buffer-map-v)
     "m c" `("Casual Menus" . ,prefix-buffer-map-casual)
     "m m" `("Mark" . ,prefix-buffer-map-mark))
 
@@ -1305,6 +1328,34 @@ Return to the subject of previous sessions fast quick.
 
 #+end_src
 
+* Agent Shell
+[[https://github.com/xenodium/agent-shell][Agent Shell]] provides a native Emacs interface for interacting with LLM agents using the Agent Client Protocol (ACP). It supports Gemini CLI, Claude Code, and other agents.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package agent-shell
+    :straight (agent-shell :type git :host github :repo "xenodium/agent-shell")
+    :bind (:map prefix-buffer-map-v
+                ("c" . (lambda () (interactive) (let ((agent-shell-default-agent "claude")) (agent-shell))))
+                ("s" . agent-shell)
+                ("d" . (lambda () (interactive) (save-excursion (mark-defun) (agent-shell)))))
+    :hook (agent-shell-mode . agent-shell-completion-mode)
+    :config
+    ;; Default to Gemini CLI.
+    (setq agent-shell-default-agent "gemini")
+    ;; Ensure gemini-cli is called with the ACP flag.
+    (setq agent-shell-google-gemini-acp-command '("gemini" "--experimental-acp"))
+    ;; Ensure claude-code is called with the ACP flag.
+    (setq agent-shell-anthropic-claude-acp-command '("claude" "--experimental-acp"))
+    
+    ;; Integrate with Sly for Common Lisp workflows.
+    (with-eval-after-load 'sly
+      (define-key sly-mode-map (kbd "C-q v c")
+                  (lambda () (interactive) (let ((agent-shell-default-agent "claude")) (agent-shell))))
+      (define-key sly-mode-map (kbd "C-q v d") 
+                  (lambda () (interactive) (save-excursion (mark-defun) (agent-shell))))
+      (define-key sly-mode-map (kbd "C-q v s") #'agent-shell)))
+#+end_src
+
 * Update Changed File Buffers
 
 source: http://ergoemacs.org/emacs/emacs_buffer_management.html
@@ -1602,14 +1653,19 @@ This is a configuration file for the GPTel package in Emacs. It sets up the mode
            gptel-model "deepseek-r1:7b" ;"qwen2.5-coder:7b"
            gptel-directives '((default . "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
                               (programming . "You are a large language model and a careful programmer and insightful system architect. Provide code and explanation as appropriate.")))
-    :bind (("C-c t" . 'gptel-send)
-           :map gptel-mode-map
-           ("C-c h" . 'gptel-menu)))
+    :bind (:map prefix-buffer-map-v
+                ("g" . gptel-send)
+                ("m" . gptel-menu)
+                ("r" . gptel-rewrite)))
 
   (setq gptel-backend (gptel-make-ollama "Ollama"
                         :host "localhost:11434"
                         :stream t
                         :models '("deepseek-r1:7b" "codellama:latest" "zephyr:latest" "llama3.2:latest")))
+
+  (gptel-make-anthropic "Claude"
+    :stream t
+    :key (lambda () (auth-source-pick-first-password :host "api.anthropic.com" :user "apikey")))
 #+end_src
 
 Ollama Buddy is an Emacs package that provides a friendly AI assistant

@@ -251,13 +251,16 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
 * Personal keymaps
 Personal keymaps are located under the =C-q= prefix. The =C-q v= prefix map provides a unified interface for AI assistants and agents, including both gptel (for inline assistant tasks) and agent-shell (for autonomous project-level tasks).
 
-| Prefix | Key | Command                    | Description                                  |
-|--------+-----+----------------------------+----------------------------------------------|
-| C-q v  | g   | gptel-send                 | Send the active region or buffer to gptel    |
-| C-q v  | m   | gptel-menu                 | Open the gptel configuration transient menu  |
-| C-q v  | r   | gptel-rewrite              | Refactor or rewrite the active region        |
-| C-q v  | s   | agent-shell                | Start or switch to an autonomous agent shell |
-| C-q v  | d   | agent-shell (defun)        | Send the current Lisp defun to the agent     |
+|--------+-----+---------------------+----------------------------------------------|
+| Prefix | Key | Command             | Description                                  |
+|--------+-----+---------------------+----------------------------------------------|
+| C-q v  | g   | gptel-send          | Send the active region or buffer to gptel    |
+| C-q v  | m   | gptel-menu          | Open the gptel configuration transient menu  |
+| C-q v  | r   | gptel-rewrite       | Refactor or rewrite the active region        |
+| C-q v  | c   | agent-shell (claude) | Start a Claude agent shell                   |
+| C-q v  | s   | agent-shell         | Start or switch to an autonomous agent shell |
+| C-q v  | d   | agent-shell (defun) | Send the current Lisp defun to the agent     |
+|--------+-----+---------------------+----------------------------------------------|
 
 #+begin_src emacs-lisp
   ;; Global Prefix for personal binds
@@ -396,6 +399,7 @@ Personal keymaps are located under the =C-q= prefix. The =C-q v= prefix map prov
     "g" #'gptel-send
     "m" #'gptel-menu
     "r" #'gptel-rewrite
+    "c" (lambda () (interactive) (let ((agent-shell-default-agent "claude")) (agent-shell)))
     "s" #'agent-shell
     "d" (lambda () (interactive) (save-excursion (mark-defun) (agent-shell))))
 
@@ -1332,6 +1336,7 @@ Return to the subject of previous sessions fast quick.
   (use-package agent-shell
     :straight (agent-shell :type git :host github :repo "xenodium/agent-shell")
     :bind (:map prefix-buffer-map-v
+                ("c" . (lambda () (interactive) (let ((agent-shell-default-agent "claude")) (agent-shell))))
                 ("s" . agent-shell)
                 ("d" . (lambda () (interactive) (save-excursion (mark-defun) (agent-shell)))))
     :hook (agent-shell-mode . agent-shell-completion-mode)
@@ -1340,9 +1345,13 @@ Return to the subject of previous sessions fast quick.
     (setq agent-shell-default-agent "gemini")
     ;; Ensure gemini-cli is called with the ACP flag.
     (setq agent-shell-google-gemini-acp-command "gemini --experimental-acp")
+    ;; Ensure claude-code is called with the ACP flag.
+    (setq agent-shell-anthropic-claude-acp-command "claude --experimental-acp")
     
     ;; Integrate with Sly for Common Lisp workflows.
     (with-eval-after-load 'sly
+      (define-key sly-mode-map (kbd "C-q v c")
+                  (lambda () (interactive) (let ((agent-shell-default-agent "claude")) (agent-shell))))
       (define-key sly-mode-map (kbd "C-q v d") 
                   (lambda () (interactive) (save-excursion (mark-defun) (agent-shell))))
       (define-key sly-mode-map (kbd "C-q v s") #'agent-shell)))
@@ -1654,6 +1663,10 @@ This is a configuration file for the GPTel package in Emacs. It sets up the mode
                         :host "localhost:11434"
                         :stream t
                         :models '("deepseek-r1:7b" "codellama:latest" "zephyr:latest" "llama3.2:latest")))
+
+  (gptel-make-anthropic "Claude"
+    :stream t
+    :key (lambda () (auth-source-pick-first-password :host "api.anthropic.com" :user "apikey")))
 #+end_src
 
 Ollama Buddy is an Emacs package that provides a friendly AI assistant

@@ -1449,7 +1449,7 @@ an Org-mode file.
 
 #+BEGIN_SRC emacs-lisp
   (use-package tramp
-    :straight t
+    :straight nil
     :config
     ;; tramp hangs when remote has 'weird' prompt. Check in for this terminal type.
     (setf tramp-terminal-type "dumb")
@@ -1653,19 +1653,21 @@ This is a configuration file for the GPTel package in Emacs. It sets up the mode
            gptel-model "deepseek-r1:7b" ;"qwen2.5-coder:7b"
            gptel-directives '((default . "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
                               (programming . "You are a large language model and a careful programmer and insightful system architect. Provide code and explanation as appropriate.")))
+
+    (setq gptel-backend (gptel-make-ollama "Ollama"
+                                           :host "localhost:11434"
+                                           :stream t
+                                           :models '("deepseek-r1:7b" "codellama:latest" "zephyr:latest" "llama3.2:latest")))
+
+    (gptel-make-anthropic "Claude"
+                          :stream t
+                          :key (lambda () (auth-source-pick-first-password :host "api.anthropic.com" :user "apikey")))
+
     :bind (:map prefix-buffer-map-v
                 ("g" . gptel-send)
                 ("m" . gptel-menu)
                 ("r" . gptel-rewrite)))
 
-  (setq gptel-backend (gptel-make-ollama "Ollama"
-                        :host "localhost:11434"
-                        :stream t
-                        :models '("deepseek-r1:7b" "codellama:latest" "zephyr:latest" "llama3.2:latest")))
-
-  (gptel-make-anthropic "Claude"
-    :stream t
-    :key (lambda () (auth-source-pick-first-password :host "api.anthropic.com" :user "apikey")))
 #+end_src
 
 Ollama Buddy is an Emacs package that provides a friendly AI assistant

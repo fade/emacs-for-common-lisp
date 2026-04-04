@@ -26,7 +26,7 @@
       tramp-connection-local-default-system-profile
       tramp-connection-local-default-shell-profile)))
  '(connection-local-profile-alist
-   '((vc-git-connection-default-profile (vc-git--program-version))
+   '((vc-git-connection-default-profile (vc-git--program-version . nil))
      (tramp-flatpak-connection-local-default-profile
       (tramp-remote-path "/app/bin" tramp-default-remote-path "/bin"
                          "/usr/bin" "/sbin" "/usr/sbin"

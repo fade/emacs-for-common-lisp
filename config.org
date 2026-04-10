@@ -2065,10 +2065,12 @@ increasingly obvious that the young'uns won't be brought to IRC.
     (progn
       (defvar sly-elide-output nil)
       (defvar corepath (expand-file-name "sbcl.core" (getenv "HOME")))
+      (load (expand-file-name ".roswell/helper.el" (getenv "HOME")))
       (if (eql system-type 'gnu/linux)
           (setf sly-lisp-implementations
                 '(;; (sbcl ("sbcl" "--core" "/home/fade/sbcl.core")) ;;"--dynamic-space-size" "8GB"
-                  (sbcl ("sbcl" "--dynamic-space-size" "4GB"))
+                  ;; (sbcl ("sbcl" "--dynamic-space-size" "4GB"))
+                  (sbcl ("ros" "-Q" "run"))
                   (sbcl-vanilla ("/usr/local/bin/sbcl" "--dynamic-space-size" "2500"))
                   (ccl ("/usr/bin/ros" "-L" "ccl-bin" "run"))
                   (abcl ("/usr/local/src/abcl/abcl"))

@@ -493,6 +493,10 @@ Personal keymaps are located under the =C-q= prefix. The =C-q v= prefix map prov
   (progn
     ;; on the terminal, the theme situation needs more attention.
     (message "Loading DeepSky theme... ")
+    ;; Enable mixed fonts so modus-themes-fixed-pitch inherits from
+    ;; fixed-pitch. Without this, org-block, org-code, org-table, etc.
+    ;; all render in variable-pitch when variable-pitch-mode is on.
+    (setq modus-themes-mixed-fonts t)
     ;; (load-theme 'deepsky-modus-fade t)
     (require 'deepsky-moonunit-theme)
     (load-theme 'deepsky-moonunit t nil)

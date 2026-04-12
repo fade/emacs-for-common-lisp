@@ -1764,7 +1764,6 @@ perform these tasks.
   (use-package flycheck
     :straight t
     :diminish flycheck-mode
-    :init (global-flycheck-mode)
     :config
     (add-hook 'sh-mode-hook 'flycheck-mode)
     ;;; flycheck creates a trully incredible number of extremely annoying
@@ -1774,7 +1773,11 @@ perform these tasks.
     ;;; visual noise that I really want to go away. Bind this hook to kill
     ;;; it before it can start.
     (add-hook 'emacs-lisp-mode-hook (lambda () (flycheck-mode -1)))
-    (add-hook 'org-mode-hook (lambda () (flycheck-disable-checker 'org-lint))))
+    (add-hook 'org-mode-hook
+              (lambda ()
+                (setq-local flycheck-disabled-checkers
+                            (cons 'org-lint flycheck-disabled-checkers))))
+    (global-flycheck-mode))
 
   (use-package flycheck-cython
     :straight t

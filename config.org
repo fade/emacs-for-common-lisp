@@ -1769,7 +1769,8 @@ perform these tasks.
     ;;; about things that I will never ever fix, so it's just a lot of
     ;;; visual noise that I really want to go away. Bind this hook to kill
     ;;; it before it can start.
-    (add-hook 'emacs-lisp-mode-hook (lambda () (flycheck-mode -1))))
+    (add-hook 'emacs-lisp-mode-hook (lambda () (flycheck-mode -1)))
+    (add-hook 'org-mode-hook (lambda () (flycheck-disable-checker 'org-lint))))
 
   (use-package flycheck-cython
     :straight t
@@ -2050,7 +2051,7 @@ increasingly obvious that the young'uns won't be brought to IRC.
 
 ** Common Lisp
 *** SLY
-    The jury has returned. Sly is superior to Slime.
+ Sly is superior to Slime.
     
 #+BEGIN_SRC emacs-lisp
   (use-package sly
@@ -2069,8 +2070,7 @@ increasingly obvious that the young'uns won't be brought to IRC.
       (if (eql system-type 'gnu/linux)
           (setf sly-lisp-implementations
                 '(;; (sbcl ("sbcl" "--core" "/home/fade/sbcl.core")) ;;"--dynamic-space-size" "8GB"
-                  ;; (sbcl ("sbcl" "--dynamic-space-size" "4GB"))
-                  (sbcl ("ros" "-Q" "run"))
+                  (sbcl ("sbcl" "--dynamic-space-size" "4GB"))
                   (sbcl-vanilla ("/usr/local/bin/sbcl" "--dynamic-space-size" "2500"))
                   (ccl ("/usr/bin/ros" "-L" "ccl-bin" "run"))
                   (abcl ("/usr/local/src/abcl/abcl"))

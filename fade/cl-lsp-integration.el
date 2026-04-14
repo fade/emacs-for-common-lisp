@@ -33,11 +33,7 @@
 ;; straight flattens lsp-mode/clients/ into straight/build/lsp-mode/, so
 ;; lsp-lisp is findable as soon as lsp-mode is on load-path.
 (with-eval-after-load 'lsp-mode
-  (require 'lsp-lisp nil t)
-  ;; Register .asd as a workspace root marker so each ASDF project is isolated.
-  (add-to-list 'lsp-workspace-root-markers ".asd")
-  ;; Large lisp trees — raise the file watch threshold.
-  (setq lsp-file-watch-threshold 3000))
+  (require 'lsp-lisp nil t))
 
 (defgroup cl-lsp-integration nil
   "Common Lisp LSP integration with SLY-first arbitration."
@@ -62,6 +58,15 @@ Called from lisp-mode-hook after lsp-deferred."
   ;; Ensure lsp-lisp (the alive-lsp client registration) is loaded before
   ;; lsp-mode's idle timer fires and tries to match a client for this buffer.
   (require 'lsp-lisp nil t)
+  ;; Workspace root: register .asd so each ASDF project gets its own LSP
+  ;; workspace root.  Done here (not with-eval-after-load) because
+  ;; lsp-workspace-root-markers is defined in lsp-mode.el; by the time
+  ;; cl-lsp-enable runs from lisp-mode-hook, lsp-mode is fully loaded.
+  (when (boundp 'lsp-workspace-root-markers)
+    (add-to-list 'lsp-workspace-root-markers ".asd"))
+  ;; Raise the file watch threshold for large lisp source trees.
+  (when (boundp 'lsp-file-watch-threshold)
+    (setq lsp-file-watch-threshold 3000))
   ;; Disable LSP completion — SLY owns completion in lisp-mode (D-07)
   (setq-local lsp-completion-provider :none)
   ;; Disable automatic lsp-ui-doc popup — SLY has its own doc commands (D-07)

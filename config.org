@@ -2201,6 +2201,38 @@ dialect regularly.
 
 #+END_SRC
 
+*** alive-lsp: Common Lisp Language Server
+
+[[https://github.com/nobody-famous/alive-lsp][alive-lsp]] is a Common Lisp implementation of the Language Server
+Protocol that communicates over TCP. It runs inside an SBCL process (started
+from =~/.sbclrc= at SBCL launch time) and provides the server side of the LSP
+channel that =lsp-mode= connects to on port 8006.
+
+The governing principle here is *SLY-first, LSP-fallback*. SLY owns completion
+(via its own CAPF and corfu integration) and the REPL/eval/debug workflow.
+=lsp-mode= provides the three features SLY does not cover well for multi-file
+projects: cross-file jump-to-definition, hover documentation on demand, and
+inline diagnostics via the flycheck backend. LSP completion is disabled
+buffer-locally so =company= or =corfu= candidates come from SLY, not the language
+server.
+
+Integration is handled by =cl-lsp-integration.el= in =fade/= (the local
+customisation directory already on =load-path=). It is loaded after =lsp-mode=
+has initialised, with a =locate-library= guard so Emacs continues to work
+normally even if the file is temporarily absent.
+
+#+BEGIN_SRC emacs-lisp
+  ;; Common Lisp LSP integration (LSP-01 through LSP-06)
+  ;; alive-lsp TCP server is started from ~/.sbclrc when SBCL launches.
+  ;; cl-lsp-integration.el (in fade/) wires lsp-mode into lisp-mode with
+  ;; SLY-first arbitration: SLY owns completion and REPL; LSP provides
+  ;; cross-file navigation (M-.), hover docs on demand (C-c l d), and
+  ;; inline diagnostics.  Manual workspace refresh: C-c l r.
+  (with-eval-after-load 'lsp-mode
+    (when (locate-library "cl-lsp-integration")
+      (require 'cl-lsp-integration)))
+#+END_SRC
+
 ** Zig
 #+begin_src emacs-lisp
   (use-package zig-mode

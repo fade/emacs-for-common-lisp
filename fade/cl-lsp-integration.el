@@ -70,7 +70,12 @@ Called from lisp-mode-hook."
   ;; Activate lsp-mode (connects to alive-lsp TCP server on port 8006).
   ;; Guard with fboundp so the module loads cleanly in ERT batch contexts.
   (when (fboundp 'lsp-deferred)
-    (lsp-deferred)))
+    (lsp-deferred))
+  ;; Make lsp-mode's xref backend take priority over SLY's for M-.
+  ;; SLY registers sly-xref-backend; lsp-mode registers lsp--xref-backend.
+  ;; Both default to priority 0 — adding lsp first in the hook list wins.
+  ;; SLY remains reachable: C-u M-. prompts for backend selection.
+  (add-hook 'xref-backend-functions #'lsp--xref-backend nil t))
 
 ;;; --- D-09: Enabled LSP features ---
 ;; 1. Cross-file jump-to-definition: provided by lsp-mode's xref integration (M-.)

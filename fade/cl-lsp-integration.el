@@ -3,7 +3,7 @@
 ;; Copyright (C) 2026 OpenCode
 ;; Author: OpenCode AI System
 ;; Keywords: lisp, lsp, sly, development
-;; Version: 1.0.0
+;; Version: 1.1.0
 ;; Package-Requires: ((emacs "29.1") (lsp-mode "8.0") (lsp-ui "8.0"))
 
 ;;; Commentary:
@@ -17,18 +17,27 @@
 ;;   - Hover docs: LSP on demand (C-c l d) — NOT auto-popup
 ;;   - Inline diagnostics: lsp-mode flycheck backend
 ;;
-;; Installation (done by Plan 03):
-;;   (require 'cl-lsp-integration)
-;;   (cl-lsp-integration-mode 1)
+;; Installation: loaded from config.org via (require 'cl-lsp-integration)
+;; inside a (with-eval-after-load 'lsp-mode ...) block.
 
 ;;; Code:
 
+;; lsp-mode and lsp-ui are required eagerly so that lsp-lisp (the alive-lsp
+;; TCP client) can be registered before lsp-deferred fires.  The nil t args
+;; make these no-ops if called before lsp-mode is on load-path (e.g., ERT).
 (require 'lsp-mode nil t)
 (require 'lsp-ui nil t)
-;; lsp-lisp provides the alive-lsp TCP client; loaded after lsp-mode initializes
-;; (lsp-mode adds its clients/ directory to load-path during initialization)
+
+;; lsp-lisp must be loaded BEFORE any call to lsp/lsp-deferred so that the
+;; alive-lsp client is registered in lsp-clients when lsp looks for a match.
+;; straight flattens lsp-mode/clients/ into straight/build/lsp-mode/, so
+;; lsp-lisp is findable as soon as lsp-mode is on load-path.
 (with-eval-after-load 'lsp-mode
-  (require 'lsp-lisp nil t))
+  (require 'lsp-lisp nil t)
+  ;; Register .asd as a workspace root marker so each ASDF project is isolated.
+  (add-to-list 'lsp-workspace-root-markers ".asd")
+  ;; Large lisp trees — raise the file watch threshold.
+  (setq lsp-file-watch-threshold 3000))
 
 (defgroup cl-lsp-integration nil
   "Common Lisp LSP integration with SLY-first arbitration."
@@ -43,15 +52,6 @@
 (defvar cl-lsp-integration-mode nil
   "Non-nil when cl-lsp-integration-mode is active.")
 
-;;; --- Workspace isolation (LSP-03, Claude's Discretion) ---
-
-(with-eval-after-load 'lsp-mode
-  ;; Register .asd as a workspace root marker so each ASDF project is isolated.
-  ;; lsp-mode uses these to find the rootUri sent in LSP initialize request.
-  (add-to-list 'lsp-workspace-root-markers ".asd")
-  ;; Large lisp trees under ~/SourceCode/lisp — raise the file watch threshold.
-  (setq lsp-file-watch-threshold 3000))
-
 ;;; --- SLY-first arbitration (D-07, D-08) ---
 
 (defun cl-lsp-enable ()
@@ -59,13 +59,16 @@
 Sets lsp-completion-provider to :none so SLY CAPF remains primary.
 Enables lsp-mode diagnostics and cross-file navigation; disables auto hover.
 Called from lisp-mode-hook."
+  ;; Ensure lsp-lisp (the alive-lsp client) is loaded before lsp-deferred
+  ;; attempts to match a client for this buffer.  Redundant after the first
+  ;; call but cheap — featurep short-circuits the require.
+  (require 'lsp-lisp nil t)
   ;; Disable LSP completion — SLY owns completion in lisp-mode (D-07)
   (setq-local lsp-completion-provider :none)
   ;; Disable automatic lsp-ui-doc popup — SLY has its own doc commands (D-07)
   (setq-local lsp-ui-doc-enable nil)
   ;; Activate lsp-mode (connects to alive-lsp TCP server on port 8006).
-  ;; Guard with fboundp so the module loads cleanly in contexts where lsp-mode
-  ;; is not yet fully initialised (e.g., batch ERT runs, early-load testing).
+  ;; Guard with fboundp so the module loads cleanly in ERT batch contexts.
   (when (fboundp 'lsp-deferred)
     (lsp-deferred)))
 

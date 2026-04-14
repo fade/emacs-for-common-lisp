@@ -55,26 +55,20 @@
 ;;; --- SLY-first arbitration (D-07, D-08) ---
 
 (defun cl-lsp-enable ()
-  "Enable LSP for the current lisp-mode buffer with SLY-first arbitration.
-Sets lsp-completion-provider to :none so SLY CAPF remains primary.
-Enables lsp-mode diagnostics and cross-file navigation; disables auto hover.
-Called from lisp-mode-hook."
-  ;; Ensure lsp-lisp (the alive-lsp client) is loaded before lsp-deferred
-  ;; attempts to match a client for this buffer.  Redundant after the first
-  ;; call but cheap — featurep short-circuits the require.
+  "Configure the current lisp-mode buffer for SLY-first LSP arbitration.
+lsp-deferred is hooked directly by use-package lsp-mode in config.org, so
+this function only sets buffer-locals and wires the xref backend.
+Called from lisp-mode-hook after lsp-deferred."
+  ;; Ensure lsp-lisp (the alive-lsp client registration) is loaded before
+  ;; lsp-mode's idle timer fires and tries to match a client for this buffer.
   (require 'lsp-lisp nil t)
   ;; Disable LSP completion — SLY owns completion in lisp-mode (D-07)
   (setq-local lsp-completion-provider :none)
   ;; Disable automatic lsp-ui-doc popup — SLY has its own doc commands (D-07)
   (setq-local lsp-ui-doc-enable nil)
-  ;; Activate lsp-mode (connects to alive-lsp TCP server on port 8006).
-  ;; Guard with fboundp so the module loads cleanly in ERT batch contexts.
-  (when (fboundp 'lsp-deferred)
-    (lsp-deferred))
   ;; Make lsp-mode's xref backend take priority over SLY's for M-.
-  ;; SLY registers sly-xref-backend; lsp-mode registers lsp--xref-backend.
-  ;; Both default to priority 0 — adding lsp first in the hook list wins.
-  ;; SLY remains reachable: C-u M-. prompts for backend selection.
+  ;; lsp--xref-backend returns nil when LSP is not connected, so xref falls
+  ;; through to SLY automatically — no hard override needed.
   (add-hook 'xref-backend-functions #'lsp--xref-backend nil t))
 
 ;;; --- D-09: Enabled LSP features ---

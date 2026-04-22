@@ -246,7 +246,8 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
 #+begin_src emacs-lisp
   (use-package jinx
     :straight t
-    :hook 'emacs-startup-hook #'global-jinx-mode)
+    :hook ((emacs-startup . 'global-jinx-mode)
+           (prog-mode . (lambda () jinx-mode -1))))
 #+end_src
 * Personal keymaps
 Personal keymaps are located under the =C-q= prefix. The =C-q v= prefix map provides a unified interface for AI assistants and agents, including both gptel (for inline assistant tasks) and agent-shell (for autonomous project-level tasks).

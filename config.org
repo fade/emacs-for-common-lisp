@@ -246,6 +246,8 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
 #+begin_src emacs-lisp
   (use-package jinx
     :straight t
+    :bind (("M-$" . jinx-correct)
+           ("H-$" . jinx-mode))
     :hook (emacs-startup . global-jinx-mode)
     :config
     ;; Only enable jinx in text-mode (natural language files)
@@ -256,8 +258,12 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
     (add-to-list 'jinx-exclude-faces '(org-mode org-block org-block-begin-line org-block-end-line
                                                org-code org-verbatim org-meta-line)))
 #+end_src
+
 * Personal keymaps
-Personal keymaps are located under the =C-q= prefix. The =C-q v= prefix map provides a unified interface for AI assistants and agents, including both gptel (for inline assistant tasks) and agent-shell (for autonomous project-level tasks).
+Personal keymaps are located under the =C-q= prefix. The =C-q v= prefix
+map provides a unified interface for AI assistants and agents,
+including both gptel (for inline assistant tasks) and agent-shell (for
+autonomous project-level tasks).
 
 | Prefix | Key | Command            | Description                                  |
 |--------+-----+--------------------+----------------------------------------------|
@@ -772,7 +778,8 @@ file if you change this list.
           '(;; ("d" "daily" entry #'org-roam-capture--get-point
             ;;  "* %?\n")
             ("d" "default" entry "* %<%I:%M %p>: %?"
-             :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
+             :if-new (file+head "%<%Y-%m-%d>.org"
+                                "#+title: %<%Y-%m-%d>\n"))))
 
     (org-roam-setup)
 
@@ -1295,6 +1302,24 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
     :after tree-sitter)
 #+end_src
 
+* lsp-mode benefits most programming modes, drop it in before they are initialized.
+#+BEGIN_SRC emacs-lisp
+  (use-package lsp-mode
+    :straight t
+    :commands (lsp lsp-deferred)
+    :hook ((python-mode . lsp-deferred)
+           (sh-mode . lsp)))
+
+  (use-package lsp-ui
+    :straight t
+    :commands lsp-ui-mode
+    :after lsp-mode)
+
+  (use-package repeat
+    :config
+    (repeat-mode))
+
+#+END_SRC
 * Dashboard
 Return to the subject of previous sessions fast quick.
 #+BEGIN_SRC emacs-lisp
@@ -2091,6 +2116,7 @@ increasingly obvious that the young'uns won't be brought to IRC.
                   (clisp ("/usr/bin/clisp"))
                   (ecl ("/usr/local/bin/ecl"))
                   (decl ("/usr/bin/ecl")))
+                sly-contribs '(sly-fancy sly-tramp sly-quicklisp sly-stepper)
                 sly-kill-without-query-p t
                 sly-net-coding-system 'utf-8-unix
                 sly-complete-symbol*-fancy t
@@ -2106,11 +2132,14 @@ increasingly obvious that the young'uns won't be brought to IRC.
                 (clasp ("/usr/local/bin/clasp"))
                 (ecl ("/usr/local/bin/ecl"))
                 (decl ("/usr/bin/ecl")))
+              sly-contribs '(sly-fancy sly-tramp sly-quicklisp)
               sly-kill-without-query-p t
               sly-net-coding-system 'utf-8-unix
               sly-complete-symbol*-fancy t
               sly-default-lisp 'sbcl
               common-lisp-hyperspec-root "file:///home/fade/SourceCode/lisp/HyperSpec/"))
+      ;; filename translations between emacs and the remote lisp.
+      ;; (require 'sly-tramp)
       
 
       ;; the prompt should live at the bottom of the screen; this isn't like... good, but it's better.
@@ -2130,29 +2159,31 @@ increasingly obvious that the young'uns won't be brought to IRC.
       (load (expand-file-name "~/SourceCode/lisp/log4cl/elisp/log4sly.el"))
       (global-log4sly-mode 1)))
 
-    (eval-after-load 'sly
-      `(define-key sly-prefix-map (kbd "M-h") 'sly-documentation-lookup))
+  (eval-after-load 'sly
+    `(define-key sly-prefix-map (kbd "M-h") 'sly-documentation-lookup))
 
-    (use-package sly-asdf
-      ;; :load-path "~/SourceCode/lisp/sly-asdf"
-      :straight t
-      :after sly)
+  (use-package sly-asdf
+    ;; :load-path "~/SourceCode/lisp/sly-asdf"
+    :straight t
+    :after sly)
 
-    (use-package sly-macrostep
-      :straight t
-      :after sly)
+  (use-package sly-macrostep
+    :straight t
+    :after sly)
 
-    (use-package sly-named-readtables
-      :straight t
-      :after sly)
+  (use-package sly-named-readtables
+    :straight t
+    :after sly
+    :config
+    (require 'sly-named-readtables-autoloads))
 
-    (use-package sly-repl-ansi-color
-      :straight t
-      :after sly)
+  (use-package sly-repl-ansi-color
+    :straight t
+    :after sly)
 
-    (use-package sly-quicklisp
-      :straight t
-      :after sly)
+  (use-package sly-quicklisp
+    :straight t
+    :after sly)
 #+END_SRC
 
 *** Paredit
@@ -2417,8 +2448,8 @@ web-mode provides syntax support for html typed and related files.
    * C-c C-k :: `skewer-load-buffer'
 
 ** Python
-
-#+BEGIN_SRC emacs-lisp
+*** stand up lsp
+#+begin_src emacs-lisp
   (use-package lsp-mode
     :straight t
     :commands (lsp lsp-deferred)
@@ -2444,7 +2475,7 @@ web-mode provides syntax support for html typed and related files.
   (use-package envrc
     :straight t
     :hook (after-init . envrc-global-mode))
-#+END_SRC
+#+end_src
 
 *** Virtualenvwrapper
 #+BEGIN_SRC emacs-lisp

@@ -121,6 +121,13 @@
   (tooltip-mode -1)
   (display-time-mode 1))
 
+;; ediff really wants to put a control panel in another OS window, force it into frame on stumpwm
+
+(if (getenv "IN_STUMPWM")
+    (progn
+      (message "Running in StumpWM")
+      (setf ediff-window-setup-function 'ediff-setup-windows-plain)))
+
 (when (not (display-graphic-p))
   (global-eldoc-mode 1)
   (xterm-mouse-mode 1))

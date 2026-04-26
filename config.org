@@ -250,6 +250,8 @@ Overflow, here: [[https://stackoverflow.com/questions/1110118/in-emacs-dired-how
            ("H-$" . jinx-mode))
     :hook (emacs-startup . global-jinx-mode)
     :config
+    ;; Use Canadian, British, and US English in order of preference.
+    (setq jinx-languages "en_CA en_GB en_US")
     ;; Only enable jinx in text-mode (natural language files)
     ;; and exclude it from programming modes and dashboard.
     (setq global-jinx-modes '(text-mode))

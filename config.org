@@ -1310,7 +1310,10 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
     :straight t
     :commands (lsp lsp-deferred)
     :hook ((python-mode . lsp-deferred)
-           (sh-mode . lsp)))
+           (sh-mode . lsp)
+           (lisp-mode . lsp-deferred))
+    :custom
+    (lsp-completion-provider :none))
 
   (use-package lsp-ui
     :straight t
@@ -2175,9 +2178,7 @@ increasingly obvious that the young'uns won't be brought to IRC.
 
   (use-package sly-named-readtables
     :straight t
-    :after sly
-    :config
-    (require 'sly-named-readtables-autoloads))
+    :after sly)
 
   (use-package sly-repl-ansi-color
     :straight t
@@ -2452,21 +2453,6 @@ web-mode provides syntax support for html typed and related files.
 ** Python
 *** stand up lsp
 #+begin_src emacs-lisp
-  (use-package lsp-mode
-    :straight t
-    :commands (lsp lsp-deferred)
-    :hook ((python-mode . lsp-deferred)
-           (lisp-mode . lsp-deferred)))
-
-  (use-package lsp-ui
-    :straight t
-    :commands lsp-ui-mode
-    :after lsp-mode)
-
-  (use-package repeat
-    :config
-    (repeat-mode))
-
   (use-package lsp-pyright
     :straight t
     :after lsp-mode

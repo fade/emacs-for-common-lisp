@@ -1501,11 +1501,16 @@ an Org-mode file.
     (add-to-list 'tramp-connection-properties
                  (list (regexp-quote "/ssh:fade@deepsky.com:")
                        "remote-shell" "/bin/sh"))
-    (add-to-list 'tramp-remote-path 'tramp-own-remote-path)) 
+    (dolist (host '("synthia" "synthia-hn1" "synthia-hn1.res.nrc.gc.ca"))
+      (add-to-list 'tramp-connection-properties
+                   (list (regexp-quote (format "/ssh:%s:" host))
+                         "remote-shell" "/bin/sh")))
+    (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+    (add-to-list 'tramp-remote-path "~/.local/bin")
+    (add-to-list 'tramp-remote-path "~/bin"))
 #+END_SRC
 
-* Window
-
+      * Window
 Convenient keybindings to resize windows.
 
 #+BEGIN_SRC emacs-lisp
@@ -2100,7 +2105,7 @@ increasingly obvious that the young'uns won't be brought to IRC.
     
 #+BEGIN_SRC emacs-lisp
   (use-package sly
-    :load-path "~/SourceCode/lisp/sly"
+    :load-path ("~/SourceCode/lisp/sly" "~/SourceCode/lisp/sly/contrib")
     :straight t
     :commands sly
     :bind
@@ -2109,6 +2114,7 @@ increasingly obvious that the young'uns won't be brought to IRC.
 
     :config
     (progn
+      (require 'cl-lib)
       (defvar sly-elide-output nil)
       (defvar corepath (expand-file-name "sbcl.core" (getenv "HOME")))
       ;; (load (expand-file-name ".roswell/helper.el" (getenv "HOME")))
@@ -2116,7 +2122,8 @@ increasingly obvious that the young'uns won't be brought to IRC.
           (setf sly-lisp-implementations
                 '((sbcl ("sbcl" "--dynamic-space-size" "4GB"))
                   (sbcl-vanilla ("/usr/local/bin/sbcl" "--dynamic-space-size" "2500"))
-                  (ccl ("/usr/bin/ros" "-L" "ccl-bin" "run"))
+                  (ros ("ros" "-Q" "run"))
+                  (ccl ("ros" "-L" "ccl-bin" "run"))
                   (abcl ("/usr/local/src/abcl/abcl"))
                   (clisp ("/usr/bin/clisp"))
                   (ecl ("/usr/local/bin/ecl"))
@@ -2131,20 +2138,36 @@ increasingly obvious that the young'uns won't be brought to IRC.
         (setf sly-lisp-implementations
               '((sbcl ("sbcl" "--dynamic-space-size" "4GB"))
                 (sbcl-vanilla ("/usr/local/bin/sbcl" "--dynamic-space-size" "2500"))
-                (ccl ("/usr/bin/ros" "-L" "ccl-bin" "run"))
+                (ros ("ros" "-Q" "run"))
+                (ccl ("ros" "-L" "ccl-bin" "run"))
                 (abcl ("/usr/local/src/abcl/abcl"))
                 (clisp ("/usr/bin/clisp"))
                 (clasp ("/usr/local/bin/clasp"))
                 (ecl ("/usr/local/bin/ecl"))
                 (decl ("/usr/bin/ecl")))
-              sly-contribs '(sly-fancy sly-tramp sly-quicklisp)
+              sly-contribs '(sly-fancy sly-tramp sly-quicklisp sly-stepper)
               sly-kill-without-query-p t
               sly-net-coding-system 'utf-8-unix
               sly-complete-symbol*-fancy t
               sly-default-lisp 'sbcl
               common-lisp-hyperspec-root "file:///home/fade/SourceCode/lisp/HyperSpec/"))
       ;; filename translations between emacs and the remote lisp.
-      ;; (require 'sly-tramp)
+      (require 'sly-tramp)
+      (dolist (host '("synthia" "synthia-hn1" "synthia-hn1.res.nrc.gc.ca"))
+        (add-to-list 'sly-filename-translations
+                     (sly-create-filename-translator
+                      :machine-instance host
+                      :remote-host "synthia"
+                      :username "oreillyb")))
+
+      ;; Connection-local variables for synthia to use Roswell.
+      (connection-local-set-profile-variables
+       'synthia-lisp-profile
+       '((sly-default-lisp . ros)))
+
+      (dolist (host '("synthia" "synthia-hn1" "synthia-hn1.res.nrc.gc.ca"))
+        (connection-local-set-profiles
+         `(:application tramp :machine ,host) 'synthia-lisp-profile))
       
 
       ;; the prompt should live at the bottom of the screen; this isn't like... good, but it's better.

@@ -33,7 +33,8 @@
 ;; straight flattens lsp-mode/clients/ into straight/build/lsp-mode/, so
 ;; lsp-lisp is findable as soon as lsp-mode is on load-path.
 (with-eval-after-load 'lsp-mode
-  (require 'lsp-lisp nil t))
+  (require 'lsp-lisp nil t)
+  (add-to-list 'lsp-language-id-configuration '(lisp-mode . "lisp")))
 
 (defgroup cl-lsp-integration nil
   "Common Lisp LSP integration with SLY-first arbitration."
@@ -58,6 +59,8 @@ Called from lisp-mode-hook after lsp-deferred."
   ;; Ensure lsp-lisp (the alive-lsp client registration) is loaded before
   ;; lsp-mode's idle timer fires and tries to match a client for this buffer.
   (require 'lsp-lisp nil t)
+  ;; Explicitly set language ID for this buffer to avoid lookup warnings.
+  (setq-local lsp-buffer-language "lisp")
   ;; Workspace root: register .asd so each ASDF project gets its own LSP
   ;; workspace root.  Done here (not with-eval-after-load) because
   ;; lsp-workspace-root-markers is defined in lsp-mode.el; by the time
@@ -67,6 +70,20 @@ Called from lisp-mode-hook after lsp-deferred."
   ;; Raise the file watch threshold for large lisp source trees.
   (when (boundp 'lsp-file-watch-threshold)
     (setq lsp-file-watch-threshold 3000))
+
+  ;; Optimization for remote buffers (Tramp) to prevent hangs.
+  (when (file-remote-p default-directory)
+    (setq-local lsp-lens-enable nil)
+    (setq-local lsp-headerline-breadcrumb-enable nil)
+    (setq-local lsp-ui-sideline-enable nil)
+    (setq-local lsp-modeline-code-actions-enable nil)
+    (setq-local lsp-modeline-diagnostics-enable nil)
+    (setq-local lsp-enable-symbol-highlighting nil)
+    (setq-local lsp-diagnostics-provider :flycheck)
+    (setq-local lsp-eldoc-enable-hover nil)
+    ;; Reduce TCP timeout for remote connections to fail faster if server is down.
+    (setq-local lsp-tcp-connection-timeout 0.5))
+
   ;; Disable LSP completion — SLY owns completion in lisp-mode (D-07)
   (setq-local lsp-completion-provider :none)
   ;; Disable automatic lsp-ui-doc popup — SLY has its own doc commands (D-07)

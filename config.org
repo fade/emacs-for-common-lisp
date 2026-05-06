@@ -1499,11 +1499,11 @@ an Org-mode file.
                  (list (regexp-quote "/ssh:")
                        "vc-handled-backends" nil))
     (add-to-list 'tramp-connection-properties
-                 (list (regexp-quote "/ssh:fade@deepsky.com:")
+                 (list "/\\(?:ssh\\|sshx\\|scp\\):.*fade@deepsky\\.com:"
                        "remote-shell" "/bin/sh"))
     (dolist (host '("synthia" "synthia-hn1" "synthia-hn1.res.nrc.gc.ca"))
       (add-to-list 'tramp-connection-properties
-                   (list (regexp-quote (format "/ssh:%s:" host))
+                   (list (format "/\\(?:ssh\\|sshx\\|scp\\):.*%s:" (regexp-quote host))
                          "remote-shell" "/bin/sh")))
     (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
     (add-to-list 'tramp-remote-path "~/.local/bin")

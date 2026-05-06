@@ -14,6 +14,11 @@
 /bookmarks
 /config.el
 /eln-cache/
+/eln-cache-*/
+/data/
+/var/
+*.tar
+*.eld
 /elpa/
 /eshell/
 /history

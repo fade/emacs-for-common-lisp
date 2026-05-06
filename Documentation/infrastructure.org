@@ -1,0 +1,40 @@
+#+TITLE: Infrastructure & Packages
+#+AUTHOR: Brian O'Reilly
+
+The foundation of the configuration: package management, startup optimization, and core defaults.
+
+* Package Management (Straight.el)
+We use [[https://github.com/radian-software/straight.el][straight.el]] for package management. Unlike the built-in =package.el=, =straight.el= allows for:
+- *Reproducibility*: Packages are cloned from source and locked to specific revisions.
+- *Hacker Friendly*: Easy to modify or contribute to packages by editing their clones in =~/.emacs.d/straight/repos/=.
+- *Literate Integration*: Works seamlessly with =use-package= via the =:straight t= keyword.
+
+* Startup Optimization
+** Early Init
+[[file:../early-init.el][early-init.el]] handles high-priority settings before the UI or packages are loaded:
+- *GC Tuning*: Temporarily raises garbage collection thresholds to speed up startup.
+- *UI Prep*: Disables toolbars, scrollbars, and menu bars early to prevent "flashing" during load.
+- *Native Compilation*: Configures the =eln-cache= directory per-machine to avoid conflicts.
+
+** Load Phasing
+The configuration is phased to ensure dependencies are met:
+1. =early-init.el= (Core tuning).
+2. =init.el= (Straight bootstrap, Org load).
+3. =config.org= (Main feature setup via Babel).
+
+* Core Defaults
+We override many standard Emacs behaviors for a more modern experience:
+- *Short Answers*: Use =y/n= instead of =yes/no=.
+- *Backup Management*: All backups are diverted to =~/.emacs.d/backups/=.
+- *Selection*: Selection is overwritten by typing.
+- *Scrolling*: Smooth, pixel-wise scrolling enabled.
+
+* Custom Integrations (fade/)
+The =fade/= directory contains local elisp modules that bridge gaps between packages:
+- =cl-lsp-integration.el=: SLY/LSP arbitration.
+- =org-spiffs.el=: Org-roam buffer management.
+- =org-open-links-choice.el=: Custom link handling.
+
+* Links
+- [[file:index.org][Back to Index]]
+- [[file:../init.el][init.el (Source Code)]]

@@ -1,0 +1,45 @@
+#+TITLE: UI & Navigation
+#+AUTHOR: Brian O'Reilly
+
+This configuration aims for a clean, professional interface that maximizes screen real estate and speeds up navigation.
+
+* Visual Environment
+** Themes
+The primary theme is the custom *Deepsky* suite, specifically designed for long development sessions:
+- *deepsky-theme*: Dark, low-contrast, focusing on purple and blue hues.
+- *deepsky-modus-fade*: A hybrid theme leveraging the accessibility of Modus with Deepsky aesthetics.
+- *Modus Themes*: Built-in support for =modus-operandi= and =modus-vivendi=.
+
+** Font
+Uses modern coding fonts (configured in =config.org=) with Tree-sitter for high-fidelity syntax highlighting.
+
+* Layout Management
+** Workspaces (Perspective)
+We use [[https://github.com/nex3/perspective-el][Perspective]] to manage workspaces. Each project or task can have its own dedicated set of buffers and window configurations, isolated from others.
+
+** Popups (Popper)
+[[https://github.com/karthink/popper][Popper]] manages "transient" buffers like =*Messages*=, =*Sly REPL*=, and =*Help*=, allowing you to quickly toggle them or turn them into full windows.
+
+* Navigation
+** Project Management
+[[https://github.com/bbatsov/projectile][Projectile]] is used for project-level actions. It recognizes git repos, ASDF systems, and other project markers.
+- =C-c p p=: Switch project.
+
+** Jumping (Avy)
+[[https://github.com/abo-abo/avy][Avy]] allows you to jump to any visible character or word with a few keystrokes.
+- Integrated with custom transient menus for easy access.
+
+** Window Management
+- *Ace Window*: Quickly switch between windows by letter.
+- *Buffer Move*: Swap window positions easily.
+
+* Completion & Narrowing
+The configuration uses a modern, modular completion stack:
+- *Corfu*: Lightweight, overlay-based completion in buffers.
+- *Vertico*: Vertical completion UI for the minibuffer.
+- *Consult*: Enhanced commands for searching and narrowing (ripgrep, buffer switching, etc.).
+- *Orderless*: Flexible pattern matching for completion candidates.
+
+* Links
+- [[file:index.org][Back to Index]]
+- [[file:org.org][Org Mode Documentation]]

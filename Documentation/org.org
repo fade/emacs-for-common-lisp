@@ -1,0 +1,26 @@
+#+TITLE: Org Mode
+#+AUTHOR: Brian O'Reilly
+
+Org-mode is a cornerstone of this configuration, used for everything from personal notes to this documentation and the configuration itself.
+
+* Literate Configuration
+This entire Emacs setup is literate. The source of truth is [[file:../config.org][config.org]]. During startup, Emacs uses =org-babel-load-file= to tangle the code blocks into elisp and load them. This allows us to maintain extensive documentation, design notes, and screenshots alongside the implementation.
+
+* Org Roam & Spiffs
+We use [[https://www.orgroam.com/][Org-roam]] for non-hierarchical note-taking. To keep the workspace clean, we've implemented custom logic in [[file:../fade/org-spiffs.el][fade/org-spiffs.el]] (referred to as *Org Spiffs*):
+- *Sane Buffer Names*: Automatically renames org-roam buffers from their UUID-laden filenames to their human-readable titles.
+- *Integration*: Hooks into =org-mode-hook= to ensure buffers are always renamed on visit.
+
+* Task Management
+- *Agenda*: Integrated view of tasks across all project files.
+- *Capture*: Standardized templates for quick entry of thoughts, tasks, and bookmarks.
+- *Priority & Keywords*: Custom sequence from =TODO= to =DONE=, including backlog and hold states.
+
+* Enhanced Features
+- *Org Noter*: For synchronized note-taking alongside PDFs and videos.
+- *Structure Templates*: Quick expansion of common blocks (code, quote, etc.).
+- *Styling*: Uses =variable-pitch-mode= and custom symbols (=org-ellipsis=) for a cleaner, book-like reading experience.
+
+* Links
+- [[file:index.org][Back to Index]]
+- [[file:ui.org][UI & Navigation Documentation]]

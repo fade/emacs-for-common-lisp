@@ -1,0 +1,32 @@
+#+TITLE: Emacs for Common Lisp
+#+AUTHOR: Brian O'Reilly
+#+EMAIL: fade@deepsky.com
+
+* TL;DR
+This is a comprehensive, literate Emacs configuration centered around *Common Lisp* development, *Org-mode* productivity, and *Remote* system management. It uses =straight.el= for reproducible package management and =org-babel= to tangle the configuration from =config.org=.
+
+** Quick Start
+1. Clone this repo to =~/.emacs.d=.
+2. Open Emacs; =straight.el= will bootstrap and install all packages.
+3. Use =M-x sly= to start a Common Lisp REPL.
+4. For remote work on the =synthia= cluster, use =./provision-remote.sh synthia= to set up the remote environment.
+
+* Overview
+This configuration is designed for high-performance Lisp development with a "Sly-first" philosophy. It balances the deep image-based introspection of *SLY* with the modern diagnostic and navigation capabilities of *LSP*.
+
+** Key Pillars
+- *Common Lisp Development*: Deep SLY integration with custom Tramp support and Roswell-awareness.
+- *Literate Configuration*: All logic lives in [[file:config.org][config.org]], allowing for extensive documentation alongside the code.
+- *Remote Workflow*: Specialized Tramp connection properties and provisioning scripts for cluster environments.
+- *Modern UI*: Uses =Corfu= for completion, =Vertico/Consult= for narrowing, and custom =Deepsky= themes.
+
+* Documentation
+Comprehensive documentation is available in the [[file:Documentation/index.org][Documentation/]] directory:
+
+- [[file:Documentation/index.org][Index]] - The main navigation hub.
+- [[file:Documentation/languages.org][Languages & Development]] - SLY, LSP, Tree-sitter, and Lisp workflows.
+- [[file:Documentation/remote.org][Remote & Tramp]] - Working with clusters and =provision-remote.sh=.
+- [[file:Documentation/ui.org][UI & Navigation]] - Themes, layout management, and project navigation.
+- [[file:Documentation/org.org][Org Mode]] - Notes, agendas, and spiffs.
+
+🄯 Brian O'Reilly <fade@deepsky.com>, 2026

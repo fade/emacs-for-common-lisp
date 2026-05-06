@@ -1,0 +1,41 @@
+#+TITLE: Remote & Tramp
+#+AUTHOR: Brian O'Reilly
+
+This configuration is optimized for working on remote clusters and servers via Tramp and Sly.
+
+* Tramp Configuration
+** Connection Properties
+We use specialized connection properties to ensure stability on remote hosts:
+- *Remote Shell*: Fixed to =/bin/sh= for known hosts (like =synthia=) to avoid issues with complex shells (zsh/fish) on the remote side.
+- *Terminal Type*: Set to =dumb= to prevent control character interference.
+- *VC Handled Backends*: Disabled for remote connections to significantly speed up file opening.
+
+** Performance Tuning
+To keep the UI responsive during remote work:
+- Remote LSP features are aggressively throttled (no lenses, breadcrumbs, etc.).
+- TCP timeouts are reduced to 0.5s for remote buffers to prevent long hangs on network issues.
+
+* Provisioning Remote Hosts
+We provide a standalone script, [[file:../provision-remote.sh][provision-remote.sh]], to stand up a development environment on a new host.
+
+** What it does:
+1. Sets up =~/.local/bin= and adds it to the PATH.
+2. Installs =Node.js= via NVM (required for some language servers).
+3. Installs =bash-language-server= and =python-lsp-server=.
+4. Syncs SLY extensions (like =sly-quicklisp=, =sly-asdf=) from the local machine to the remote.
+5. Sets up Roswell symlinks for ASDF discovery.
+6. Creates a durable =start-slynk.sh= script to run Slynk inside a =tmux= session.
+
+** Usage:
+#+BEGIN_SRC bash
+./provision-remote.sh <hostname>
+#+END_SRC
+
+* The Synthia Cluster
+Special configurations exist for the NRC =synthia= cluster:
+- *Default Lisp*: Configured via connection-local variables to use =ros= (Roswell).
+- *Filename Translations*: Map remote paths back to local Emacs paths for seamless SLY interaction.
+
+* Links
+- [[file:index.org][Back to Index]]
+- [[file:languages.org][Languages & Development Documentation]]

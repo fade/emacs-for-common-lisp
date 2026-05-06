@@ -1,0 +1,50 @@
+#+TITLE: Languages & Development
+#+AUTHOR: Brian O'Reilly
+
+This configuration centers on *Common Lisp* development, utilizing a hybrid SLY/LSP approach.
+
+* Common Lisp
+** SLY-First Philosophy
+We use [[https://github.com/joaotavora/sly][SLY]] as the primary development environment. SLY provides the deep, image-based introspection required for Lisp development (REPL, debugger, inspector, cross-referencing).
+
+** Implementations
+The configuration automatically detects the operating system and sets up appropriate Lisp implementations:
+- *SBCL*: Local default, optimized with 4GB dynamic space.
+- *Roswell (ros)*: Used for managing multiple Lisp versions and as the default on remote hosts like =synthia=.
+
+** Contribs
+Key SLY extensions enabled:
+- =sly-fancy=: The standard suite of enhancements.
+- =sly-tramp=: Seamless remote development.
+- =sly-asdf=: Integration with the ASDF system manager.
+- =sly-quicklisp=: REPL integration for Quicklisp.
+- =sly-stepper=: Visual stepping debugger.
+
+* LSP Integration
+While SLY is the primary tool, [[https://github.com/emacs-lsp/lsp-mode][lsp-mode]] is used as a secondary provider for features SLY doesn't cover as extensively:
+- *Diagnostics*: Inline errors via Flycheck.
+- *Hover Docs*: On-demand documentation.
+- *Language ID*: Configured for =lisp-mode= to avoid warnings.
+
+** Arbitration (SLY vs LSP)
+To prevent tool collision, we use custom logic in [[file:../fade/cl-lsp-integration.el][fade/cl-lsp-integration.el]]:
+- *Completion*: Owned by SLY. LSP completion is disabled in Lisp buffers.
+- *Navigation*: Both SLY and LSP provide navigation; LSP xref backend is prioritized for unloaded files.
+
+* Remote Development
+Development on remote clusters (like =synthia=) is handled by:
+1. Connecting via Tramp.
+2. Using =sly-tramp= to manage the Slynk connection.
+3. Automatically optimizing LSP for remote buffers by disabling heavy features (lenses, breadcrumbs, etc.).
+
+* Other Languages
+- *Python*: =lsp-pyright= for static analysis.
+- *Shell*: =bash-language-server= for script development.
+- *Tree-sitter*: Used across many modes for high-fidelity syntax highlighting.
+
+* Agent Shell
+Integration with LLMs is provided via =agent-shell=, allowing for AI-assisted development directly within the Emacs environment.
+
+* Links
+- [[file:index.org][Back to Index]]
+- [[file:remote.org][Remote & Tramp Documentation]]

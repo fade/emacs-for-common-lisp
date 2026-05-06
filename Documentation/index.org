@@ -1,0 +1,44 @@
+#+TITLE: Configuration Documentation Index
+#+AUTHOR: Brian O'Reilly
+
+Welcome to the documentation for the *Deepsky* Emacs configuration. This configuration is built for a senior software engineer workflow, emphasizing Common Lisp, Org-mode, and remote system orchestration.
+
+* Documentation Topics
+
+** [[file:languages.org][Languages & Development]]
+Details on the *SLY-first* development philosophy.
+- *SLY*: Setup, implementations (SBCL, Roswell), and contribs.
+- *LSP*: =lsp-mode= integration with =alive-lsp=, including remote optimizations.
+- *Tree-sitter*: Enhanced syntax highlighting and structural navigation.
+- *Development Tools*: VTerm, Agent Shell (LLM integration), and Hydra.
+
+** [[file:remote.org][Remote & Tramp]]
+Orchestrating work across clusters and remote hosts.
+- *Tramp*: Connection properties, shell overrides, and performance tuning.
+- *Provisioning*: Using =provision-remote.sh= to stand up Slynk and LSP on remote hosts.
+- *Synthia Cluster*: Specific configurations for the NRC synthia host.
+
+** [[file:ui.org][UI & Navigation]]
+The visual and spatial environment.
+- *Themes*: The =Deepsky= suite and =Modus= themes.
+- *Navigation*: =Perspective= for workspaces, =Projectile= for projects, and =Avy= for jumping.
+- *Layout*: =Popper= for popup management and =Ace Window=.
+- *Completion*: =Corfu=, =Vertico=, and =Consult=.
+
+** [[file:org.org][Org Mode]]
+The literate life.
+- *Capture & Agenda*: Efficient note-taking and task management.
+- *Org Spiffs*: Custom renaming and management of org-roam buffers.
+- *Literate Config*: How =config.org= is structured and tangled.
+
+** [[file:infrastructure.org][Infrastructure & Packages]]
+Under the hood.
+- *Straight.el*: Reproducible package management.
+- *Early Init*: Optimization and bootstrapping logic.
+- *Sane Defaults*: Standard Emacs behavioral overrides.
+
+* Links
+- [[file:../README.org][Back to README]]
+- [[file:../config.org][Literate Configuration (Source Code)]]
+
+🄯 Brian O'Reilly <fade@deepsky.com>, 2026

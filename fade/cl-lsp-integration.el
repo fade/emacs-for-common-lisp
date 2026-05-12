@@ -81,8 +81,13 @@ Called from lisp-mode-hook after lsp-deferred."
     (setq-local lsp-enable-symbol-highlighting nil)
     (setq-local lsp-diagnostics-provider :flycheck)
     (setq-local lsp-eldoc-enable-hover nil)
-    ;; Reduce TCP timeout for remote connections to fail faster if server is down.
-    (setq-local lsp-tcp-connection-timeout 0.5))
+    ;; Disable expensive features that cause heavy TRAMP traffic.
+    (setq-local lsp-enable-file-watchers nil)
+    (setq-local lsp-enable-folding nil)
+    (setq-local lsp-enable-text-document-color nil)
+    (setq-local lsp-enable-on-type-formatting nil)
+    ;; Reduce TCP timeout for remote connections, but keep it high enough for cluster latency.
+    (setq-local lsp-tcp-connection-timeout 2.0))
 
   ;; Disable LSP completion — SLY owns completion in lisp-mode (D-07)
   (setq-local lsp-completion-provider :none)

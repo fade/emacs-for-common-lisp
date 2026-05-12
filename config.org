@@ -1379,22 +1379,42 @@ Return to the subject of previous sessions fast quick.
     :bind (:map prefix-buffer-map-v
                 ("c" . (lambda () (interactive) (let ((agent-shell-default-agent "claude")) (agent-shell))))
                 ("s" . agent-shell)
-                ("d" . (lambda () (interactive) (save-excursion (mark-defun) (agent-shell)))))
+                ("d" . agent-shell-send-defun))
     :hook (agent-shell-mode . agent-shell-completion-mode)
+    :init
+    ;; Patch shell-maker--curl-version-supported globally in :init to ensure it's
+    ;; active before any part of agent-shell or shell-maker tries to call it.
+    (with-eval-after-load 'shell-maker
+      (defun shell-maker--curl-version-supported ()
+        "Return t if curl version is 7.76 or newer, nil otherwise."
+        (let* ((curl (if (boundp 'shell-maker-curl-executable) shell-maker-curl-executable "curl"))
+               (curl-version-string (shell-command-to-string (concat curl " --version "))))
+          (if (string-match "\\([0-9]+\\)\\.\\([0-9]+\\)\\.\\([0-9]+\\)" curl-version-string)
+              (let ((major (string-to-number (match-string 1 curl-version-string)))
+                    (minor (string-to-number (match-string 2 curl-version-string))))
+                (or (> major 7)
+                    (and (= major 7) (>= minor 76))))
+            nil))))
     :config
     ;; Default to Gemini CLI.
     (setq agent-shell-default-agent "gemini")
     ;; Ensure gemini-cli is called with the ACP flag.
-    (setq agent-shell-google-gemini-acp-command '("gemini" "--experimental-acp"))
+    (setq agent-shell-google-gemini-acp-command '("gemini" "--acp"))
     ;; Ensure claude-code is called with the ACP flag.
-    (setq agent-shell-anthropic-claude-acp-command '("claude" "--experimental-acp"))
-    
+    (setq agent-shell-anthropic-claude-acp-command '("claude" "--acp"))
+
+    (defun agent-shell-send-defun ()
+      "Send the current Lisp defun to the agent shell."
+      (interactive)
+      (save-excursion
+        (mark-defun)
+        (agent-shell (buffer-substring-no-properties (region-beginning) (region-end)))))
+
     ;; Integrate with Sly for Common Lisp workflows.
     (with-eval-after-load 'sly
       (define-key sly-mode-map (kbd "C-q v c")
                   (lambda () (interactive) (let ((agent-shell-default-agent "claude")) (agent-shell))))
-      (define-key sly-mode-map (kbd "C-q v d") 
-                  (lambda () (interactive) (save-excursion (mark-defun) (agent-shell))))
+      (define-key sly-mode-map (kbd "C-q v d") #'agent-shell-send-defun)
       (define-key sly-mode-map (kbd "C-q v s") #'agent-shell)))
 #+end_src
 
@@ -1424,7 +1444,10 @@ buffers in emacs. source: [[http://whattheemacsd.com/sane-defaults.el-01.html][M
   :bind ("C-x C-r" . helm-recentf)
   :config
   (recentf-mode t)
-  (setq recentf-max-saved-items 200))
+  (setq recentf-max-saved-items 200)
+  ;; Disable auto-cleanup, especially for TRAMP files which causes hangs/errors.
+  (setq recentf-auto-cleanup 'never)
+  (add-to-list 'recentf-exclude "^/\\(?:ssh\\|sshx\\|scp\\|pscp\\|sftp\\|adb\\|docker\\|sudo\\|flatpak\\):"))
 #+END_SRC
 
 * CrafterBin
@@ -1495,16 +1518,21 @@ an Org-mode file.
     :config
     ;; tramp hangs when remote has 'weird' prompt. Check in for this terminal type.
     (setf tramp-terminal-type "dumb")
+    (setq tramp-default-method "ssh")
+    (setq tramp-verbose 1)
+    (setq tramp-connection-timeout 60)
+    (setq tramp-use-connection-share t)
+    (setq tramp-histfile-override "/dev/null")
     (add-to-list 'tramp-connection-properties
                  (list (regexp-quote "/ssh:")
                        "vc-handled-backends" nil))
     (add-to-list 'tramp-connection-properties
-                 (list "/\\(?:ssh\\|sshx\\|scp\\):.*fade@deepsky\\.com:"
+                 (list (format "/\\(?:ssh\\|sshx\\|scp\\):.*%s:" (regexp-quote (user-login-name)))
                        "remote-shell" "/bin/sh"))
-    (dolist (host '("synthia" "synthia-hn1" "synthia-hn1.res.nrc.gc.ca"))
-      (add-to-list 'tramp-connection-properties
-                   (list (format "/\\(?:ssh\\|sshx\\|scp\\):.*%s:" (regexp-quote host))
-                         "remote-shell" "/bin/sh")))
+    ;; Generalize remote shell to all ssh/scp connections for stability.
+    (add-to-list 'tramp-connection-properties
+                 (list "/\\(?:ssh\\|sshx\\|scp\\):"
+                       "remote-shell" "/bin/sh"))
     (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
     (add-to-list 'tramp-remote-path "~/.local/bin")
     (add-to-list 'tramp-remote-path "~/bin"))
@@ -2153,12 +2181,28 @@ increasingly obvious that the young'uns won't be brought to IRC.
               common-lisp-hyperspec-root "file:///home/fade/SourceCode/lisp/HyperSpec/"))
       ;; filename translations between emacs and the remote lisp.
       (require 'sly-tramp)
-      (dolist (host '("synthia" "synthia-hn1" "synthia-hn1.res.nrc.gc.ca"))
-        (add-to-list 'sly-filename-translations
-                     (sly-create-filename-translator
-                      :machine-instance host
-                      :remote-host "synthia"
-                      :username "oreillyb")))
+      ;; Default dynamic translator: uses the lisp's machine-instance as the TRAMP host.
+      ;; The username is derived from (user-login-name) but can be overridden by the USER environment variable.
+      (let ((lisp-user (or (getenv "USER") (user-login-name))))
+        (setq sly-filename-translations
+              (list (list "^.*$"
+                          (lambda (emacs-filename)
+                            (tramp-file-name-localname (tramp-dissect-file-name emacs-filename)))
+                          `(lambda (lisp-filename)
+                             (let ((conn (sly-current-connection)))
+                               (sly-make-tramp-file-name
+                                ,lisp-user
+                                (sly-machine-instance conn)
+                                lisp-filename))))))
+
+        ;; Specific override for the synthia cluster to ensure we always use the head node (hn1)
+        ;; for the TRAMP connection, even if the machine-instance is just "synthia".
+        (dolist (host '("synthia" "synthia-hn1" "synthia-hn1.res.nrc.gc.ca"))
+          (add-to-list 'sly-filename-translations
+                       (sly-create-filename-translator
+                        :machine-instance host
+                        :remote-host "synthia-hn1"
+                        :username lisp-user))))
 
       ;; Connection-local variables for synthia to use Roswell.
       (connection-local-set-profile-variables

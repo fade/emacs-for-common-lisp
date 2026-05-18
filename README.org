@@ -8,8 +8,9 @@ This is a comprehensive, literate Emacs configuration centered around *Common Li
 ** Quick Start
 1. Clone this repo to =~/.emacs.d=.
 2. Open Emacs; =straight.el= will bootstrap and install all packages.
-3. Use =M-x sly= to start a Common Lisp REPL.
-4. For remote work on the =synthia= cluster, use =./provision-remote.sh synthia= to set up the remote environment.
+3. Use =C-q s s= to start a local Common Lisp REPL.
+4. For remote work, establish an SSH tunnel and use =C-q s r= to connect reliably.
+5. Use =./provision-remote.sh <host>= to set up remote Slynk/LSP environments.
 
 * Overview
 This configuration is designed for high-performance Lisp development with a "Sly-first" philosophy. It balances the deep image-based introspection of *SLY* with the modern diagnostic and navigation capabilities of *LSP*.

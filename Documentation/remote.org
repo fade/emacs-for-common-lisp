@@ -36,6 +36,22 @@ Special configurations exist for the NRC =synthia= cluster:
 - *Default Lisp*: Configured via connection-local variables to use =ros= (Roswell).
 - *Filename Translations*: Map remote paths back to local Emacs paths for seamless SLY interaction.
 
+* Remote SLY Connections
+To ensure reliability and prevent "leakage" of remote paths into local sessions, we use a manual connection workflow.
+
+** Manual Connection Workflow
+1. Establish an SSH tunnel in your terminal:
+   #+BEGIN_SRC shell
+   ssh -L 4005:localhost:4005 user@remote-host
+   #+END_SRC
+2. In Emacs, use *C-q s r* (=fade/sly-connect-remote=).
+3. Provide the remote hostname (for TRAMP path translation) and the local port.
+
+This command explicitly registers the TRAMP translator for that session, ensuring that commands like =sly-asdf-open-system= find files on the remote disk rather than looking locally.
+
+** Local-First Philosophy
+By default, SLY assumes connections are local to avoid the overhead and brittleness of automatic TRAMP path generation. Automatic translation is reserved for specific, known hosts like the *Synthia Cluster*.
+
 * Links
 - [[file:index.org][Back to Index]]
 - [[file:languages.org][Languages & Development Documentation]]

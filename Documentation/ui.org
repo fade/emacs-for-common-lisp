@@ -40,6 +40,18 @@ The configuration uses a modern, modular completion stack:
 - *Consult*: Enhanced commands for searching and narrowing (ripgrep, buffer switching, etc.).
 - *Orderless*: Flexible pattern matching for completion candidates.
 
+* Personal Keymap
+Most custom actions are bound under the *C-q* prefix.
+
+- *C-q b*: Buffers (switch, menu, clean).
+- *C-q c*: Consult (grep, imenu, bookmarks).
+- *C-q e*: Ement & ERC (connect, disconnect).
+- *C-q j*: Jump (avy, dired-jump).
+- *C-q k*: Spelling & Dictionary (jinx).
+- *C-q o*: Org (refile, archive, tags).
+- *C-q s*: SLY (connect, disconnect, remote).
+- *C-q v*: AI & Agents (gptel, agent-shell).
+
 * Links
 - [[file:index.org][Back to Index]]
 - [[file:org.org][Org Mode Documentation]]

@@ -391,12 +391,19 @@ autonomous project-level tasks).
     "r" #'frameset-to-register
     "j" #'jump-to-register)
 
-  (defvar-keymap prefix-buffer-map-s
-    :doc "Prefix map for C-q for spelling"
+  (defvar-keymap prefix-buffer-map-k
+    :doc "Prefix map for C-q for spelling (Check)"
     ;; "o" #'osx-dictionary-search-word-at-point
     "l" #'jinx-languages
     "c" #'jinx-correct
     "s" #'dictionary-search)
+
+  (defvar-keymap prefix-buffer-map-sly
+    :doc "Prefix map for C-q for SLY"
+    "s" #'sly
+    "c" #'sly-connect
+    "r" #'fade/sly-connect-remote
+    "d" #'sly-disconnect)
 
   (defvar-keymap prefix-buffer-map-t
     :doc "Prefix map for C-q for terminals"
@@ -432,13 +439,14 @@ autonomous project-level tasks).
     "g" 'magit-status
     "j" prefix-buffer-map-j
     "h" help-map
+    "k" prefix-buffer-map-k
     "l" prefix-buffer-map-l
     "m" prefix-buffer-map-m
     "o" prefix-buffer-map-o
     "p" prefix-buffer-map-p
     "q" 'prefix-buffer-map-q
     "r" prefix-buffer-map-r
-    "s" prefix-buffer-map-s
+    "s" prefix-buffer-map-sly
     "t" prefix-buffer-map-t
     "u" prefix-buffer-map-u
     "v" prefix-buffer-map-v
@@ -452,13 +460,14 @@ autonomous project-level tasks).
     "e" `("Ement/ERC" . ,prefix-buffer-map-e)
     "j" `("Jump" . ,prefix-buffer-map-j)
     "h" `("Help Map" . ,help-map)
+    "k" `("Spelling/Check" . ,prefix-buffer-map-k)
     "l" `("Line" . ,prefix-buffer-map-l)
     "m" `("Misc" . ,prefix-buffer-map-m)
     "o" `("Org" . ,prefix-buffer-map-o)
     "p" `("Packages" . ,prefix-buffer-map-p)
     "q" `("Org-ql" . ,prefix-buffer-map-q)
     "r" `("WindowRegisters" . ,prefix-buffer-map-r)
-    "s" `("Spelling/Dictionary/Jinx" . ,prefix-buffer-map-s)
+    "s" `("SLY" . ,prefix-buffer-map-sly)
     "t" `("Terminals" . ,prefix-buffer-map-t)
     "u" `("Undo Tree" . ,prefix-buffer-map-u)
     "v" `("AI/Agents" . ,prefix-buffer-map-v)
@@ -2181,22 +2190,23 @@ increasingly obvious that the young'uns won't be brought to IRC.
               common-lisp-hyperspec-root "file:///home/fade/SourceCode/lisp/HyperSpec/"))
       ;; filename translations between emacs and the remote lisp.
       (require 'sly-tramp)
-      ;; Default dynamic translator: uses the lisp's machine-instance as the TRAMP host.
-      ;; The username is derived from (user-login-name) but can be overridden by the USER environment variable.
-      (let ((lisp-user (or (getenv "USER") (user-login-name))))
-        (setq sly-filename-translations
-              (list (list "^.*$"
-                          (lambda (emacs-filename)
-                            (tramp-file-name-localname (tramp-dissect-file-name emacs-filename)))
-                          `(lambda (lisp-filename)
-                             (let ((conn (sly-current-connection)))
-                               (sly-make-tramp-file-name
-                                ,lisp-user
-                                (sly-machine-instance conn)
-                                lisp-filename))))))
 
-        ;; Specific override for the synthia cluster to ensure we always use the head node (hn1)
-        ;; for the TRAMP connection, even if the machine-instance is just "synthia".
+      (defun fade/sly-connect-remote (host port)
+        "Connect to a remote Slynk server via SSH tunnel.
+HOST is the remote hostname (for TRAMP), PORT is the local tunnel port."
+        (interactive (list (read-string "Remote Host (for TRAMP): ")
+                           (read-number "Local Port: " 4005)))
+        (let ((lisp-user (or (getenv "USER") (user-login-name))))
+          ;; Ensure we have a translator for this machine-instance
+          (add-to-list 'sly-filename-translations
+                       (sly-create-filename-translator
+                        :machine-instance host
+                        :remote-host host
+                        :username lisp-user)))
+        (sly-connect "localhost" port))
+
+      ;; Specific overrides for known clusters
+      (let ((lisp-user (or (getenv "USER") (user-login-name))))
         (dolist (host '("synthia" "synthia-hn1" "synthia-hn1.res.nrc.gc.ca"))
           (add-to-list 'sly-filename-translations
                        (sly-create-filename-translator

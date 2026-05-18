@@ -12,10 +12,17 @@ The configuration automatically detects the operating system and sets up appropr
 - *SBCL*: Local default, optimized with 4GB dynamic space.
 - *Roswell (ros)*: Used for managing multiple Lisp versions and as the default on remote hosts like =synthia=.
 
+** Key SLY Keybindings
+We use =C-q s= as a dedicated prefix for SLY operations:
+- *C-q s s*: Start or switch to a local SLY session.
+- *C-q s r*: Connect to a remote Slynk server via SSH tunnel using =fade/sly-connect-remote=.
+- *C-q s c*: Standard =sly-connect= for already established tunnels or local servers.
+- *C-q s d*: Disconnect from the current session.
+
 ** Contribs
 Key SLY extensions enabled:
 - =sly-fancy=: The standard suite of enhancements.
-- =sly-tramp=: Seamless remote development.
+- =sly-tramp=: Seamless remote development (now manually triggered for reliability).
 - =sly-asdf=: Integration with the ASDF system manager.
 - =sly-quicklisp=: REPL integration for Quicklisp.
 - =sly-stepper=: Visual stepping debugger.

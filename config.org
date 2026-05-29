@@ -785,12 +785,23 @@ file if you change this list.
     ;; (setf org-roam-dailies-directory (expand-file-name "Dailies/" org-roam-directory))
 
     ;; New capture template
+    (setq org-roam-capture-templates
+          '(("d" "default" plain "%?"
+             :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}\n")
+             :unnarrowed t)
+            ("b" "book" plain "%?"
+             :target (file+head "books/%<%Y%m%d%H%M%S>-${slug}.org"
+                                "#+title: ${title}\n#+filetags: :book:\n\n* Source\n- Author: %^{Author}\n- Year: %^{Year}\n\n* Summary\n%?")
+             :unnarrowed t)
+            ("r" "recipe" plain "%?"
+             :target (file+head "recipes/%<%Y%m%d%H%M%S>-${slug}.org"
+                                "#+title: ${title}\n#+filetags: :recipe:\n\n* Ingredients\n- %?\n\n* Instructions\n1. \n\n* Notes\n- Source: %^{Source|Personal}")
+             :unnarrowed t)))
+
     (setq org-roam-dailies-capture-templates
-          '(;; ("d" "daily" entry #'org-roam-capture--get-point
-            ;;  "* %?\n")
-            ("d" "default" entry "* %<%I:%M %p>: %?"
+          '(("d" "default" entry "* %<%I:%M %p>: %?"
              :if-new (file+head "%<%Y-%m-%d>.org"
-                                "#+title: %<%Y-%m-%d>\n"))))
+                                "#+title: %<%Y-%m-%d>\n#+filetags: :daily:\n\n* Log\n\n* Gratitude\n1. %?\n\n* Focus for Tomorrow\n"))))
 
     (org-roam-setup)
 
@@ -998,6 +1009,9 @@ good column number to do that.
            "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
            :clock-in :clock-resume
            :empty-lines 1)
+
+          ("a" "Appointment" entry (file+headline "~/Dropbox/OrgFiles/Tasks.org" "Inbox")
+           "* %^{Description} :appointment:\n  %^t\n  %?")
 
           ("w" "Workflows")
           ("we" "Checking Email" entry (file+olp+datetree "~/Dropbox/OrgFiles/Journal.org")
@@ -1383,8 +1397,13 @@ Return to the subject of previous sessions fast quick.
 [[https://github.com/xenodium/agent-shell][Agent Shell]] provides a native Emacs interface for interacting with LLM agents using the Agent Client Protocol (ACP). It supports Gemini CLI, Claude Code, and other agents.
 
 #+BEGIN_SRC emacs-lisp
+  (straight-use-package
+   '(shell-maker :type git :host github :repo "fade/shell-maker"
+                 :local-repo "~/SourceCode/lisp/emacs_stuff/shell-maker"))
+
   (use-package agent-shell
-    :straight (agent-shell :type git :host github :repo "xenodium/agent-shell")
+    :straight (agent-shell :type git :host github :repo "fade/agent-shell"
+                           :local-repo "~/SourceCode/lisp/emacs_stuff/agent-shell")
     :bind (:map prefix-buffer-map-v
                 ("c" . (lambda () (interactive) (let ((agent-shell-default-agent "claude")) (agent-shell))))
                 ("s" . agent-shell)
@@ -1395,15 +1414,8 @@ Return to the subject of previous sessions fast quick.
     ;; active before any part of agent-shell or shell-maker tries to call it.
     (with-eval-after-load 'shell-maker
       (defun shell-maker--curl-version-supported ()
-        "Return t if curl version is 7.76 or newer, nil otherwise."
-        (let* ((curl (if (boundp 'shell-maker-curl-executable) shell-maker-curl-executable "curl"))
-               (curl-version-string (shell-command-to-string (concat curl " --version "))))
-          (if (string-match "\\([0-9]+\\)\\.\\([0-9]+\\)\\.\\([0-9]+\\)" curl-version-string)
-              (let ((major (string-to-number (match-string 1 curl-version-string)))
-                    (minor (string-to-number (match-string 2 curl-version-string))))
-                (or (> major 7)
-                    (and (= major 7) (>= minor 76))))
-            nil))))
+        "Force success for curl version check."
+        t))
     :config
     ;; Default to Gemini CLI.
     (setq agent-shell-default-agent "gemini")

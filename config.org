@@ -422,6 +422,7 @@ autonomous project-level tasks).
     "m" #'gptel-menu
     "r" #'gptel-rewrite
     "c" (lambda () (interactive) (let ((agent-shell-default-agent "claude")) (agent-shell)))
+    "o" (lambda () (interactive) (let ((agent-shell-default-agent "opencode")) (agent-shell)))
     "s" #'agent-shell
     "d" (lambda () (interactive) (save-excursion (mark-defun) (agent-shell))))
 
@@ -1387,6 +1388,7 @@ Return to the subject of previous sessions fast quick.
     :straight (agent-shell :type git :host github :repo "xenodium/agent-shell")
     :bind (:map prefix-buffer-map-v
                 ("c" . (lambda () (interactive) (let ((agent-shell-default-agent "claude")) (agent-shell))))
+                ("o" . (lambda () (interactive) (let ((agent-shell-default-agent "opencode")) (agent-shell))))
                 ("s" . agent-shell)
                 ("d" . agent-shell-send-defun))
     :hook (agent-shell-mode . agent-shell-completion-mode)
@@ -1411,6 +1413,8 @@ Return to the subject of previous sessions fast quick.
     (setq agent-shell-google-gemini-acp-command '("gemini" "--acp"))
     ;; Ensure claude-code is called with the ACP flag.
     (setq agent-shell-anthropic-claude-acp-command '("claude" "--acp"))
+    ;; Ensure opencode is called with the ACP flag.
+    (setq agent-shell-opencode-acp-command '("opencode" "acp"))
 
     (defun agent-shell-send-defun ()
       "Send the current Lisp defun to the agent shell."
@@ -1423,6 +1427,8 @@ Return to the subject of previous sessions fast quick.
     (with-eval-after-load 'sly
       (define-key sly-mode-map (kbd "C-q v c")
                   (lambda () (interactive) (let ((agent-shell-default-agent "claude")) (agent-shell))))
+      (define-key sly-mode-map (kbd "C-q v o")
+                  (lambda () (interactive) (let ((agent-shell-default-agent "opencode")) (agent-shell))))
       (define-key sly-mode-map (kbd "C-q v d") #'agent-shell-send-defun)
       (define-key sly-mode-map (kbd "C-q v s") #'agent-shell)))
 #+end_src

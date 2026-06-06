@@ -1713,7 +1713,8 @@ your cursor will be briefly highlighted now.
     (beacon-mode 1)
     :custom
     (beacon-color "#00bfff")
-    (beacon-blink-when-buffer-changes nil))
+    (beacon-blink-when-buffer-changes nil)
+    (beacon-dont-blink-major-modes '(agent-shell-mode agent-shell-diff-mode)))
 
 #+END_SRC
 

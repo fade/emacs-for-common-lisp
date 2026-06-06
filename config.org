@@ -2783,7 +2783,7 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
 
   ;; consult conveniences around notes and note-taking.
   (use-package consult-notes
-    :straight t)
+    :straight (consult-notes :host codeberg :repo "mclear-tools/consult-notes"))
 
   ;; this is a completion style, which defines how we match against input.
   (use-package orderless

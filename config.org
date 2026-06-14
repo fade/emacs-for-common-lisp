@@ -2664,10 +2664,10 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
 #+BEGIN_SRC emacs-lisp
   (if window-system
       (progn
+        ;; Family hint so the initial/new frames come up right; the fontaine
+        ;; presets below own the default/fixed-pitch/variable-pitch faces —
+        ;; family, height, and pitch all come from the active preset.
         (add-to-list 'default-frame-alist '(font . "EnvyCodeR Nerd Font"))
-        ;; (set-face-attribute 'variable-pitch nil :font "Iosevka Comfy Duo" :height 120 :weight 'regular)
-        (set-face-attribute 'default nil :font "EnvyCodeR Nerd Font" :height 100)
-        (set-face-attribute 'fixed-pitch nil :font "EnvyCodeR Nerd Font-10")
 
         (use-package fontaine
           :straight t
@@ -2681,7 +2681,7 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
                    :default-height 80)
                   (regular
                    :default-family "EnvyCodeR Nerd Font"
-                   :default-height 95)
+                   :default-height 100)
                   (medium
                    :default-family "EnvyCodeR Nerd Font"
                    :default-height 110)
@@ -2720,24 +2720,10 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
 
           (fontaine-mode 1)
 
-          ;;; fontaine is implemented as a theme now, so we need to
-          ;;; ensure it is applied when themes change.
-          ;;; emacs-version >= 29
-          (add-hook 'enable-theme-functions #'fontaine-apply-current-preset)
-
-          ;;; emacs-version < 29
-          ;; Set up the `after-enable-theme-hook'
-          ;; (defvar after-enable-theme-hook nil
-          ;;   "Normal hook run after enabling a theme.")
-
-          ;; (defun run-after-enable-theme-hook (&rest _args)
-          ;;   "Run `after-enable-theme-hook'."
-          ;;   (run-hooks 'after-enable-theme-hook))
-
-          ;; (advice-add 'enable-theme :after #'run-after-enable-theme-hook)
-
-          ;; (add-hook 'after-enable-theme-hook #'fontaine-apply-current-preset)
-
+          ;; Fontaine 3.x applies presets through an always-enabled synthetic
+          ;; `fontaine' theme that outranks other themes, so the fonts survive
+          ;; `load-theme' on their own — no enable-theme hook is needed.
+          ;; (`fontaine-apply-current-preset' was removed in 3.0.)
           )))
 #+END_SRC
 

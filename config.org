@@ -2253,7 +2253,8 @@ HOST is the remote hostname (for TRAMP), PORT is the local tunnel port."
 
   (use-package sly-asdf
     ;; :load-path "~/SourceCode/lisp/sly-asdf"
-    :straight t
+    :straight (sly-asdf :host github :repo "fade/sly-asdf"
+                        :branch "fix/normalize-dependency-defs")
     :after sly)
 
   (use-package sly-macrostep

@@ -2664,11 +2664,10 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
 #+BEGIN_SRC emacs-lisp
   (if window-system
       (progn
-        ;; Family hint so the initial/new frames come up right; the fontaine
-        ;; presets below own the default/fixed-pitch/variable-pitch faces —
-        ;; family, height, and pitch all come from the active preset.
-        (add-to-list 'default-frame-alist '(font . "EnvyCodeR Nerd Font"))
-
+        ;; Fontaine owns the fonts end-to-end: family, height, and pitch all
+        ;; come from the active preset. Deliberately no default-frame-alist
+        ;; font entry — a sizeless one forces the initial frame to the font's
+        ;; native size and outranks the preset on that frame.
         (use-package fontaine
           :straight t
           :config

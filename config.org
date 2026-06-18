@@ -25,9 +25,9 @@
 * Personal Information
 Obviously, you'll want to change this to match your personal
 credentials.
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp
   (setq user-full-name "Brian O'Reilly"
-	user-mail-address "fade@deepsky.com")
+        user-mail-address "fade@deepsky.com")
 #+END_SRC
 
 * Pass, the built-in unix password manager, emacs support
@@ -46,7 +46,7 @@ all of the bindings under that prefix and which command they run. This
 is very useful for learning the possible key bindings in the mode of
 your current buffer.
 
-  #+BEGIN_SRC emacs-lisp 
+  #+BEGIN_SRC emacs-lisp
     (use-package which-key
       :straight t
       :diminish which-key-mode
@@ -160,7 +160,7 @@ init overrides of things done in early-init.el or in init.el
   (set-selection-coding-system 'utf-8) ; please
   (prefer-coding-system 'utf-8) ; with sugar on top
 
-  ;; tabs never in code. 
+  ;; tabs never in code.
   (setq-default indent-tabs-mode nil)
   (setq-default indicate-empty-lines t)
 
@@ -200,7 +200,7 @@ the symbol at point as the default value for occur.
 #+BEGIN_SRC emacs-lisp
   ;; in practice, I don't use this much. The keybinding has been given
   ;; to another mode.
-  
+
   (defun occur-dwim ()
     "Call `occur' with a sane default."
     (interactive)
@@ -211,7 +211,7 @@ the symbol at point as the default value for occur.
             (thing-at-point 'symbol))
           regexp-history)
     (call-interactively 'occur))
-  
+
   ;; (bind-key "M-s o" 'occur-dwim)
 #+END_SRC
 
@@ -219,7 +219,7 @@ Here we make page-break characters look pretty, instead of appearing
 as =^L= in Emacs. [[https://ericjmritz.wordpress.com/2015/08/29/using-page-breaks-in-gnu-emacs/][Here's an informative article called "Using
 Page-Breaks in GNU Emacs" by Eric J. M. Ritz.]]
 
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp
   (use-package page-break-lines
     :straight t)
 #+END_SRC
@@ -490,8 +490,8 @@ autonomous project-level tasks).
    inside a terminal, the effect is really just terrible. This mode
    kind of approximates the effect of a graphical emacs frame, in a
    text console.
-   
-#+BEGIN_SRC emacs-lisp :tangle no
+
+#+BEGIN_SRC emacs-lisp
   (use-package color-theme-approximate
     :straight t
     :config
@@ -671,7 +671,6 @@ speed keys in Org mode]].
 #+end_src
 
 ** Org Tables .. Extended functionality
-
 This package is useful when you have a lot of data in various org
 tables in a given document, and you want to drop it into a table that
 synthesizes various pieces of data from the other tables, with or
@@ -688,13 +687,14 @@ without additional processing.
     :straight t
     :after org)
 #+end_src
+
 ** Org capture
 #+BEGIN_SRC emacs-lisp
   (bind-key "C-c c" 'org-capture)
   (setq org-default-notes-file "~/Dropbox/Notes/notes.org")
 #+END_SRC
-** Org agenda
 
+** Org agenda
 Learned about [[https://github.com/sachac/.emacs.d/blob/83d21e473368adb1f63e582a6595450fcd0e787c/Sacha.org#org-agenda][this =delq= and =mapcar= trick from Sacha Chua's config]].
 This form will add the agenda file to the org-agenda-files list if the
 file actually exists at the place indicated. Remember to touch the
@@ -704,12 +704,14 @@ file if you change this list.
   (setq org-agenda-files
         (delq nil
               (mapcar (lambda (x) (and (file-exists-p x) x))
-                      (list (expand-file-name "personal-agenda.org" site-org-files)
-                            (expand-file-name "notes.org" site-org-files)
-                            (expand-file-name "todos.org" site-org-files)
-                            (expand-file-name "tasks.org" site-org-files)
-                            (expand-file-name "people.org" site-org-files)
-                            (expand-file-name "Archive.org" site-org-files)))))
+                      (list
+                       ;; (expand-file-name "" org-roam-dailies-directory)
+                       (expand-file-name "personal-agenda.org" site-org-files)
+                       (expand-file-name "notes.org" site-org-files)
+                       (expand-file-name "todos.org" site-org-files)
+                       (expand-file-name "tasks.org" site-org-files)
+                       (expand-file-name "people.org" site-org-files)
+                       (expand-file-name "Archive.org" site-org-files)))))
 
   ;; when we finish a todo, just mark it DONE and fold down the entry.
   (defun org-toggle-todo-and-fold ()
@@ -734,7 +736,7 @@ file if you change this list.
     :straight t
     :after org
     :config
-    (progn 
+    (progn
       ;; (with-eval-after-load 'org (global-org-modern-mode))
 
       (setq
@@ -784,7 +786,7 @@ file if you change this list.
     ;; (setf org-web-tools-pandoc-sleep-time 2.0)
     ;; (setf org-roam-directory (expand-file-name "Roam/" site-org-files))
     ;; (setf org-roam-dailies-directory (expand-file-name "Dailies/" org-roam-directory))
-
+    (expand-file-name "" org-roam-dailies-directory)
     ;; New capture template
     (setq org-roam-dailies-capture-templates
           '(;; ("d" "daily" entry #'org-roam-capture--get-point
@@ -1078,7 +1080,7 @@ consistent as it doesn't pad source blocks with leading spaces.
 
 ** Org exporting
 *** Pandoc exporter
-Pandoc converts between a huge number of different file formats. 
+Pandoc converts between a huge number of different file formats.
 
 #+BEGIN_SRC emacs-lisp
 (use-package ox-pandoc
@@ -1366,7 +1368,7 @@ Return to the subject of previous sessions fast quick.
     (setq dashboard-items '((agenda . 5)
                             (recents . 5)
                             (projects . 5)))
-    
+
     (setq dashboard-banner-logo-title "DeepSky Emacs")
     (advice-add 'dashboard-refresh-buffer :after 'set-random-startup-banner))
 #+end_src
@@ -1473,7 +1475,7 @@ post regions/files/iota of emacs buffers to CrafterBin for linking in remote pla
 #+end_src
 
 * SparQL mode
-most relevantly, sparql is used to define queries to the WikiData knowledge database. 
+most relevantly, sparql is used to define queries to the WikiData knowledge database.
 
 #+BEGIN_SRC emacs-lisp
   (use-package sparql-mode
@@ -1523,7 +1525,7 @@ an Org-mode file.
 #+BEGIN_SRC emacs-lisp
   (use-package org-noter
     :straight t)
-#+end_src 
+#+end_src
 
 * Tramp
 
@@ -1539,18 +1541,8 @@ an Org-mode file.
     (setq tramp-use-connection-share t)
     (setq tramp-histfile-override "/dev/null")
     (add-to-list 'tramp-connection-properties
-                 (list (regexp-quote "/ssh:")
-                       "vc-handled-backends" nil))
-    (add-to-list 'tramp-connection-properties
-                 (list (format "/\\(?:ssh\\|sshx\\|scp\\):.*%s:" (regexp-quote (user-login-name)))
-                       "remote-shell" "/bin/sh"))
-    ;; Generalize remote shell to all ssh/scp connections for stability.
-    (add-to-list 'tramp-connection-properties
-                 (list "/\\(?:ssh\\|sshx\\|scp\\):"
-                       "remote-shell" "/bin/sh"))
-    (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
-    (add-to-list 'tramp-remote-path "~/.local/bin")
-    (add-to-list 'tramp-remote-path "~/bin"))
+                 (list (regexp-quote "/ssh:fade@deepsky.com:")
+                       "remote-shell" "/bin/sh")))
 #+END_SRC
 
       * Window
@@ -1630,7 +1622,7 @@ person with unusual editor defaults.
              (display-graphic-p))
     :straight t
     :load-path "/usr/share/emacs/site-lisp/mu4e"
-    
+
     :config
     ;; this setting avoids mbsync problems
     (setq mu4e-change-filenames-when-moving t)
@@ -1664,7 +1656,7 @@ person with unusual editor defaults.
     ;; (setq (smtpmail-smtp-server . "smtp.gmail.com")
     ;;       (smtpmail-smtp-service . 465)
     ;;       (smtpmail-stream-type . ssl))
-    
+
 #+end_src
 
 * Minor conveniences
@@ -1710,7 +1702,7 @@ While changing buffers or workspaces, the first thing you do is look
 for your cursor. Unless you know its position, you can not move it
 efficiently. Every time you change buffers, the current position of
 your cursor will be briefly highlighted now.
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp
   (use-package beacon
     :straight t
     :config
@@ -1739,7 +1731,7 @@ Overall, this configuration sets up =gptel= to use a language model called "code
 
 This is a configuration file for the GPTel package in Emacs. It sets up the model, mode, and directives for the language model assistant, as well as binds keys to send text to the language model and display its responses. The backend is set up using the =gptel-make-ollama= function, which connects to an Ollama server at localhost:11434 and uses the "codellama:latest" model. The =:stream= option is set to =t=, which enables real-time responses from the language model.
 
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp
   (use-package gptel
     :straight t
     :config
@@ -1783,13 +1775,13 @@ perform these tasks.
   (use-package chatgpt-arcana
     :straight (:host github :repo "CarlQLange/ChatGPT-Arcana.el" :files ("*.el"))
     :init (setq chatgpt-arcana-api-key "") ;; this key should be set in an environment variable.
-    :config 
+    :config
     (use-package all-the-icons
       :config
       (add-to-list 'all-the-icons-mode-icon-alist
                    '(chatgpt-arcana-chat-mode all-the-icons-octicon "comment-discussion" :height 1.0 :v-adjust -0.1 :face all-the-icons-purple))))
 
-  (use-package major-mode-hydra 
+  (use-package major-mode-hydra
     :straight t
     :bind
     ("s-SPC" . major-mode-hydra)
@@ -1878,7 +1870,7 @@ perform these tasks.
     :straight t
     :after flycheck)
 #+END_SRC
-   
+
 ** Dictionary (Websters) support
 I was struggling to find an acceptable english dictionary for local
 off-line use, and googling lead me to a salubrious link tree, starting
@@ -2011,7 +2003,7 @@ No more juggling windows after commiting. It's magit bliss.
 #+END_SRC
 
 *** magit-todo converts :TODO, :FIXME to status actions in magit.
-#+BEGIN_SRC emacs-lisp :tangle no 
+#+BEGIN_SRC emacs-lisp :tangle no
   (use-package magit-todos
     :straight t
     :after magit
@@ -2093,7 +2085,7 @@ keep things portable.
 #+BEGIN_SRC emacs-lisp
   (use-package avy
     :straight t
-    :config 
+    :config
     (avy-setup-default)
     (set-face-attribute 'avy-lead-face-0 nil :background "blue" :foreground "yellow")
     (set-face-attribute 'avy-lead-face-1 nil :background "purple4" :foreground "goldenrod")
@@ -2145,11 +2137,11 @@ increasingly obvious that the young'uns won't be brought to IRC.
 
 ** Common Lisp
 *** SLY
- Sly is superior to Slime.
-    
+    The jury has returned. Sly is superior to Slime.
+
 #+BEGIN_SRC emacs-lisp
   (use-package sly
-    :load-path ("~/SourceCode/lisp/sly" "~/SourceCode/lisp/sly/contrib")
+    ;; :load-path "~/SourceCode/lisp/sly"
     :straight t
     :commands sly
     :bind
@@ -2164,7 +2156,8 @@ increasingly obvious that the young'uns won't be brought to IRC.
       ;; (load (expand-file-name ".roswell/helper.el" (getenv "HOME")))
       (if (eql system-type 'gnu/linux)
           (setf sly-lisp-implementations
-                '((sbcl ("sbcl" "--dynamic-space-size" "4GB"))
+                '(;; (sbcl ("sbcl" "--core" "/home/oreillyb/sbcl.core")) ;;"--dynamic-space-size" "8GB"
+                  (sbcl ("sbcl" "--dynamic-space-size" "4GB"))
                   (sbcl-vanilla ("/usr/local/bin/sbcl" "--dynamic-space-size" "2500"))
                   (ros ("ros" "-Q" "run"))
                   (ccl ("ros" "-L" "ccl-bin" "run"))
@@ -2177,7 +2170,7 @@ increasingly obvious that the young'uns won't be brought to IRC.
                 sly-net-coding-system 'utf-8-unix
                 sly-complete-symbol*-fancy t
                 sly-default-lisp 'sbcl
-                common-lisp-hyperspec-root "file:///home/fade/SourceCode/lisp/HyperSpec/")
+                common-lisp-hyperspec-root "file:///home/oreillyb/SourceCode/lisp/HyperSpec/")
         ;; else it's probably darwin, $HOME in /Users
         (setf sly-lisp-implementations
               '((sbcl ("sbcl" "--dynamic-space-size" "4GB"))
@@ -2194,42 +2187,8 @@ increasingly obvious that the young'uns won't be brought to IRC.
               sly-net-coding-system 'utf-8-unix
               sly-complete-symbol*-fancy t
               sly-default-lisp 'sbcl
-              common-lisp-hyperspec-root "file:///home/fade/SourceCode/lisp/HyperSpec/"))
-      ;; filename translations between emacs and the remote lisp.
-      (require 'sly-tramp)
+              common-lisp-hyperspec-root "file:///home/oreillyb/SourceCode/lisp/HyperSpec/"))
 
-      (defun fade/sly-connect-remote (host port)
-        "Connect to a remote Slynk server via SSH tunnel.
-HOST is the remote hostname (for TRAMP), PORT is the local tunnel port."
-        (interactive (list (read-string "Remote Host (for TRAMP): ")
-                           (read-number "Local Port: " 4005)))
-        (let ((lisp-user (or (getenv "USER") (user-login-name))))
-          ;; Ensure we have a translator for this machine-instance
-          (add-to-list 'sly-filename-translations
-                       (sly-create-filename-translator
-                        :machine-instance host
-                        :remote-host host
-                        :username lisp-user)))
-        (sly-connect "localhost" port))
-
-      ;; Specific overrides for known clusters
-      (let ((lisp-user (or (getenv "USER") (user-login-name))))
-        (dolist (host '("synthia" "synthia-hn1" "synthia-hn1.res.nrc.gc.ca"))
-          (add-to-list 'sly-filename-translations
-                       (sly-create-filename-translator
-                        :machine-instance host
-                        :remote-host "synthia-hn1"
-                        :username lisp-user))))
-
-      ;; Connection-local variables for synthia to use Roswell.
-      (connection-local-set-profile-variables
-       'synthia-lisp-profile
-       '((sly-default-lisp . ros)))
-
-      (dolist (host '("synthia" "synthia-hn1" "synthia-hn1.res.nrc.gc.ca"))
-        (connection-local-set-profiles
-         `(:application tramp :machine ,host) 'synthia-lisp-profile))
-      
 
       ;; the prompt should live at the bottom of the screen; this isn't like... good, but it's better.
       (defun my-sly-mrepl-goto-end (&rest _)
@@ -2246,15 +2205,21 @@ HOST is the remote hostname (for TRAMP), PORT is the local tunnel port."
       (require 'sly-stepper-autoloads)
       (add-to-list 'load-path (expand-file-name "~/SourceCode/lisp/log4cl/elisp"))
       (load (expand-file-name "~/SourceCode/lisp/log4cl/elisp/log4sly.el"))
-      (global-log4sly-mode 1)))
+      (global-log4sly-mode 1)
+      (add-to-list 'load-path "~/SourceCode/lisp/sly/contrib")
+      (require 'sly-tramp)
+      (add-to-list 'sly-filename-translations
+                   (sly-create-filename-translator
+                    :machine-instance "synthia-hn1"
+                    :remote-host "synthia-hn1.res.nrc.gc.ca"
+                    :username "oreillyb"))))
 
   (eval-after-load 'sly
     `(define-key sly-prefix-map (kbd "M-h") 'sly-documentation-lookup))
 
   (use-package sly-asdf
     ;; :load-path "~/SourceCode/lisp/sly-asdf"
-    :straight (sly-asdf :host github :repo "fade/sly-asdf"
-                        :branch "fix/normalize-dependency-defs")
+    :straight t
     :after sly)
 
   (use-package sly-macrostep
@@ -2440,7 +2405,7 @@ web-mode provides syntax support for html typed and related files.
 #+end_src
 
 *** JavaScript
-  #+BEGIN_SRC emacs-lisp 
+  #+BEGIN_SRC emacs-lisp
     (use-package js2-mode
       :straight t
       :init
@@ -2469,7 +2434,7 @@ web-mode provides syntax support for html typed and related files.
 
    Color /defined/ variables with [[https://github.com/ankurdave/color-identifiers-mode][color-identifiers-mode]]:
 
-  #+BEGIN_SRC emacs-lisp 
+  #+BEGIN_SRC emacs-lisp
    (use-package color-identifiers-mode
        :straight t
        :init
@@ -2480,7 +2445,7 @@ web-mode provides syntax support for html typed and related files.
   to have [[http://flycheck.readthedocs.org/][flycheck]] validate the source based on [[http://www.jshint.com/][jshint]], and [[https://github.com/eslint/eslint][eslint]].
   Let’s prefer =eslint=:
 
-  #+BEGIN_SRC emacs-lisp 
+  #+BEGIN_SRC emacs-lisp
     (add-hook 'js2-mode-hook
               (lambda () (flycheck-select-checker "javascript-eslint")))
   #+END_SRC
@@ -2512,18 +2477,18 @@ web-mode provides syntax support for html typed and related files.
     * =sv= is =split-var-declaration=: Splits a =var= with multiple vars declared, into several =var= statements.
     * =uw= is =unwrap=: Replaces the parent statement with the selected region.
 
-  #+BEGIN_SRC emacs-lisp 
+  #+BEGIN_SRC emacs-lisp
   (use-package js2-refactor
     :straight t
     :init   (add-hook 'js2-mode-hook 'js2-refactor-mode)
     :config (js2r-add-keybindings-with-prefix "C-c ."))
   #+END_SRC
-  
+
 *** Skewer
     I also configure Skewer for my [[file:emacs-web.org][HTML and CSS]] files, we need to do the
     same for JavaScript:
 
-    #+BEGIN_SRC emacs-lisp 
+    #+BEGIN_SRC emacs-lisp
   (use-package skewer-mode
      :straight t
      :init (add-hook 'js2-mode-hook 'skewer-mode))
@@ -2575,7 +2540,7 @@ web-mode provides syntax support for html typed and related files.
 #+END_SRC
 
 * Rainbow
-   
+
 Mostly useful if you are into web development or game development.
 Every time emacs encounters a hexadecimal code that resembles a color,
 it will automatically highlight it in the appropriate color. This is a
@@ -2708,7 +2673,7 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
                    :italic-family "EnvyCodeR Nerd Font"
                    :italic-slant italic
                    :line-spacing nil)))
-          
+
           (fontaine-set-preset 'regular)
 
           ;; (with-eval-after-load 'fontaine
@@ -2723,6 +2688,9 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
           ;; (`fontaine-apply-current-preset' was removed in 3.0.)
           )))
 #+END_SRC
+
+#+RESULTS:
+: t
 
 
 * Yasnippet
@@ -2741,7 +2709,7 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
      :after yasnippet)
  #+end_src
 * Completion
-#+BEGIN_SRC emacs-lisp 
+#+BEGIN_SRC emacs-lisp
   ;; vertico is the base for our Helm exodus.
   (use-package vertico
     :straight t
@@ -2786,7 +2754,7 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
   ;; metadata around completion selections
   (use-package marginalia
     :straight t
-    :custom 
+    :custom
     (setq marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
     :init
     (marginalia-mode 1))
@@ -2853,5 +2821,21 @@ This is the way we do in buffer completion. Problem solved.
       ;; :config
       ;; (global-corfu-mode)
       :hook (after-init . global-corfu-mode)))
+
+  ;; corfu popup frames have some issues on terminal sessions. this
+  ;; still doesn't fix it (within screen), so if you want to use this
+  ;; config on a terminal, you might want to revisit the choice of corfu
+  ;; entirely.
+
+  ;; (when (and (not (display-graphic-p))
+  ;;            (not (version< emacs-version "31")))
+  ;;   (use-package corfu-terminal
+  ;;     :straight t
+  ;;     :vc (:url
+  ;;          "https://codeberg.org/akib/emacs-corfu-terminal.git"
+  ;;          :branch "master")
+  ;;     :config
+  ;;     (corfu-terminal-mode +1)))
+
 
 #+end_src

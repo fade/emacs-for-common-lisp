@@ -15,7 +15,11 @@
  '(column-number-mode t)
  '(compilation-message-face 'default)
  '(connection-local-criteria-alist
-   '(((:application vc-git) vc-git-connection-default-profile)
+   '(((:application tramp :machine "synthia-hn1.res.nrc.gc.ca")
+      synthia-lisp-profile)
+     ((:application tramp :machine "synthia-hn1") synthia-lisp-profile)
+     ((:application tramp :machine "synthia") synthia-lisp-profile)
+     ((:application vc-git) vc-git-connection-default-profile)
      ((:application tramp :protocol "kubernetes")
       tramp-kubernetes-connection-local-default-profile)
      ((:application tramp :protocol "flatpak")
@@ -26,7 +30,8 @@
       tramp-connection-local-default-system-profile
       tramp-connection-local-default-shell-profile)))
  '(connection-local-profile-alist
-   '((vc-git-connection-default-profile (vc-git--program-version))
+   '((synthia-lisp-profile (sly-default-lisp . ros))
+     (vc-git-connection-default-profile (vc-git--program-version))
      (tramp-flatpak-connection-local-default-profile
       (tramp-remote-path "/app/bin" tramp-default-remote-path "/bin"
                          "/usr/bin" "/sbin" "/usr/sbin"
@@ -130,7 +135,9 @@
  '(cua-overwrite-cursor-color "#b58900")
  '(cua-read-only-cursor-color "#859900")
  '(custom-safe-themes
-   '("14d62ab7d23ec130697c9050718e7e3a230a97f30f838a475c8f45e0a262d050"
+   '("917f643d60193764d30f2f5bfea0254daf801c5f1f771922c69976af3941d3b1"
+     "7de64ff2bb2f94d7679a7e9019e23c3bf1a6a04ba54341c36e7cf2d2e56e2bcc"
+     "14d62ab7d23ec130697c9050718e7e3a230a97f30f838a475c8f45e0a262d050"
      "114690b562ef993b00bd08e41a66c5012c2e8b186761df9a3a10b154b66110e3"
      "af5dd4ae31f71fff89cbf8471be3a904a2e94e4f7c09773d7b004010373b371e"
      "26119be0a36a2974d260f55794d0902e87ca644835f9bceef8f7da75d7636ced"

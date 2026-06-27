@@ -2672,16 +2672,16 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
           (setq fontaine-presets
                 '((tiny
                    :default-family "EnvyCodeR Nerd Font"
-                   :default-height 70)
+                   :default-height 80)
                   (small
                    :default-family "EnvyCodeR Nerd Font"
-                   :default-height 80)
+                   :default-height 90)
                   (regular
                    :default-family "EnvyCodeR Nerd Font"
-                   :default-height 100)
+                   :default-height 110)
                   (medium
                    :default-family "EnvyCodeR Nerd Font"
-                   :default-height 110)
+                   :default-height 115)
                   (large
                    :default-weight semilight
                    :default-height 140

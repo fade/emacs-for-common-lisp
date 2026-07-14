@@ -421,9 +421,10 @@ autonomous project-level tasks).
     "g" #'gptel-send
     "m" #'gptel-menu
     "r" #'gptel-rewrite
-    "c" (lambda () (interactive) (let ((agent-shell-default-agent "claude")) (agent-shell-local)))
-    "s" #'agent-shell-local
-    "d" #'agent-shell-send-defun)
+    "c" (lambda () (interactive) (let ((agent-shell-default-agent "claude")) (agent-shell)))
+    "o" (lambda () (interactive) (let ((agent-shell-default-agent "opencode")) (agent-shell)))
+    "s" #'agent-shell
+    "d" (lambda () (interactive) (save-excursion (mark-defun) (agent-shell))))
 
   (defvar-keymap prefix-buffer-map-w
     :doc "Prefix map for C-q for web"
@@ -1386,8 +1387,9 @@ Return to the subject of previous sessions fast quick.
   (use-package agent-shell
     :straight (agent-shell :type git :host github :repo "xenodium/agent-shell")
     :bind (:map prefix-buffer-map-v
-                ("c" . (lambda () (interactive) (let ((agent-shell-default-agent "claude")) (agent-shell-local))))
-                ("s" . agent-shell-local)
+                ("c" . (lambda () (interactive) (let ((agent-shell-default-agent "claude")) (agent-shell))))
+                ("o" . (lambda () (interactive) (let ((agent-shell-default-agent "opencode")) (agent-shell))))
+                ("s" . agent-shell)
                 ("d" . agent-shell-send-defun))
     :hook (agent-shell-mode . agent-shell-completion-mode)
     :init
@@ -1405,6 +1407,8 @@ Return to the subject of previous sessions fast quick.
     (setq agent-shell-google-gemini-acp-command '("gemini" "--acp"))
     ;; Ensure claude-code is called with the ACP flag.
     (setq agent-shell-anthropic-claude-acp-command '("claude" "--acp"))
+    ;; Ensure opencode is called with the ACP flag.
+    (setq agent-shell-opencode-acp-command '("opencode" "acp"))
 
     (defun agent-shell-local ()
       "Start agent-shell on the local machine."
@@ -1424,7 +1428,9 @@ Return to the subject of previous sessions fast quick.
     ;; Integrate with Sly for Common Lisp workflows.
     (with-eval-after-load 'sly
       (define-key sly-mode-map (kbd "C-q v c")
-                  (lambda () (interactive) (let ((agent-shell-default-agent "claude")) (agent-shell-local))))
+                  (lambda () (interactive) (let ((agent-shell-default-agent "claude")) (agent-shell))))
+      (define-key sly-mode-map (kbd "C-q v o")
+                  (lambda () (interactive) (let ((agent-shell-default-agent "opencode")) (agent-shell))))
       (define-key sly-mode-map (kbd "C-q v d") #'agent-shell-send-defun)
       (define-key sly-mode-map (kbd "C-q v s") #'agent-shell-local)))
 #+end_src

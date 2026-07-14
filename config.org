@@ -1393,19 +1393,13 @@ Return to the subject of previous sessions fast quick.
                 ("d" . agent-shell-send-defun))
     :hook (agent-shell-mode . agent-shell-completion-mode)
     :init
-    ;; Patch shell-maker--curl-version-supported globally in :init to ensure it's
-    ;; active before any part of agent-shell or shell-maker tries to call it.
+    ;; Force shell-maker--curl-version-supported to return t.
+    ;; The upstream version check frequently fails on major version boundaries (like curl 8.5.0).
+    ;; We apply this both as an advice and as a direct definition to ensure it sticks.
+    (defun my-skip-curl-check (&rest _) t)
+    (advice-add 'shell-maker--curl-version-supported :override #'my-skip-curl-check)
     (with-eval-after-load 'shell-maker
-      (defun shell-maker--curl-version-supported ()
-        "Return t if curl version is 7.76 or newer, nil otherwise."
-        (let* ((curl (if (boundp 'shell-maker-curl-executable) shell-maker-curl-executable "curl"))
-               (curl-version-string (shell-command-to-string (concat curl " --version "))))
-          (if (string-match "\\([0-9]+\\)\\.\\([0-9]+\\)\\.\\([0-9]+\\)" curl-version-string)
-              (let ((major (string-to-number (match-string 1 curl-version-string)))
-                    (minor (string-to-number (match-string 2 curl-version-string))))
-                (or (> major 7)
-                    (and (= major 7) (>= minor 76))))
-            nil))))
+      (defun shell-maker--curl-version-supported () t))
     :config
     ;; Default to Gemini CLI.
     (setq agent-shell-default-agent "gemini")
@@ -1416,12 +1410,20 @@ Return to the subject of previous sessions fast quick.
     ;; Ensure opencode is called with the ACP flag.
     (setq agent-shell-opencode-acp-command '("opencode" "acp"))
 
+    (defun agent-shell-local ()
+      "Start agent-shell on the local machine."
+      (interactive)
+      (let ((default-directory (expand-file-name "~")))
+        (agent-shell)))
+
     (defun agent-shell-send-defun ()
       "Send the current Lisp defun to the agent shell."
       (interactive)
-      (save-excursion
-        (mark-defun)
-        (agent-shell (buffer-substring-no-properties (region-beginning) (region-end)))))
+      (let ((defun-text (save-excursion
+                          (mark-defun)
+                          (buffer-substring-no-properties (region-beginning) (region-end))))
+            (default-directory (expand-file-name "~")))
+        (agent-shell defun-text)))
 
     ;; Integrate with Sly for Common Lisp workflows.
     (with-eval-after-load 'sly
@@ -1430,7 +1432,7 @@ Return to the subject of previous sessions fast quick.
       (define-key sly-mode-map (kbd "C-q v o")
                   (lambda () (interactive) (let ((agent-shell-default-agent "opencode")) (agent-shell))))
       (define-key sly-mode-map (kbd "C-q v d") #'agent-shell-send-defun)
-      (define-key sly-mode-map (kbd "C-q v s") #'agent-shell)))
+      (define-key sly-mode-map (kbd "C-q v s") #'agent-shell-local)))
 #+end_src
 
 * Update Changed File Buffers

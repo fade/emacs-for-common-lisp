@@ -2857,3 +2857,48 @@ This is the way we do in buffer completion. Problem solved.
       :hook (after-init . global-corfu-mode)))
 
 #+end_src
+
+* Semantic line breaks for forge prose
+
+I hard-wrap by reflex, and on a pull request body that reflex costs me the diff.
+A forge renders Markdown, where a single newline is a soft break, so it reflows
+every paragraph to the reader's window no matter how I wrapped it. The wrapping
+is invisible where it lands and expensive where I work: revise one word and the
+whole paragraph rewraps, so the real change arrives buried in reflow.
+
+Rather than teach my hands not to press M-q, I make M-q do the useful thing in
+Markdown: break the paragraph after each sentence instead of at a column. One
+sentence per line survives editing, so a diff shows the sentence I changed.
+
+This is scoped to Markdown on purpose. A commit message is not Markdown and is
+read in a terminal, where git indents the body four spaces, so it keeps filling
+at =fill-column= where 70 leaves room for the indent inside eighty columns.
+
+The sentence test is a regular expression, so an abbreviation followed by a
+capital splits where it should not: write =e.g. Foo= and you get two lines.
+Lines opening with a list marker are left alone, which handles a flat list and
+does not handle a nested one.
+
+#+BEGIN_SRC emacs-lisp
+  (defun fade/sembr-fill-paragraph (&optional _justify)
+    "Fill the paragraph at point one sentence per line.
+  Keeps diffs of forge prose legible: editing a word rewrites only
+  the sentence it sits in, not every line of the paragraph."
+    (interactive "P")
+    (save-excursion
+      (let ((beg (progn (backward-paragraph) (point)))
+            (end (progn (forward-paragraph) (point))))
+        (save-restriction
+          (narrow-to-region beg end)
+          (goto-char (point-min))
+          (while (re-search-forward "[ \t]*\n[ \t]*\\([^\n[:space:]-]\\)" nil t)
+            (replace-match " \\1"))
+          (goto-char (point-min))
+          (while (re-search-forward "\\([.!?]\\)[ ]+\\([A-Z`]\\)" nil t)
+            (replace-match "\\1\n\\2")))))
+    t)
+
+  (add-hook 'markdown-mode-hook
+            (lambda ()
+              (setq-local fill-paragraph-function #'fade/sembr-fill-paragraph)))
+#+END_SRC

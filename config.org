@@ -2289,7 +2289,11 @@ dialect regularly.
 
 #+BEGIN_SRC emacs-lisp
   (use-package paredit
-    :straight t
+    ;; paredit.org, where this package came from, no longer resolves, and the
+    ;; MELPA recipe still names it, so a fresh install of this configuration
+    ;; fails before it fetches anything. I track my own fork instead: it
+    ;; carries one commit the GitHub mirror never received.
+    :straight (paredit :type git :host github :repo "fade/paredit.el")
     :diminish paredit-mode
     ;; :load-path "~/SourceCode/lisp/emacs_stuff/paredit"
     :config

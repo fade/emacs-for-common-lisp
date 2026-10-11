@@ -2151,7 +2151,7 @@ increasingly obvious that the young'uns won't be brought to IRC.
     
 #+BEGIN_SRC emacs-lisp
   (use-package sly
-    :load-path ("~/SourceCode/lisp/sly" "~/SourceCode/lisp/sly/contrib")
+    :load-path ("~/SourceCode/lisp/fade-sly" "~/SourceCode/lisp/fade-sly/contrib")
     :straight t
     :commands sly
     :bind
@@ -2198,6 +2198,9 @@ increasingly obvious that the young'uns won't be brought to IRC.
               sly-default-lisp 'sbcl
               common-lisp-hyperspec-root "file:///home/fade/SourceCode/lisp/HyperSpec/"))
       ;; filename translations between emacs and the remote lisp.
+      ;; SLY only puts contrib/ on load-path once a connection is set up,
+      ;; but the translators below need sly-tramp now.
+      (add-to-list 'load-path (expand-file-name "contrib" sly-path))
       (require 'sly-tramp)
 
       (defun fade/sly-connect-remote (host port)

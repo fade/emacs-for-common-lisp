@@ -1234,6 +1234,8 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
 
   (global-set-key (kbd "C-c u") 'browse-last-url-in-brower)
 
+  (use-package elpher
+    :straight (elpher :type git :host github :repo "emacsmirror/elpher"))
 #+END_SRC
 
 * Tree-sitter

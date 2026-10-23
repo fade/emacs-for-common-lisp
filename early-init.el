@@ -47,7 +47,6 @@
 
 ;; Packages will be initialized later
 (setopt package-enable-at-startup nil)
-(setq package-enable-at-startup nil)
 
 ;;; Following from Lionyx <Rahul Juliato> in #systemcrafters
 ;;; Native Compile Settings:
@@ -63,8 +62,7 @@
 		  native-compile-target-directory path)
     (startup-redirect-eln-cache path))
 
-  (setq-default native-comp-async-report-warnings-errors nil  ;; Silence compiler warnings as they can be disruptive
-		native-comp-jit-compilation              t    ;; Enable async native compilation
+  (setq-default native-comp-jit-compilation              t    ;; Enable async native compilation
 		package-native-compile                   t))  ;; Compile installed packages
 
 
@@ -79,7 +77,7 @@
 
 ;; Silence compiler warnings and remove old versions of native-compiled files
 (setopt native-compile-prune-cache t
-        native-comp-async-report-warnings-errors 'silent)
+        native-comp-async-report-warnings-errors nil)
 
 ;; Process performance tuning
 (setopt process-adaptive-read-buffering nil

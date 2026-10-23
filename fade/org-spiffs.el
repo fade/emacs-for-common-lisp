@@ -4,31 +4,28 @@
 ;;; Copyright (c) 2018-2021 Brian O'Reilly <fade@deepsky.com>
 ;;; Code:
 
-(require 'cl-lib)
+(require 'subr-x)
 
 ;;; taken from https://github.com/skx/dotfiles redefined to ameliorate
 ;;; the assignment to uninitialised variables. Also, #'goto-line is
 ;;; for interactive functions only. recast in terms of #'goto-char
 
-(cl-defun fade/org-global-prop (name)
-  "Given a property NAME like 'AUTHOR', 'TITLE', &etc. return the associated value."
+(defun fade/org-global-prop (name)
+  "Return the first Org keyword NAME without changing folding or point."
   (save-excursion
-    (outline-show-all)
-    (goto-char (point-min))
-    (if (re-search-forward (concat "^#\\+" name ":") nil t)
-        (let (start end)
-          (setq start (point))
-          (re-search-forward "$")
-          (setq end (point))
-          (string-trim (buffer-substring-no-properties start end))))))
+    (save-restriction
+      (widen)
+      (goto-char (point-min))
+      (let ((case-fold-search t))
+        (when (re-search-forward
+               (concat "^#\\+" (regexp-quote name) ":[ \t]*\\(.*\\)$") nil t)
+          (string-trim (match-string-no-properties 1)))))))
 
-;; that properties function can be used specifically in org files to
-;; do various things, like renaming the (convoluted, unfriendly)
-;; buffer names of org-roam notes. to whit:
-
-(cl-defun fade/org-mode-rename-buffer ()
-  (if (fade/org-global-prop "TITLE")
-      (rename-buffer (fade/org-global-prop "TITLE"))))
+(defun fade/org-mode-rename-buffer ()
+  "Use this Org buffer's title as a unique buffer name."
+  (let ((title (fade/org-global-prop "TITLE")))
+    (when (and title (not (string-empty-p title)))
+      (rename-buffer title t))))
 
 ;;; now in your init file, attach the renaming function to the 'org-mode-hook
 

@@ -174,7 +174,7 @@ init overrides of things done in early-init.el or in init.el
 
   (column-number-mode t)
 
-  (global-visual-line-mode)
+  (global-visual-line-mode 1)
   (diminish 'visual-line-mode)
 
   (setq uniquify-buffer-name-style 'forward)
@@ -305,8 +305,7 @@ autonomous project-level tasks).
     "o" #'consult-outline
     "g" #'consult-grep
     "i" #'consult-imenu
-    "s" #'consult-notes-search-in-all-notes
-    "@" #'consult-mu)
+    "s" #'consult-notes-search-in-all-notes)
 
   ;; (defvar-keymap prefix-buffer-map-d
   ;;   :doc "Prefix map for C-q for dired/Denote"
@@ -372,18 +371,6 @@ autonomous project-level tasks).
     :doc "Prefix map for C-q for packages"
     "l" #'list-packages
     "r" #'package-refresh-contents)
-
-  (defvar-keymap prefix-buffer-map-q
-    :doc "Prefix map for C-q for org-ql"
-    "s" #'org-ql-search
-    "r" #'org-ql-refile
-    "l" #'org-ql-open-link
-    "b" #'org-ql-view-sidebar
-    "f" #'org-ql-find
-    "v" #'org-ql-view
-    "a" #'org-ql-find-in-agenda
-    "d" #'org-ql-find-in-org-directory
-    "i" #'org-ql-view-recent-items)
 
   (defvar-keymap prefix-buffer-map-r
     :doc "Prefix map for C-q for frame configuration to register"
@@ -451,7 +438,6 @@ autonomous project-level tasks).
     "m" prefix-buffer-map-m
     "o" prefix-buffer-map-o
     "p" prefix-buffer-map-p
-    "q" prefix-buffer-map-q
     "r" prefix-buffer-map-r
     "s" prefix-buffer-map-sly
     "t" prefix-buffer-map-t
@@ -472,7 +458,6 @@ autonomous project-level tasks).
     "m" `("Misc" . ,prefix-buffer-map-m)
     "o" `("Org" . ,prefix-buffer-map-o)
     "p" `("Packages" . ,prefix-buffer-map-p)
-    "q" `("Org-ql" . ,prefix-buffer-map-q)
     "r" `("WindowRegisters" . ,prefix-buffer-map-r)
     "s" `("SLY" . ,prefix-buffer-map-sly)
     "t" `("Terminals" . ,prefix-buffer-map-t)
@@ -530,8 +515,9 @@ autonomous project-level tasks).
     ;; all render in variable-pitch when variable-pitch-mode is on.
     (setq modus-themes-mixed-fonts t)
     ;; (load-theme 'deepsky-modus-fade t)
-    (require 'deepsky-moonunit-theme)
-    (load-theme 'deepsky-moonunit t nil)
+    (if (locate-library "deepsky-moonunit-theme")
+        (load-theme 'deepsky-moonunit t)
+      (load-theme 'deepsky t))
     (message "Configuring mode-line appearance...")
     (set-face-attribute `mode-line nil
                         :box nil)
@@ -767,7 +753,8 @@ file if you change this list.
 #+BEGIN_SRC emacs-lisp
   (use-package org-web-tools
     :straight t
-    :load-path "~/SourceCode/lisp/emacs_stuff/packages-projects/org-web-tools")
+    :custom
+    (org-web-tools-pandoc-sleep-time 2.0))
 #+end_src
 
 ** Org Roam
@@ -780,17 +767,10 @@ file if you change this list.
 
   (use-package org-roam
     :straight t
-    :init
-    (setq org-roam-v2-ack t)
     :custom
-    (org-web-tools-pandoc-sleep-time 2.0)
     (org-roam-directory (expand-file-name "Roam/" site-org-files))
-    (org-roam-dailies-directory (expand-file-name "Dailies/" org-roam-directory))
+    (org-roam-dailies-directory "Dailies/")
     :config
-    ;; (setf org-web-tools-pandoc-sleep-time 2.0)
-    ;; (setf org-roam-directory (expand-file-name "Roam/" site-org-files))
-    ;; (setf org-roam-dailies-directory (expand-file-name "Dailies/" org-roam-directory))
-
     ;; New capture template
     (setq org-roam-dailies-capture-templates
           '(;; ("d" "daily" entry #'org-roam-capture--get-point
@@ -799,7 +779,10 @@ file if you change this list.
              :if-new (file+head "%<%Y-%m-%d>.org"
                                 "#+title: %<%Y-%m-%d>\n"))))
 
-    (org-roam-setup)
+    (if (file-directory-p org-roam-directory)
+        (org-roam-db-autosync-mode 1)
+      (message "Org-roam autosync inactive: notes directory is missing: %s"
+               org-roam-directory))
 
     :bind
     ("C-c n l" . org-roam-buffer-toggle)
@@ -808,19 +791,20 @@ file if you change this list.
     ("C-c n r" . org-roam-node-random)
     (:map org-mode-map
           ("C-c n i" . org-roam-node-insert)
-          ("C-c n o" . org-roam-get-create)
+          ("C-c n o" . org-roam-node-find)
           ("C-c n t" . org-roam-tag-add)
           ("C-c n a" . org-roam-alias-add)
           ("C-c n l" . org-roam-buffer-toggle)
           :map org-mode-map
-          ("C-M-i" . completion-at-point)
-          :map org-roam-dailies-map
-          ("Y" . org-roam-dailies-capture-yesterday)
-          ("T" . org-roam-dailies-capture-tomorrow))
-    :bind-keymap ("C-c n d" . org-roam-dailies-map)
+          ("C-M-i" . completion-at-point)))
 
-    :config (require 'org-roam-dailies)
-    (org-roam-db-autosync-mode))
+  ;; This extension owns the dailies map and can load independently of autosync.
+  (use-package org-roam-dailies
+    :straight nil
+    :bind-keymap ("C-c n d" . org-roam-dailies-map)
+    :bind (:map org-roam-dailies-map
+                ("Y" . org-roam-dailies-capture-yesterday)
+                ("T" . org-roam-dailies-capture-tomorrow)))
 
   (use-package  org-roam-bibtex
     :straight t
@@ -998,17 +982,17 @@ good column number to do that.
            (file+olp+datetree "~/Dropbox/OrgFiles/Journal.org")
            "\n* %<%I:%M %p> - Journal :journal:\n\n%?\n\n"
            ;; ,(dw/read-file-as-string "~/Notes/Templates/Daily.org")
-           :clock-in :clock-resume
+           :clock-in t :clock-resume t
            :empty-lines 1)
           ("jm" "Meeting" entry
            (file+olp+datetree "~/Dropbox/OrgFiles/Journal.org")
            "* %<%I:%M %p> - %a :meetings:\n\n%?\n\n"
-           :clock-in :clock-resume
+           :clock-in t :clock-resume t
            :empty-lines 1)
 
           ("w" "Workflows")
           ("we" "Checking Email" entry (file+olp+datetree "~/Dropbox/OrgFiles/Journal.org")
-           "* Checking Email :email:\n\n%?" :clock-in :clock-resume :empty-lines 1)
+           "* Checking Email :email:\n\n%?" :clock-in t :clock-resume t :empty-lines 1)
 
           ("b" "Books, manual")
           ("bm" "Books, Internet" entry (file org-books-file)
@@ -1056,7 +1040,7 @@ good column number to do that.
              (string= lang "python")
              (string= lang "emacs-lisp")
              (string= lang "sqlite")
-             (string= lang "resclient"))))
+             (string= lang "restclient"))))
 
   (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
 #+END_SRC
@@ -1213,7 +1197,7 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
             ("amazon.com" . browse-url-generic)
             ("slideshare.net" . browse-url-generic)
             ("." . eww-browse-url)))
-    (setq browser-url-secondary-browser-function 'browse-url-generic)
+    (setq browse-url-secondary-browser-function 'browse-url-generic)
     (setq browse-url-generic-program (executable-find "firefox"))
     (add-hook 'eww-mode-hook #'toggle-word-wrap)
     (add-hook 'eww-mode-hook #'visual-line-mode)
@@ -1246,16 +1230,18 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
 
 * Tree-sitter
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package tree-sitter
-  ;;   :straight t)
-
   (use-package treesit-parser-manager
     :straight (treesit-parser-manager :host codeberg :repo "ckruse/treesit-parser-manager" :files ("*.el"))
+    :init
+    (add-to-list 'treesit-extra-load-path
+                 (expand-file-name "tree-sit-parsers/" user-emacs-directory))
     :commands (treesit-parser-manager-install-grammars
                treesit-parser-manager-update-grammars
                treesit-parser-manager-install-or-update-grammars
                treesit-parser-manager-remove-grammar)
     :custom
+    (treesit-parser-manager-target-directory
+     (expand-file-name "tree-sit-parsers/" user-emacs-directory))
     (treesit-parser-manager-grammars
      '(("https://github.com/tree-sitter-grammars/tree-sitter-rust"
         ("tree-sitter-rust"))
@@ -1311,15 +1297,10 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
        ("https://github.com/tree-sitter-grammars/tree-sitter-commonlisp"
         ("tree-sitter-commonlisp"))
 
-       ))
+       )))
 
-    :config
-    (setq treesit-extra-load-path (list (expand-file-name "tree-sit" user-emacs-directory)))
-    :hook (emacs-startup . treesit-parser-manager-install-grammars))
-
-  (use-package tree-sitter-langs
-    :straight t
-    :after tree-sitter)
+  ;; Grammar installation is explicit: M-x treesit-parser-manager-install-grammars.
+  ;; Starting Emacs should not clone repositories or invoke a compiler.
 #+end_src
 
 * lsp-mode benefits most programming modes, drop it in before they are initialized.
@@ -1329,9 +1310,7 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
     :commands (lsp lsp-deferred)
     ;; Common Lisp uses SLY by default; LSP is started explicitly below.
     :hook ((python-mode . lsp-deferred)
-           (sh-mode . lsp))
-    :custom
-    (lsp-completion-provider :none))
+           (sh-mode . lsp)))
 
   (use-package lsp-ui
     :straight t
@@ -1340,27 +1319,28 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
 
   (use-package repeat
     :config
-    (repeat-mode))
+    (repeat-mode 1))
 
 #+END_SRC
 * Dashboard
 Return to the subject of previous sessions fast quick.
 #+BEGIN_SRC emacs-lisp
-  ;; Function to get a random file with specified extensions from a directory
   (defun get-random-file (directory)
-    (interactive)
-    (let* ((allowed-extensions '(".png" ".svg" ".jpg" ".gif"))
-           (filtered-files (directory-files directory t (regexp-opt allowed-extensions))))
-      (if filtered-files
-          (nth (random (length filtered-files)) filtered-files)
-        (progn
-          (message "Error: No supported files found in %s" directory)
-          (return nil)))))
+    "Return a random image file in DIRECTORY, or nil if none is available."
+    (interactive "DImage directory: ")
+    (when (file-directory-p directory)
+      (let* ((case-fold-search t)
+             (files (seq-filter
+                     #'file-regular-p
+                     (directory-files directory t "\\.\\(?:png\\|svg\\|jpe?g\\|gif\\)\\'"))))
+        (when files
+          (nth (random (length files)) files)))))
 
-  ;; Function to set a random picture as the startup banner
-  (defun set-random-startup-banner ()
+  (defun set-random-startup-banner (&rest _)
+    "Choose an available dashboard image, falling back to the official banner."
     (interactive)
-    (setq dashboard-startup-banner (get-random-file dashboard-banner-dir)))
+    (setq dashboard-startup-banner
+          (or (get-random-file dashboard-banner-dir) 'official)))
 
   (use-package dashboard
     :straight t
@@ -1376,7 +1356,7 @@ Return to the subject of previous sessions fast quick.
                             (projects . 5)))
     
     (setq dashboard-banner-logo-title "DeepSky Emacs")
-    (advice-add 'dashboard-refresh-buffer :after 'set-random-startup-banner))
+    (advice-add 'dashboard-refresh-buffer :before #'set-random-startup-banner))
 #+end_src
 
 * VTerm
@@ -1483,7 +1463,9 @@ This really is the best PDF management system I've ever used.
 
   (use-package org-pdftools
     :straight t
-    :hook (org-load-hook . org-pdftools-setup-link))
+    :after org
+    :config
+    (org-pdftools-setup-link))
 #+END_SRC
 
 * Epub support
@@ -1588,7 +1570,7 @@ Because sometimes you have to look at python code that came from a
 person with unusual editor defaults.
 #+BEGIN_SRC emacs-lisp
   (use-package whitespace
-    :bind ("s-<f10>" . whitespace-mode))
+    :bind ("s-<f12>" . whitespace-mode))
 #+END_SRC
 
 * Aggressive Indent Mode
@@ -1706,29 +1688,18 @@ your cursor will be briefly highlighted now.
 
 #+END_SRC
 
-* LLM Integrations via Ollama
+* LLM integrations
 
-So... this is actually right up in the land of magic technology. I
-kind of can't believe how interesting it is.
-
-This is the Emacs configuration for the =gptel= package, which allows you to use a language model as a helpful assistant in Emacs. The following settings are used:
-
-- =gptel-default-mode=: This sets the default mode for =gptel= to be =org-mode=.
-- =gptel-model=: This sets the name of the language model that will be used by =gptel=, which in this case is "codellama:latest".
-- =gptel-directives=: This sets a list of directives for =gptel= to use when generating responses. In this case, the first directive sets the default response for any input, while the second directive sets the response for inputs that are labeled as "programming".
-- =C-c t=: This sets the key binding for sending input to =gptel=.
-- =gptel-mode-map=: This sets the map of key bindings for =gptel= mode. The first binding sets the key binding for displaying the menu, while the second binding sets the key binding for sending input to =gptel=.
-
-Overall, this configuration sets up =gptel= to use a language model called "codellama:latest" and provides some default directives for generating responses.
-
-This is a configuration file for the GPTel package in Emacs. It sets up the model, mode, and directives for the language model assistant, as well as binds keys to send text to the language model and display its responses. The backend is set up using the =gptel-make-ollama= function, which connects to an Ollama server at localhost:11434 and uses the "codellama:latest" model. The =:stream= option is set to =t=, which enables real-time responses from the language model.
+Agent-shell handles project agent sessions through Codex. The optional gptel
+interface remains available for inline requests under =C-q v g/m/r=, using
+ChatGPT authentication. Ollama Buddy provides the local-model interface.
 
 #+BEGIN_SRC emacs-lisp 
   (use-package gptel
     :straight t
+    :commands (gptel-send gptel-menu gptel-rewrite)
     :config
     (setf  gptel-default-mode 'org-mode
-           ;; gptel-model "codellama:latest"
            gptel-model 'gpt-6.1-sol
            gptel-directives '((default . "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
                               (programming . "You are a large language model and a careful programmer and insightful system architect. Provide code and explanation as appropriate.")))
@@ -1813,21 +1784,7 @@ This is a configuration file for the GPTel package in Emacs. It sets up the mode
                   (insert-file-contents file)
                   (buffer-string)))))))))
 
-    ;; (setq gptel-backend (gptel-make-ollama "Ollama"
-    ;;                                        :host "localhost:11434"
-    ;;                                        :stream t
-    ;;                                        :models '("deepseek-r1:7b" "codellama:latest" "zephyr:latest" "llama3.2:latest")))
-
-    (setq gptel-backend (gptel-make-openai-oauth "ChatGPT"))
-
-    ;; (gptel-make-anthropic "Claude"
-    ;;                       :stream t
-    ;;                       :key (lambda () (auth-source-pick-first-password :host "api.anthropic.com" :user "apikey")))
-
-    :bind (:map prefix-buffer-map-v
-                ("g" . gptel-send)
-                ("m" . gptel-menu)
-                ("r" . gptel-rewrite)))
+    (setq gptel-backend (gptel-make-openai-oauth "ChatGPT")))
 
 #+end_src
 
@@ -1930,7 +1887,7 @@ perform these tasks.
               (lambda ()
                 (setq-local flycheck-disabled-checkers
                             (cons 'org-lint flycheck-disabled-checkers))))
-    (global-flycheck-mode))
+    (global-flycheck-mode 1))
 
   (use-package flycheck-cython
     :straight t
@@ -2107,7 +2064,7 @@ Workspaces in Emacs.
 (use-package perspective
   :straight t
   :defer t
-  :config (persp-mode))
+  :config (persp-mode 1))
 #+END_SRC
 * Projectile
 [[http://batsov.com/projectile/][Projectile Home]]
@@ -2147,7 +2104,7 @@ keep things portable.
     :straight t
     :diminish undo-tree-mode
     :config
-    (global-undo-tree-mode)
+    (global-undo-tree-mode 1)
     :custom
     (undo-tree-auto-save-history nil))
 #+END_SRC
@@ -2175,7 +2132,7 @@ buffer navigation, but applies it to windows. The default keys are
   (use-package ace-window
     :straight t
     :config
-    (ace-window-display-mode)
+    (ace-window-display-mode 1)
     :bind ("s-o" . ace-window))
 
 #+END_SRC
@@ -2190,7 +2147,11 @@ increasingly obvious that the young'uns won't be brought to IRC.
     (ement-room-prism 'both)
     (ement-save-sessions t);; stores token to disk in plain text
     (ement-room-send-message-filter 'ement-room-send-org-filter)
-    (ement-set-display-name "Fade"))
+    :config
+    (defun fade/ement-set-display-name (session)
+      "Set the display name to Fade on a selected connected SESSION."
+      (interactive (list (ement-complete-session)))
+      (ement-set-display-name "Fade" session)))
 #+end_src
 
 
@@ -2310,10 +2271,13 @@ HOST is the remote hostname (for TRAMP), PORT is the local tunnel port."
 
       (require 'sly-autoloads)
       (add-to-list 'load-path "~/SourceCode/lisp/emacs_stuff/sly-stepper")
-      (require 'sly-stepper-autoloads)
-      (add-to-list 'load-path (expand-file-name "~/SourceCode/lisp/log4cl/elisp"))
-      (load (expand-file-name "~/SourceCode/lisp/log4cl/elisp/log4sly.el"))
-      (global-log4sly-mode 1)))
+      (unless (require 'sly-stepper-autoloads nil t)
+        (setq sly-contribs (delq 'sly-stepper sly-contribs)))
+      (let ((log4sly (expand-file-name "~/SourceCode/lisp/log4cl/elisp/log4sly.el")))
+        (when (file-readable-p log4sly)
+          (add-to-list 'load-path (file-name-directory log4sly))
+          (load log4sly)
+          (global-log4sly-mode 1)))))
 
   (eval-after-load 'sly
     `(define-key sly-prefix-map (kbd "M-h") 'sly-documentation-lookup))
@@ -2582,12 +2546,8 @@ web-mode provides syntax support for html typed and related files.
 
       (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
       :custom
-      (js2-basic-indent 2)
       (js2-basic-offset 2)
-      (js2-auto-indent-p t)
-      (js2-cleanup-whitespace t)
-      (js2-enter-indents-newline t)
-      (js2-indent-on-enter-key t))
+      (js2-cleanup-whitespace t))
   #+END_SRC
 
    Color /defined/ variables with [[https://github.com/ankurdave/color-identifiers-mode][color-identifiers-mode]]:
@@ -2777,7 +2737,8 @@ Convenience bindings to use doc-view with the arrow keys.
 #+BEGIN_SRC emacs-lisp
   (use-package server
     :config
-    (server-mode t))
+    (unless (server-running-p)
+      (server-start)))
 #+END_SRC
 
 * Font
@@ -2857,7 +2818,8 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
      :config
      (define-key yas-minor-mode-map (kbd "M-z") 'yas-expand)
      (define-key yas-keymap (kbd "M-n") 'yas-next-field-or-maybe-expand)
-     (define-key yas-keymap (kbd "M-p") 'yas-prev-field))
+     (define-key yas-keymap (kbd "M-p") 'yas-prev-field)
+     (yas-global-mode 1))
 
    (use-package yasnippet-snippets
      :straight t

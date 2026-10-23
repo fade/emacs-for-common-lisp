@@ -7,17 +7,9 @@
 ;;; When source files are newer than byte-compiled artifacts, we want the new file.
 (setq load-prefer-newer t)
 
-;;; Silence compiler warnings from native-comp; they're too disruptive.
-(setq native-comp-async-report-warnings-errors nil)
-
-;;; straight is failing due to a reference to a void symbol, the
-;;; symbol being deprecated and missing in emacs29, set it to nothing
-;;; to shutup the machine.
-(defvar native-comp-deferred-compilation-deny-list nil)
-
 ;; I put 'org-spiffs in a subdir of emacs.d, which needs finding:
 (add-to-list 'load-path (expand-file-name "fade/" user-emacs-directory))
-(require 'org-spiffs nil t) ;; rename org-roam buffers to something sane.
+(require 'org-spiffs) ;; rename org-roam buffers to something sane.
 
 ;;; FIXME the following package can no longer be sourced by straight.
 (require 'org-open-links-choice)
@@ -25,29 +17,16 @@
 ;;; Themes need finding.
 (add-to-list 'custom-theme-load-path
              (expand-file-name "themes/" user-emacs-directory))
-;;; But, one by one, like we're savages...
-(add-to-list 'custom-theme-load-path
-             (expand-file-name "modus-themes/" (expand-file-name "themes/" "~/SourceCode/lisp/emacs_stuff/")))
-;; modus-themes.el must also be on load-path for (require 'modus-themes)
-(add-to-list 'load-path
-             (expand-file-name "modus-themes/" (expand-file-name "themes/" "~/SourceCode/lisp/emacs_stuff/")))
-;; where I'm developing my theme.
-(add-to-list 'custom-theme-load-path
-             (expand-file-name "deepsky-themes-moonunit/" (expand-file-name "themes/" "~/SourceCode/lisp/emacs_stuff/")))
-(add-to-list 'load-path
-             (expand-file-name "deepsky-themes-moonunit/" (expand-file-name "themes/" "~/SourceCode/lisp/emacs_stuff/")))
 
-;; where we hold transient saves and other such data. The arity of
-;; files--ensure-directory changed from emacs29 to emacs30.
+;; Local theme development checkouts are optional.
+(dolist (directory '("~/SourceCode/lisp/emacs_stuff/themes/modus-themes/"
+                     "~/SourceCode/lisp/emacs_stuff/themes/deepsky-themes-moonunit/"))
+  (when (file-directory-p directory)
+    (add-to-list 'custom-theme-load-path (expand-file-name directory))
+    (add-to-list 'load-path (expand-file-name directory))))
 
-(if (version<= emacs-version "28")
-    (progn
-      (files--ensure-directory 'make-directory-internal (expand-file-name "config/" user-emacs-directory))
-      (files--ensure-directory 'make-directory-internal (expand-file-name "data/" user-emacs-directory)))
-  (progn
-    (files--ensure-directory (expand-file-name "config/" user-emacs-directory))
-    (files--ensure-directory (expand-file-name "data/" user-emacs-directory))))
-
+(dolist (directory '("config/" "data/"))
+  (make-directory (expand-file-name directory user-emacs-directory) t))
 
 ;;; Bootstrap straight package manager
 ;; Install straight.el
@@ -150,7 +129,7 @@
 
 ;; Keep emacs Custom-settings in separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(load custom-file)
+(load custom-file t)
 
 ;; Add external projects to load path
 (dolist (project (directory-files site-lisp-dir t "\\w+"))
@@ -174,10 +153,6 @@
   :commands (dired dired-jump)
   :bind (("C-x C-j" . dired-jump))
   :custom ((dired-listing-switches "-hal --group-directories-first")))
-
-;; start the emacs daemon process.
-(if (display-graphic-p)
-    (server-start))
 
 ;;; Load the config contained in our Org-mode file, which contains the
 ;;; meat of this config..
@@ -204,7 +179,9 @@
 (defun show-file-name ()
   "Show the full path filename of the current buffer in the minibuffer."
   (interactive)
-  (message (buffer-file-name))
+  (unless buffer-file-name
+    (user-error "This buffer does not visit a file"))
+  (message "%s" buffer-file-name)
   (kill-new (file-truename buffer-file-name)))
 
 (global-set-key "\C-cz" 'show-file-name)

@@ -117,8 +117,7 @@ package by Bodizar Bhatzov.
     (no-littering-etc-directory
      (expand-file-name "config/" user-emacs-directory))
     (no-littering-var-directory
-     (expand-file-name "data/" user-emacs-directory))
-    (require 'no-littering))
+     (expand-file-name "data/" user-emacs-directory)))
 #+end_src
 
 Calling use-package with 'emacs as the package target alows top level
@@ -424,7 +423,7 @@ autonomous project-level tasks).
     "c" (lambda () (interactive) (let ((agent-shell-default-agent "claude")) (agent-shell)))
     "o" (lambda () (interactive) (let ((agent-shell-default-agent "opencode")) (agent-shell)))
     "s" #'agent-shell
-    "d" (lambda () (interactive) (save-excursion (mark-defun) (agent-shell))))
+    "d" #'agent-shell-send-defun)
 
   (defvar-keymap prefix-buffer-map-w
     :doc "Prefix map for C-q for web"
@@ -445,7 +444,7 @@ autonomous project-level tasks).
     "m" prefix-buffer-map-m
     "o" prefix-buffer-map-o
     "p" prefix-buffer-map-p
-    "q" 'prefix-buffer-map-q
+    "q" prefix-buffer-map-q
     "r" prefix-buffer-map-r
     "s" prefix-buffer-map-sly
     "t" prefix-buffer-map-t
@@ -690,7 +689,7 @@ without additional processing.
 #+end_src
 ** Org capture
 #+BEGIN_SRC emacs-lisp
-  (bind-key "C-c c" 'org-capture)
+  ;; The capture binding is defined under Org activation bindings.
   (setq org-default-notes-file "~/Dropbox/Notes/notes.org")
 #+END_SRC
 ** Org agenda
@@ -807,7 +806,7 @@ file if you change this list.
           ("C-c n a" . org-roam-alias-add)
           ("C-c n l" . org-roam-buffer-toggle)
           :map org-mode-map
-          ("C-M-i" . completion-at-point-functions)
+          ("C-M-i" . completion-at-point)
           :map org-roam-dailies-map
           ("Y" . org-roam-dailies-capture-yesterday)
           ("T" . org-roam-dailies-capture-tomorrow))
@@ -1099,7 +1098,7 @@ http://tex.stackexchange.com/a/161619.
 
   (use-package latex-extra
     :straight t
-    :hook 'LaTeX-mode-hook #'latex-extra-mode)
+    :hook (LaTeX-mode . latex-extra-mode))
 #+end_src
 
 #+BEGIN_SRC emacs-lisp
@@ -1321,9 +1320,9 @@ Taken, with thanks, from [[https://github.com/dakrone/eos/blob/master/eos-web.or
   (use-package lsp-mode
     :straight t
     :commands (lsp lsp-deferred)
+    ;; Common Lisp uses SLY by default; LSP is started explicitly below.
     :hook ((python-mode . lsp-deferred)
-           (sh-mode . lsp)
-           (lisp-mode . lsp-deferred))
+           (sh-mode . lsp))
     :custom
     (lsp-completion-provider :none))
 
@@ -1378,7 +1377,7 @@ Return to the subject of previous sessions fast quick.
   (use-package vterm
     :straight t
     :config
-    (setq veterm-max-scrollback 10000))
+    (setq vterm-max-scrollback 10000))
 
 #+end_src
 
@@ -1388,11 +1387,9 @@ Return to the subject of previous sessions fast quick.
 #+BEGIN_SRC emacs-lisp
   (use-package agent-shell
     :straight (agent-shell :type git :host github :repo "xenodium/agent-shell")
-    :bind (:map prefix-buffer-map-v
-                ("c" . (lambda () (interactive) (let ((agent-shell-default-agent "claude")) (agent-shell))))
-                ("o" . (lambda () (interactive) (let ((agent-shell-default-agent "opencode")) (agent-shell))))
-                ("s" . agent-shell)
-                ("d" . agent-shell-send-defun))
+    ;; AI bindings live in `prefix-buffer-map-v'; declare the entry point
+    ;; for autoloading rather than duplicating the prefix-map bindings.
+    :commands agent-shell
     :hook (agent-shell-mode . agent-shell-completion-mode)
     :init
     ;; Force shell-maker--curl-version-supported to return t.
@@ -1460,7 +1457,7 @@ buffers in emacs. source: [[http://whattheemacsd.com/sane-defaults.el-01.html][M
 
 #+BEGIN_SRC emacs-lisp
 (use-package recentf
-  :bind ("C-x C-r" . helm-recentf)
+  :bind ("C-x C-r" . consult-recent-file)
   :config
   (recentf-mode t)
   (setq recentf-max-saved-items 200)
@@ -1492,7 +1489,7 @@ This really is the best PDF management system I've ever used.
 #+BEGIN_SRC emacs-lisp
   (use-package pdf-tools
     :straight t
-    :commands (pdf-vew-modepdf-tools-install)
+    :commands (pdf-view-mode pdf-tools-install)
     :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
     :magic ("%PDF" . pdf-view-mode)
     :config
@@ -1749,18 +1746,99 @@ This is a configuration file for the GPTel package in Emacs. It sets up the mode
     :config
     (setf  gptel-default-mode 'org-mode
            ;; gptel-model "codellama:latest"
-           gptel-model "deepseek-r1:7b" ;"qwen2.5-coder:7b"
+           gptel-model 'gpt-6.1-sol
            gptel-directives '((default . "You are a large language model living in Emacs and a helpful assistant. Respond concisely.")
                               (programming . "You are a large language model and a careful programmer and insightful system architect. Provide code and explanation as appropriate.")))
+    (add-to-list
+     'gptel-tools
+     (gptel-make-tool
+      :name "replace_in_config_buffer"
+      :description
+      "Replace one exact, unique string in the open Emacs Configuration buffer. Does not save the buffer."
+      :category "emacs"
+      :confirm t
+      :args '((:name "old" :type "string"
+                     :description "Exact text currently in the buffer")
+              (:name "new" :type "string"
+                     :description "Replacement text"))
+      :function
+      (lambda (old new)
+        (let ((buffer (get-buffer "Emacs Configuration")))
+          (unless buffer
+            (error "The Emacs Configuration buffer is not open"))
+          (unless (and (stringp old) (not (string-empty-p old))
+                       (stringp new))
+            (error "Expected a nonempty OLD string and a NEW string"))
+          (with-current-buffer buffer
+            (save-excursion
+              (save-restriction
+                (widen)
+                (goto-char (point-min))
+                (unless (search-forward old nil t)
+                  (error "OLD text was not found"))
+                (when (search-forward old nil t)
+                  (error "OLD text occurs more than once; no edit made"))
+                (goto-char (point-min))
+                (search-forward old)
+                (replace-match new t t)
+                "Replaced text in the open configuration buffer; not saved.")))))))
 
-    (setq gptel-backend (gptel-make-ollama "Ollama"
-                                           :host "localhost:11434"
-                                           :stream t
-                                           :models '("deepseek-r1:7b" "codellama:latest" "zephyr:latest" "llama3.2:latest")))
+    ;; Read-only access for configuration review.  No evaluation or saving.
+    (add-to-list
+     'gptel-tools
+     (gptel-make-tool
+      :name "read_emacs_configuration"
+      :description
+      "Read configuration or Lisp integration source without evaluating it. TARGET must be config, init, early-init, cl-lsp-integration, sly, sly-completion, sly-autodoc, sly-xref, lsp-mode, or lsp-completion. Returns the entire source text."
+      :category "emacs"
+      :confirm t
+      :args '((:name "target" :type "string"
+                       :description "One of the explicitly allowed configuration or Lisp integration targets"))
+      :function
+      (lambda (target)
+        (if (equal target "config")
+            (let ((buffer (get-buffer "Emacs Configuration")))
+              (unless buffer
+                (error "The Emacs Configuration buffer is not open"))
+              (with-current-buffer buffer
+                (save-restriction
+                  (widen)
+                  (buffer-substring-no-properties (point-min) (point-max)))))
+          (let ((file
+                 (cond
+                  ((equal target "init")
+                   (or user-init-file
+                       (expand-file-name "init.el" user-emacs-directory)))
+                  ((equal target "early-init")
+                   (expand-file-name "early-init.el" user-emacs-directory))
+                  ((member target '("cl-lsp-integration" "sly"
+                                    "sly-completion" "sly-autodoc" "sly-xref"
+                                    "lsp-mode" "lsp-completion"))
+                   (locate-file target load-path '(".el")))
+                  (t (error "Target is not allowed: %s" target)))))
+            (unless (and file (file-readable-p file))
+              (error "No readable source found for %s" target))
+            ;; Prefer unsaved edits when the source is already visited.
+            (let ((buffer (find-buffer-visiting file)))
+              (if buffer
+                  (with-current-buffer buffer
+                    (save-restriction
+                      (widen)
+                      (buffer-substring-no-properties (point-min) (point-max))))
+                (with-temp-buffer
+                  (insert-file-contents file)
+                  (buffer-string)))))))))
 
-    (gptel-make-anthropic "Claude"
-                          :stream t
-                          :key (lambda () (auth-source-pick-first-password :host "api.anthropic.com" :user "apikey")))
+    ;; (setq gptel-backend (gptel-make-ollama "Ollama"
+    ;;                                        :host "localhost:11434"
+    ;;                                        :stream t
+    ;;                                        :models '("deepseek-r1:7b" "codellama:latest" "zephyr:latest" "llama3.2:latest")))
+
+    (setq gptel-backend (gptel-make-openai-oauth "ChatGPT"))
+
+    ;; (gptel-make-anthropic "Claude"
+    ;;                       :stream t
+    ;;                       :key (lambda () (auth-source-pick-first-password :host "api.anthropic.com" :user "apikey")))
 
     :bind (:map prefix-buffer-map-v
                 ("g" . gptel-send)
@@ -1963,7 +2041,7 @@ access magit.
     :defer t
     :after magit
     :config
-    (setq auth-source '("~/.authinfo")))
+    (setq auth-sources '("~/.authinfo")))
 
   (use-package git-ps1-mode
     :straight t
@@ -2100,7 +2178,6 @@ keep things portable.
     :config 
     (avy-setup-default)
     (set-face-attribute 'avy-lead-face-0 nil :background "blue" :foreground "yellow")
-    (set-face-attribute 'avy-lead-face-1 nil :background "purple4" :foreground "goldenrod")
     (set-face-attribute 'avy-lead-face-1 nil :background "SlateBlue4" :foreground "light goldenrod")
     :bind ("s-s c" . avy-goto-char))
 #+end_src
@@ -2142,9 +2219,8 @@ increasingly obvious that the young'uns won't be brought to IRC.
   (use-package janet-mode
     :straight t
     :config
-    (add-hook 'janet-mode-hook
-              (define-key janet-mode-map "{" #'paredit-open-curly)
-              (define-key janet-mode-map "}" #'paredit-close-curly)))
+    (define-key janet-mode-map "{" #'paredit-open-curly)
+    (define-key janet-mode-map "}" #'paredit-close-curly))
 #+end_src
 
 ** Common Lisp
@@ -2339,36 +2415,88 @@ dialect regularly.
 
 #+END_SRC
 
-*** alive-lsp: Common Lisp Language Server
+*** Common Lisp: SLY primary, LSP explicitly secondary
 
-[[https://github.com/nobody-famous/alive-lsp][alive-lsp]] is a Common Lisp implementation of the Language Server
-Protocol that communicates over TCP. It runs inside an SBCL process (started
-from =~/.sbclrc= at SBCL launch time) and provides the server side of the LSP
-channel that =lsp-mode= connects to on port 8006.
+SLY owns the normal Lisp workflow, including definitions, cross-references,
+completion, context-sensitive argument lists, indentation, and compiler notes.
+LSP is an optional comparison tool, not an automatic replacement or fallback.
+The actual alive-lsp transport and image setup still need verification; no
+port or shared-image assumptions are made here.
 
-The governing principle here is *SLY-first, LSP-fallback*. SLY owns completion
-(via its own CAPF and corfu integration) and the REPL/eval/debug workflow.
-=lsp-mode= provides the three features SLY does not cover well for multi-file
-projects: cross-file jump-to-definition, hover documentation on demand, and
-inline diagnostics via the flycheck backend. LSP completion is disabled
-buffer-locally so =company= or =corfu= candidates come from SLY, not the language
-server.
+The old =cl-lsp-integration.el= is no longer loaded. Its source is retained
+on disk for reference. Restart Emacs after adopting this configuration to
+avoid retaining its old hooks, workspaces, and buffer-local settings.
 
-Integration is handled by =cl-lsp-integration.el= in =fade/= (the local
-customisation directory already on =load-path=). It is loaded after =lsp-mode=
-has initialised, with a =locate-library= guard so Emacs continues to work
-normally even if the file is temporarily absent.
+| Prefix  | Key | Action                            |
+|---------+-----+-----------------------------------|
+| C-q s l | s   | Start LSP in this buffer          |
+|         | g   | Explicit LSP definition lookup    |
+|         | f   | Explicit LSP reference lookup     |
+|         | d   | Explicit LSP documentation        |
+|         | e   | Flycheck error list               |
+|         | r   | Restart the current LSP workspace |
+|         | q   | Disconnect this buffer from LSP   |
+
+Use =C-u C-q s l s= when starting a disconnected buffer to opt into LSP
+Flycheck diagnostics. Without that prefix, LSP diagnostics are disabled;
+SLY compilation notes remain available. Disconnect and start again to change
+this choice. Restarting an LSP workspace may shut down the server; it is not
+merely an index refresh.
 
 #+BEGIN_SRC emacs-lisp
-  ;; Common Lisp LSP integration (LSP-01 through LSP-06)
-  ;; alive-lsp TCP server is started from ~/.sbclrc when SBCL launches.
-  ;; cl-lsp-integration.el (in fade/) wires lsp-mode into lisp-mode with
-  ;; SLY-first arbitration: SLY owns completion and REPL; LSP provides
-  ;; cross-file navigation (M-.), hover docs on demand (C-c l d), and
-  ;; inline diagnostics.  Manual workspace refresh: C-c l r.
-  (with-eval-after-load 'lsp-mode
-    (when (locate-library "cl-lsp-integration")
-      (require 'cl-lsp-integration)))
+  (defun fade/lisp-lsp-settings ()
+    "Keep automatic LSP features out of SLY's way in Lisp buffers."
+    (setq-local lsp-completion-provider :none)
+    (setq-local lsp-enable-xref nil)
+    (setq-local lsp-eldoc-enable-hover nil)
+    (setq-local lsp-signature-auto-activate nil)
+    (setq-local lsp-ui-doc-enable nil)
+    (setq-local lsp-ui-sideline-enable nil)
+    (setq-local lsp-enable-imenu nil)
+    (setq-local lsp-enable-indentation nil)
+    (setq-local lsp-enable-on-type-formatting nil)
+    (setq-local lsp-before-save-edits nil)
+    (setq-local lsp-format-buffer-on-save nil)
+    (setq-local lsp-fix-all-on-save nil)
+    (setq-local lsp-enable-symbol-highlighting nil)
+    (setq-local lsp-headerline-breadcrumb-enable nil)
+    (setq-local lsp-lens-enable nil)
+    (setq-local lsp-enable-file-watchers nil)
+    (setq-local lsp-diagnostics-provider :none))
+
+  (defun fade/lisp-lsp-start (&optional diagnostics)
+    "Start secondary LSP here; with prefix DIAGNOSTICS, use Flycheck.
+Does not start SLY or promise that the two services share a Lisp image."
+    (interactive "P")
+    (unless (derived-mode-p 'lisp-mode)
+      (user-error "This command is for Common Lisp buffers"))
+    (require 'lsp-mode)
+    (when (bound-and-true-p lsp-mode)
+      (user-error "Disconnect LSP in this buffer before starting again"))
+    (require 'lsp-lisp)
+    (fade/lisp-lsp-settings)
+    (setq-local lsp-diagnostics-provider (if diagnostics :flycheck :none))
+    (lsp))
+
+  ;; Remove the previous startup hooks when this section is re-evaluated.
+  ;; Existing managed buffers still need a fresh session for a clean test.
+  (remove-hook 'lisp-mode-hook #'lsp-deferred)
+  (remove-hook 'lisp-mode-hook #'cl-lsp-enable)
+  (add-hook 'lisp-mode-hook #'fade/lisp-lsp-settings)
+
+  (defvar-keymap fade/lisp-lsp-map
+    :doc "Explicit secondary LSP commands for Common Lisp"
+    "s" #'fade/lisp-lsp-start
+    "g" #'lsp-find-definition
+    "f" #'lsp-find-references
+    "d" #'lsp-describe-thing-at-point
+    "e" #'flycheck-list-errors
+    "r" #'lsp-workspace-restart
+    "q" #'lsp-disconnect)
+
+  (keymap-set prefix-buffer-map-sly "l" fade/lisp-lsp-map)
+  (which-key-add-keymap-based-replacements prefix-buffer-map-sly
+    "l" '("Secondary LSP" . fade/lisp-lsp-map))
 #+END_SRC
 
 ** Zig
@@ -2493,7 +2621,7 @@ web-mode provides syntax support for html typed and related files.
 
   #+BEGIN_SRC emacs-lisp 
     (add-hook 'js2-mode-hook
-              (lambda () (flycheck-select-checker "javascript-eslint")))
+              (lambda () (flycheck-select-checker 'javascript-eslint)))
   #+END_SRC
 
 *** Refactoring JavaScript
@@ -2745,7 +2873,7 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
      :config
      (define-key yas-minor-mode-map (kbd "M-z") 'yas-expand)
      (define-key yas-keymap (kbd "M-n") 'yas-next-field-or-maybe-expand)
-     (define-key yas-keymap (kbd "M-p") 'yas-pre-field))
+     (define-key yas-keymap (kbd "M-p") 'yas-prev-field))
 
    (use-package yasnippet-snippets
      :straight t
@@ -2761,9 +2889,7 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
     :custom
     (vertico-count 13)
     (vertico-resize t)
-    (vertico-cycle t)
-    :config
-    (vertico-mode))
+    (vertico-cycle t))
 
   ;; this will put most recent items at the top of any given vertico selection.
   (use-package savehist
@@ -2792,13 +2918,12 @@ And here's how we tell Emacs which font we want. See [[https://protesilaos.com/e
     :custom
     (completion-styles '(orderless))
     (completion-category-overrides '((file (styles . (partial-completion)))))
-    (setq completion-category-defaults nil))
+    (completion-category-defaults nil))
 
   ;; metadata around completion selections
   (use-package marginalia
     :straight t
-    :custom 
-    (setq marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+    ;; Use Marginalia's default annotator registry.
     :init
     (marginalia-mode 1))
 

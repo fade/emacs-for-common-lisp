@@ -179,8 +179,9 @@ init overrides of things done in early-init.el or in init.el
 
   (setq uniquify-buffer-name-style 'forward)
 
-  ;; -i gets alias definitions from .bash_profile
-  (setq shell-command-switch "-ic")
+  ;; Keep subprocess output machine-readable (e.g. shell-maker parses curl --version).
+  ;; Interactive shell startup banners and aliases must not affect these commands.
+  (setq shell-command-switch "-c")
 
   ;; Don't beep at me
   (setq visible-bell t)
@@ -1449,23 +1450,45 @@ most relevantly, sparql is used to define queries to the WikiData knowledge data
 * PDF Tools
 This really is the best PDF management system I've ever used.
 
+Keep the native helper outside Straight's rebuildable package directory.
+Install it before loading Org PDF annotation support: =pdf-annot= queries
+server capabilities while loading, and the installer may run asynchronously.
+
 #+BEGIN_SRC emacs-lisp
+  (use-package org-pdftools
+    :straight t
+    :defer t)
+
   (use-package pdf-tools
     :straight t
+    :demand t
     :commands (pdf-view-mode pdf-tools-install)
+    :init
+    (defun fade/pdf-tools-setup-org-links (&rest _)
+      "Load Org PDF support after the native PDF server is ready."
+      (require 'org-pdftools)
+      (org-pdftools-setup-link))
     :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
     :magic ("%PDF" . pdf-view-mode)
     :config
-    (pdf-tools-install)
+    ;; Preserve an existing helper before Straight next rebuilds this package.
+    (let* ((directory (expand-file-name "pdf-tools/" user-emacs-directory))
+           (executable (expand-file-name
+                        (if (eq system-type 'windows-nt) "epdfinfo.exe" "epdfinfo")
+                        directory)))
+      (make-directory directory t)
+      (when (and (not (file-executable-p executable))
+                 (file-executable-p pdf-info-epdfinfo-program))
+        (copy-file pdf-info-epdfinfo-program executable t t t))
+      (setq pdf-info-epdfinfo-program executable))
+    ;; The installer calls this only once the server works, including after
+    ;; an asynchronous build.  Loading org-pdftools earlier loads pdf-annot
+    ;; before its capability queries can succeed.
+    (advice-add 'pdf-tools-install-noverify :after #'fade/pdf-tools-setup-org-links)
+    (pdf-tools-install t t)
     (define-pdf-cache-function pagelabels)
     (setq-default pdf-view-display-size 'fit-width)
     (setq pdf-annot-activate-created-annotations t))
-
-  (use-package org-pdftools
-    :straight t
-    :after org
-    :config
-    (org-pdftools-setup-link))
 #+END_SRC
 
 * Epub support
